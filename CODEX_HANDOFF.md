@@ -14,7 +14,7 @@ fluid systems from Polymathic AI's *The Well*: `turbulent_radiative_layer_2D`,
 - **Live app:** https://krishmalik-delta-v.hf.space
 - **HF Space (source of truth for deploy):** https://huggingface.co/spaces/KrishMalik/delta-v (Docker SDK, HF PRO required for `cpu-basic` hardware — already subscribed)
 - **HF dataset repo (model artifacts):** https://huggingface.co/datasets/KrishMalik/deltav-fluid (public)
-- **Code repo:** https://github.com/krishoncloud/delta-v *(public, once pushed)*
+- **Code repo:** https://github.com/krishoncloud/delta-v (public)
 
 ### To deploy changes yourself
 
@@ -37,6 +37,45 @@ HfApi().upload_folder(
 
 Poll `https://huggingface.co/spaces/KrishMalik/delta-v` or `GET /health` on
 the live URL to confirm the rebuild landed.
+
+## Task 0 — resolve the accuracy TBD before touching the frontend
+
+This ran through a 5-advisor/peer-review council pass before this handoff was
+finalized. Verdict, unanimous across every reviewer: **do this before the
+wireframe redesign, not after** — it's roughly a half-day of work, not a
+week's detour, and it's the one open item most likely to actually get
+questioned by an evaluator.
+
+Why it matters: the project's SRS leaves the accuracy bar as an explicit,
+undecided TBD (see "Known limitations" below). Right now the frontend shows
+real per-channel error (3–39% relative L2 depending on channel/system) next
+to ground truth with no stated target for what counts as acceptable. A
+*more polished* site sitting on top of that undefended number is worse, not
+better — it reads as confident packaging around an unaddressed gap, and
+invites exactly the follow-up question a landing page can't answer ("why is
+that acceptable?").
+
+**Do this first:**
+1. Replace "TBD" with a concrete, even if self-imposed, threshold per
+   channel — e.g. `<15% relative L2 on pressure/density (primary) channels;
+   velocity channels explicitly flagged as directional-only, not
+   production-grade`. Base the actual numbers on what `/samples/{id}/predict`
+   already reports (`X-Quality`), not on guesses.
+2. Wire that threshold into the existing quality display (the
+   `renderQuality()` panel in `static/app.js`, and/or `main.py`'s
+   `/samples/{id}/predict` `X-Quality` payload) so it visibly reports
+   pass/fail per channel against the stated bar, not just a bare percentage.
+3. Only then move to Task 1 (wireframe redesign) and Task 2 (landing/about
+   pages) below — and when you do, explicitly brief yourself (or whoever
+   continues this) to **preserve the honest error/threshold display**, not
+   smooth it over with confident marketing copy. A landing/about page that
+   undersells the real accuracy gap is the specific failure mode the council
+   flagged as worse than not having the pages at all.
+
+Do not use this task as an excuse to expand scope (e.g. a multi-system
+spike, retraining, new datasets) — that was explicitly considered and
+rejected as the wrong move for this week. Keep it to writing the threshold
+and wiring the display.
 
 ## Guardrail — do not violate
 
