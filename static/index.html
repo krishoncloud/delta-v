@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delta-V</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<div id="wake" class="wake" hidden>
+  <div class="wake-card">
+    <div class="brand"><svg class="mark" viewBox="0 0 18 18" fill="none"><path d="M9 2 L16 15 L2 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Delta-V</div>
+    <div class="wake-title">Waking up the model</div>
+    <div class="wake-phase mono"><span id="wake-phase">connecting</span><span class="sep">·</span><span id="wake-elapsed">0s</span></div>
+    <div class="wake-bar"><div id="wake-fill"></div></div>
+    <div class="wake-note">The service sleeps when idle. The first visit downloads and loads the 858 MB checkpoint — usually one to two minutes.</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><svg class="mark" viewBox="0 0 18 18" fill="none"><path d="M9 2 L16 15 L2 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Delta-V</div>
+    <div class="status mono"><span class="dot" id="dot"></span><span id="status-text">connecting</span></div>
+  </div>
+
+  <div class="main">
+    <aside class="sidebar">
+      <div>
+        <div class="label">System</div>
+        <div class="systems" id="systems"></div>
+      </div>
+      <div>
+        <div class="label">Parameters</div>
+        <div id="dials"></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="predict">Predict</button>
+        <div class="hint" id="predict-hint">Interpolated from the trained parametric table · no neural network</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section>
+        <div class="section-head"><h2>Outcome</h2><span class="meta mono" id="units-note"></span></div>
+        <div class="metrics" id="metrics"></div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>Field simulation</h2>
+          <span class="meta mono" id="field-meta">FNO · 256 × 256 · 4 channels</span>
+        </div>
+
+        <div class="field">
+          <div class="bar">
+            <div class="bar-group">
+              <span class="bar-label">Initial condition</span>
+              <div class="chips" id="samples"></div>
+            </div>
+            <button class="btn secondary sm" id="run" disabled>Run field simulation</button>
+          </div>
+
+          <div class="bar sub">
+            <div class="segs" id="channels"></div>
+            <span class="meta mono" id="scale-note"></span>
+          </div>
+
+          <div class="stage" id="stage">
+            <div class="empty" id="stage-empty">Select an initial condition</div>
+            <div class="panels" id="panels" hidden></div>
+          </div>
+
+          <div class="timeline" id="timeline" hidden>
+            <div class="tl-track" id="tl-track"></div>
+            <div class="tl-info mono" id="tl-info"></div>
+          </div>
+
+          <div class="foot mono" id="foot"></div>
+        </div>
+        <div class="quality" id="quality" hidden></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script src="colormaps.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

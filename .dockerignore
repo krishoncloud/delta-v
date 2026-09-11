@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.git/
+.DS_Store
+*.ipynb
+tests/
+.artifacts/
+design/
+.claude/

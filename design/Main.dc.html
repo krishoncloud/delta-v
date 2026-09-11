@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+  <style>
+    :root {
+      --bg: #0B0A12; --surface: #100E19; --surface-2: #151322;
+      --line: #1E1B2C; --line-strong: #2A2640;
+      --text: #F4F1FF; --text-2: #A39DB8; --text-3: #665F7E;
+      --accent: #9B7BFF; --live: #73F5C2;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Geist', system-ui, -apple-system, sans-serif; font-size: 13px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-feature-settings: 'tnum' 1; }
+    a { color: var(--accent); text-decoration: none; } a:hover { color: var(--text); }
+    button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+    .sys:hover { background: var(--surface-2); color: var(--text); }
+    .btn-primary:hover { background: #AD93FF; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--text-3); }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; border-radius: 1px; outline: none; margin: 6px 0 2px;
+      background: linear-gradient(90deg, var(--accent) var(--fill), var(--line-strong) var(--fill)); }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--text); border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--line-strong); margin-top: -5px; }
+    input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--text); border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--line-strong); }
+  </style>
+</helmet>
+
+<div style="width: 1280px; min-height: 820px; background: #0B0A12; display: grid; grid-template-rows: 52px 1fr;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid #1E1B2C;">
+    <div style="display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; letter-spacing: -0.01em;">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2 L16 15 L2 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+      <span>Delta-V</span>
+    </div>
+    <div class="mono" style="display: flex; align-items: center; gap: 8px; color: #A39DB8; font-size: 12px;">
+      <span style="width: 6px; height: 6px; border-radius: 50%; background: #73F5C2;"></span>
+      <span>online</span><span style="color: #665F7E;">·</span><span>cpu</span><span style="color: #665F7E;">·</span><span>epoch 3</span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 300px 1fr; min-height: 0;">
+
+    <div style="border-right: 1px solid #1E1B2C; padding: 24px 20px; display: flex; flex-direction: column; gap: 28px;">
+      <div>
+        <div style="font-size: 11px; font-weight: 500; color: #665F7E; margin-bottom: 10px;">System</div>
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <sc-for list="{{systems}}" as="sys" hint-placeholder-count="3">
+            <button class="sys" onClick="{{sys.select}}" style="{{sys.style}}">
+              <span>{{sys.name}}</span>
+              <span class="mono" style="font-size: 11px; color: #665F7E;">{{sys.grid}}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 11px; font-weight: 500; color: #665F7E; margin-bottom: 10px;">Parameters</div>
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <sc-for list="{{dials}}" as="dial" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span class="mono" style="color: #A39DB8; font-size: 12px;">{{dial.name}}</span>
+                <span class="mono" style="font-size: 12px; color: #F4F1FF;">{{dial.display}}</span>
+              </div>
+              <input type="range" min="{{dial.min}}" max="{{dial.max}}" step="{{dial.step}}" value="{{dial.value}}" style="{{dial.fill}}" onInput="{{dial.onChange}}" />
+              <div class="mono" style="display: flex; justify-content: space-between; font-size: 10.5px; color: #665F7E;">
+                <span>{{dial.minLabel}}</span><span>{{dial.maxLabel}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+        <button class="btn-primary" onClick="{{predict}}" style="height: 34px; border-radius: 6px; font-size: 13px; font-weight: 500; background: #9B7BFF; color: #0B0A12; display: flex; align-items: center; justify-content: center;">Predict</button>
+        <button class="btn-secondary" onClick="{{runField}}" style="height: 34px; border-radius: 6px; font-size: 13px; font-weight: 500; border: 1px solid #2A2640; color: #A39DB8; display: flex; align-items: center; justify-content: center;">{{runLabel}}</button>
+        <div style="font-size: 11px; color: #665F7E; text-align: center;">Field simulation runs the FNO on CPU, ~15 s</div>
+      </div>
+    </div>
+
+    <div style="padding: 24px 28px 40px; display: flex; flex-direction: column; gap: 24px; min-width: 0;">
+
+      <div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between;">
+          <h2 style="margin: 0; font-size: 13px; font-weight: 500;">Outcome</h2>
+          <span class="mono" style="font-size: 11px; color: #665F7E;">parametric · interpolated</span>
+        </div>
+        <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #1E1B2C; border: 1px solid #1E1B2C; border-radius: 8px; overflow: hidden;">
+          <sc-for list="{{metrics}}" as="m" hint-placeholder-count="2">
+            <div style="background: #100E19; padding: 18px 20px;">
+              <div style="font-size: 11px; color: #665F7E; margin-bottom: 10px;">{{m.name}}</div>
+              <div class="mono" style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: {{m.color}};">{{m.value}}</div>
+              <div style="font-size: 11px; color: #665F7E; margin-top: 8px;">simulation units</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between;">
+          <h2 style="margin: 0; font-size: 13px; font-weight: 500;">Field</h2>
+          <span class="mono" style="font-size: 11px; color: #665F7E;">256 × 256 · 4 channels</span>
+        </div>
+        <div style="margin-top: 10px; border: 1px solid #1E1B2C; border-radius: 8px; overflow: hidden; background: #100E19;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #1E1B2C;">
+            <div style="display: flex; gap: 2px; background: #151322; padding: 2px; border-radius: 6px;">
+              <sc-for list="{{channels}}" as="ch" hint-placeholder-count="4">
+                <button class="mono" onClick="{{ch.select}}" style="{{ch.style}}">{{ch.name}}</button>
+              </sc-for>
+            </div>
+            <span class="mono" style="font-size: 11px; color: #665F7E;">{{gridNative}}</span>
+          </div>
+          <sc-if value="{{hasField}}" hint-placeholder-val="{{true}}">
+            <canvas ref="{{canvasRef}}" width="952" height="360" style="display: block; width: 100%; height: 360px;"></canvas>
+          </sc-if>
+          <sc-if value="{{noField}}" hint-placeholder-val="{{false}}">
+            <div style="height: 360px; display: flex; align-items: center; justify-content: center; color: #665F7E; font-size: 12px;">Run a field simulation to render the predicted frame</div>
+          </sc-if>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; font-size: 11px; color: #665F7E; border-top: 1px solid #1E1B2C;">
+            <span class="mono">{{footLabel}}</span>
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <span>low</span>
+              <span style="width: 90px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #0B0A12, #35235C, #9B7BFF, #F4F1FF);"></span>
+              <span>high</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.canvasEl = null;
+    this.SYSTEMS = [
+      { key: 'turbulent_radiative_layer_2D', name: 'Turbulent radiative layer', grid: '128 × 384',
+        dials: [{ n: 't_cool', min: 0.03, max: 3.16, step: 0.01, f: (v) => v.toFixed(2) }] },
+      { key: 'rayleigh_benard', name: 'Rayleigh–Bénard', grid: '512 × 128',
+        dials: [{ n: 'rayleigh_number', min: 1e6, max: 1e10, step: 1e6, f: (v) => v.toExponential(1) },
+                { n: 'prandtl', min: 0.1, max: 10, step: 0.1, f: (v) => v.toFixed(1) }] },
+      { key: 'shear_flow', name: 'Shear flow', grid: '256 × 512',
+        dials: [{ n: 'reynolds', min: 1e4, max: 5e5, step: 1e3, f: (v) => Math.round(v).toLocaleString() },
+                { n: 'schmidt', min: 0.1, max: 10, step: 0.1, f: (v) => v.toFixed(1) }] },
+    ];
+    this.CH = ['scalar', 'pressure', 'velocity_x', 'velocity_y'];
+    const vals = {};
+    this.SYSTEMS.forEach((s) => { vals[s.key] = {}; s.dials.forEach((d) => { vals[s.key][d.n] = (d.min + d.max) / 2; }); });
+    this.state = { active: 0, ch: 0, vals, predicted: false, hasField: false, running: false };
+  }
+
+  drawField() {
+    const cv = this.canvasEl; if (!cv) return;
+    const ctx = cv.getContext('2d'), w = cv.width, h = cv.height, img = ctx.createImageData(w, h);
+    let seed = this.state.active * 97 + this.state.ch * 13 + 7;
+    const r = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const nx = 6 + Math.floor(r() * 3), ny = 4 + Math.floor(r() * 2);
+    const f = []; for (let i = 0; i <= nx; i++) { f.push([]); for (let j = 0; j <= ny; j++) f[i].push(r()); }
+    const L = (a, b, t) => a + (b - a) * t;
+    const pal = [[11,10,18],[53,35,92],[155,123,255],[244,241,255]];
+    for (let y = 0; y < h; y++) {
+      const fy = y / h * ny, y0 = Math.floor(fy), ty = fy - y0;
+      for (let x = 0; x < w; x++) {
+        const fx = x / w * nx, x0 = Math.floor(fx), tx = fx - x0;
+        const a = f[x0][y0], b = f[Math.min(x0+1,nx)][y0], c = f[x0][Math.min(y0+1,ny)], d = f[Math.min(x0+1,nx)][Math.min(y0+1,ny)];
+        let v = Math.pow(L(L(a, b, tx), L(c, d, tx), ty), 1.3);
+        let col;
+        if (v < .33) { const t = v / .33; col = [L(pal[0][0],pal[1][0],t), L(pal[0][1],pal[1][1],t), L(pal[0][2],pal[1][2],t)]; }
+        else if (v < .66) { const t = (v - .33) / .33; col = [L(pal[1][0],pal[2][0],t), L(pal[1][1],pal[2][1],t), L(pal[1][2],pal[2][2],t)]; }
+        else { const t = (v - .66) / .34; col = [L(pal[2][0],pal[3][0],t), L(pal[2][1],pal[3][1],t), L(pal[2][2],pal[3][2],t)]; }
+        const k = (y * w + x) * 4; img.data[k] = col[0]; img.data[k+1] = col[1]; img.data[k+2] = col[2]; img.data[k+3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  componentDidUpdate() { if (this.state.hasField) this.drawField(); }
+
+  renderVals() {
+    const s = this.SYSTEMS[this.state.active];
+    const vals = this.state.vals[s.key];
+
+    const systems = this.SYSTEMS.map((x, i) => ({
+      name: x.name, grid: x.grid,
+      select: () => this.setState({ active: i, hasField: false, ch: 0, predicted: false }),
+      style: `display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 6px; text-align: left; width: 100%; background: ${i === this.state.active ? '#151322' : 'transparent'}; color: ${i === this.state.active ? '#F4F1FF' : '#A39DB8'};`,
+    }));
+
+    const dials = s.dials.map((d) => {
+      const v = vals[d.n], pct = ((v - d.min) / (d.max - d.min)) * 100;
+      return {
+        name: d.n, value: v, min: d.min, max: d.max, step: d.step,
+        display: d.f(v), minLabel: d.f(d.min), maxLabel: d.f(d.max),
+        fill: `--fill: ${pct}%`,
+        onChange: (e) => {
+          const nv = parseFloat(e.target.value);
+          this.setState({ vals: { ...this.state.vals, [s.key]: { ...vals, [d.n]: nv } }, predicted: false });
+        },
+      };
+    });
+
+    let m1 = '—', m2 = '—';
+    if (this.state.predicted) {
+      const h = Object.values(vals).reduce((a, b) => a + b, 0) + this.state.active * 7;
+      const p = (n) => { const x = Math.sin(h + n) * 1e4; return x - Math.floor(x); };
+      m1 = (p(1) * 9e-5 + 1e-6).toExponential(2);
+      m2 = (p(2) * 0.08 + 0.01).toFixed(4);
+    }
+    const mc = this.state.predicted ? '#F4F1FF' : '#665F7E';
+
+    const channels = this.CH.map((c, i) => ({
+      name: c,
+      select: () => this.setState({ ch: i }),
+      style: `padding: 4px 10px; border-radius: 4px; font-size: 11.5px; background: ${i === this.state.ch ? '#0B0A12' : 'transparent'}; color: ${i === this.state.ch ? '#F4F1FF' : '#A39DB8'};`,
+    }));
+
+    return {
+      systems, dials, channels,
+      metrics: [{ name: 'mass_flux', value: m1, color: mc }, { name: 'turbulent_velocity', value: m2, color: mc }],
+      gridNative: s.grid + ' native',
+      hasField: this.state.hasField,
+      noField: !this.state.hasField,
+      runLabel: this.state.running ? 'Running…' : 'Run field simulation',
+      footLabel: this.state.hasField ? `predicted_frame[${this.state.ch}] · ${this.CH[this.state.ch]} · float32` : 'predicted_frame · float32',
+      predict: () => this.setState({ predicted: true }),
+      runField: () => {
+        if (this.state.running) return;
+        this.setState({ running: true });
+        setTimeout(() => this.setState({ running: false, hasField: true }), 900);
+      },
+      canvasRef: (el) => { this.canvasEl = el; if (el && this.state.hasField) this.drawField(); },
+    };
+  }
+}
+</script>
+</body>
+</html>
