@@ -1,91 +1,840 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Delta-V</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="app.css">
-</head>
-<body>
-
-<div id="wake" class="wake" hidden>
-  <div class="wake-card">
-    <div class="brand"><svg class="mark" viewBox="0 0 18 18" fill="none"><path d="M9 2 L16 15 L2 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Delta-V</div>
-    <div class="wake-title">Waking up the model</div>
-    <div class="wake-phase mono"><span id="wake-phase">connecting</span><span class="sep">·</span><span id="wake-elapsed">0s</span></div>
-    <div class="wake-bar"><div id="wake-fill"></div></div>
-    <div class="wake-note">The service sleeps when idle. The first visit downloads and loads the 858 MB checkpoint — usually one to two minutes.</div>
-  </div>
-</div>
-
-<div class="app">
-  <div class="topbar">
-    <div class="brand"><svg class="mark" viewBox="0 0 18 18" fill="none"><path d="M9 2 L16 15 L2 15 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Delta-V</div>
-    <div class="status mono"><span class="dot" id="dot"></span><span id="status-text">connecting</span></div>
-  </div>
-
-  <div class="main">
-    <aside class="sidebar">
-      <div>
-        <div class="label">System</div>
-        <div class="systems" id="systems"></div>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Delta-V — Explore learned fluid dynamics</title>
+    <meta
+      name="description"
+      content="Explore three fluid systems with fast parameter estimates and neural next-state predictions compared with real simulation data. An experimental Delta-V prototype."
+    />
+    <meta name="theme-color" content="#0B0A12" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 5L36 34H4Z' fill='none' stroke='%239B7BFF' stroke-width='3'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="app.css?v=prototype-1" />
+  </head>
+  <body>
+    <a class="skip" href="#main-content">Skip to content</a>
+    <header class="topbar">
+      <a href="#home" class="brand" aria-label="Delta-V home"
+        ><svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path
+            d="M16 3 29 27H3L16 3Z"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path d="m16 11 8 16" stroke="currentColor" /></svg
+        ><span>DELTA-V</span><span class="badge">PROTOTYPE</span></a
+      >
+      <nav class="topnav" aria-label="Main navigation">
+        <a href="#about">The project</a><a href="#datasets">Datasets</a
+        ><a
+          href="https://github.com/krishoncloud/delta-v"
+          target="_blank"
+          rel="noopener"
+          >GitHub ↗</a
+        >
+      </nav>
+      <div class="top-actions">
+        <button
+          id="theme"
+          class="icon-btn"
+          aria-label="Switch to light mode"
+          title="Switch theme"
+        >
+          ☼</button
+        ><a class="btn primary small" href="#simulator">Open simulator ↗</a>
       </div>
-      <div>
-        <div class="label">Parameters</div>
-        <div id="dials"></div>
-      </div>
-      <div class="actions">
-        <button class="btn primary" id="predict">Predict</button>
-        <div class="hint" id="predict-hint">Interpolated from the trained parametric table · no neural network</div>
-      </div>
-    </aside>
-
-    <main class="content">
-      <section>
-        <div class="section-head"><h2>Outcome</h2><span class="meta mono" id="units-note"></span></div>
-        <div class="metrics" id="metrics"></div>
-      </section>
-
-      <section>
-        <div class="section-head">
-          <h2>Field simulation</h2>
-          <span class="meta mono" id="field-meta">FNO · 256 × 256 · 4 channels</span>
-        </div>
-
-        <div class="field">
-          <div class="bar">
-            <div class="bar-group">
-              <span class="bar-label">Initial condition</span>
-              <div class="chips" id="samples"></div>
+    </header>
+    <main id="main-content">
+      <div id="page-home" class="page landing">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <span class="live-dot"></span> A FLUID DYNAMICS EXPLORER
+            </p>
+            <h1>Complex physics.<br /><span>A faster first look.</span></h1>
+            <p class="hero-description">
+              Explore how fluids behave with learned approximations. Adjust a
+              parameter, predict the next state, and see exactly where the model
+              agrees with simulation.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#simulator"
+                >Explore the simulator ↗</a
+              ><a class="text-link" href="#about">Understand Delta-V →</a>
             </div>
-            <button class="btn secondary sm" id="run" disabled>Run field simulation</button>
+            <p class="hero-note">
+              Experimental · 2D fluid systems · Ground truth included
+            </p>
           </div>
-
-          <div class="bar sub">
-            <div class="segs" id="channels"></div>
-            <span class="meta mono" id="scale-note"></span>
+          <div class="hero-visual">
+            <div class="visual-label">
+              <span class="live-dot"></span> FROM THE WELL
+              <span class="mono">01 / 03</span>
+            </div>
+            <div class="hero-field">
+              <img
+                src="field-preview.png"
+                alt="Real shear-flow tracer field from The Well, showing layered fluid mixing"
+                width="256"
+                height="512"
+              />
+              <div class="field-axis mono">y ↑</div>
+            </div>
+            <div class="visual-caption">
+              <div>
+                <strong>Shear-driven mixing</strong
+                ><span>Ground truth · tracer · t = 6.40</span>
+              </div>
+              <a
+                href="#simulator"
+                data-start="shear_flow"
+                aria-label="Explore shear flow"
+                >↗</a
+              >
+            </div>
           </div>
-
-          <div class="stage" id="stage">
-            <div class="empty" id="stage-empty">Select an initial condition</div>
-            <div class="panels" id="panels" hidden></div>
-          </div>
-
-          <div class="timeline" id="timeline" hidden>
-            <div class="tl-track" id="tl-track"></div>
-            <div class="tl-info mono" id="tl-info"></div>
-          </div>
-
-          <div class="foot mono" id="foot"></div>
+        </section>
+        <div class="fact-strip">
+          <div><strong>03</strong><span>fluid systems</span></div>
+          <div><strong>02</strong><span>ways to explore</span></div>
+          <div><strong>4 → 1</strong><span>frames in → next state</span></div>
+          <div><strong>The Well</strong><span>open simulation data</span></div>
         </div>
-        <div class="quality" id="quality" hidden></div>
-      </section>
+        <section class="landing-section">
+          <div class="section-intro">
+            <p class="eyebrow">FROM A QUESTION TO A COMPARISON</p>
+            <h2>Two views of the same physics.</h2>
+            <p>
+              Start with a quick numeric estimate. Go deeper with a spatial
+              prediction you can inspect against the reference.
+            </p>
+          </div>
+          <div class="tier-grid">
+            <a href="#simulator" class="tier-card"
+              ><span class="step-number">01 / PARAMETRIC</span>
+              <div class="mini-chart" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <h3>Turn a dial. See an estimate. <span>↗</span></h3>
+              <p>
+                Explore flux and turbulent velocity by interpolating precomputed
+                outcome tables within supported parameter ranges.
+              </p>
+              <span class="tag">Fast numeric estimates</span></a
+            ><a href="#simulator" class="tier-card"
+              ><span class="step-number">02 / FIELD PREDICTION</span>
+              <div class="frame-diagram" aria-hidden="true">
+                <i>t₀</i><i>t₁</i><i>t₂</i><i>t₃</i><span>→</span><i>t₄</i>
+              </div>
+              <h3>Predict. Compare. Inspect. <span>↗</span></h3>
+              <p>
+                A Fourier Neural Operator predicts one future frame from four
+                real frames. Inspect the prediction, reference, and signed
+                difference.
+              </p>
+              <span class="tag">Measured error, every run</span></a
+            >
+          </div>
+        </section>
+        <section class="landing-section launch-note">
+          <div>
+            <p class="eyebrow">AN OPEN EXPERIMENT</p>
+            <h2>Useful questions.<br />Visible limitations.</h2>
+          </div>
+          <div>
+            <p>
+              Delta-V is an early prototype for exploring learned fluid
+              surrogates. Prediction quality varies by system and field; every
+              field prediction comes with its measured error. These
+              approximations complement high-fidelity solvers.
+            </p>
+            <a class="text-link" href="#about"
+              >What works, what doesn’t, and what’s next →</a
+            >
+          </div>
+        </section>
+        <footer>
+          <span class="brand">△ DELTA-V</span
+          ><span>Built with The Well · Krish Malik &amp; Adya Anwesha</span
+          ><a
+            href="https://github.com/krishoncloud/delta-v/issues"
+            target="_blank"
+            rel="noopener"
+            >Share feedback ↗</a
+          >
+        </footer>
+      </div>
+      <div id="workspace" hidden>
+        <aside class="sidebar">
+          <p class="eyebrow">WORKSPACE</p>
+          <nav aria-label="Workspace navigation">
+            <a href="#simulator" data-nav="simulator"
+              ><span>◈</span> Simulator</a
+            ><a href="#history" data-nav="history"><span>◷</span> Run history</a
+            ><a href="#datasets" data-nav="datasets"><span>▧</span> Datasets</a
+            ><a href="#models" data-nav="models"><span>◇</span> Model</a
+            ><a href="#settings" data-nav="settings"><span>⚙</span> Settings</a
+            ><a href="#about" data-nav="about"><span>ⓘ</span> About Delta-V</a>
+          </nav>
+          <div class="sidebar-info">
+            <span class="eyebrow">CURRENT SELECTION</span>
+            <div id="selection-info">Choose a system in the simulator.</div>
+          </div>
+          <div class="sidebar-bottom">
+            <div class="status">
+              <span id="dot" class="dot"></span
+              ><span id="status-text">Connecting to model</span>
+            </div>
+            <a
+              href="https://github.com/krishoncloud/delta-v/issues"
+              target="_blank"
+              rel="noopener"
+              >Give feedback ↗</a
+            >
+          </div>
+        </aside>
+        <div class="workspace-content">
+          <div id="wake" class="wake" hidden role="status">
+            <strong id="wake-title">Waking up the model</strong
+            ><span id="wake-phase">connecting</span
+            ><span id="wake-elapsed">0s</span>
+            <div class="wake-bar"><div id="wake-fill"></div></div>
+            <p>
+              The first request after sleep can take a minute or two. You can
+              read the project notes while it loads.
+            </p>
+          </div>
+          <div id="notice" role="alert" hidden></div>
+          <section id="page-simulator" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">FLUID DYNAMICS / EXPERIMENTAL</p>
+                <h1>Simulator</h1>
+                <p>A faster estimate. A closer look at the physics.</p>
+              </div>
+              <button class="btn secondary small" id="tour-start">
+                Feature walkthrough →
+              </button>
+            </div>
+            <div
+              id="tour"
+              hidden
+              class="tour"
+              role="region"
+              aria-label="Feature walkthrough"
+            >
+              <span id="tour-count" class="eyebrow"></span>
+              <h3 id="tour-title"></h3>
+              <p id="tour-copy"></p>
+              <div>
+                <button id="tour-back" class="btn secondary small">Back</button
+                ><button id="tour-next" class="btn primary small">Next</button
+                ><button id="tour-close" class="text-link">Close tour</button>
+              </div>
+            </div>
+            <div class="selection-bar" id="selection-bar">
+              <label
+                >PHYSICAL SYSTEM<select id="systems" disabled>
+                  <option>Loading systems…</option>
+                </select></label
+              ><label
+                >FIELD<select id="channels" disabled>
+                  <option>—</option>
+                </select></label
+              ><label
+                >SAMPLE WINDOW<select id="samples" disabled>
+                  <option>—</option>
+                </select></label
+              ><label
+                >FRAME<select id="time-select" disabled>
+                  <option>—</option>
+                </select></label
+              ><button class="btn primary" id="run" disabled>
+                Run prediction ↗
+              </button>
+            </div>
+            <details class="parametric card" id="parametric" open>
+              <summary>
+                <span
+                  >Instant parameter explorer
+                  <span class="tag">TABLE INTERPOLATION</span></span
+                ><span>⌄</span>
+              </summary>
+              <div class="parametric-body">
+                <div>
+                  <div id="dials"></div>
+                  <button class="btn secondary small" id="predict" disabled>
+                    Estimate outcomes →
+                  </button>
+                  <p class="small muted">
+                    These dials control numeric estimates only. Field prediction
+                    uses the fixed parameters of the selected sample.
+                  </p>
+                </div>
+                <div>
+                  <div class="metrics" id="metrics"></div>
+                  <p class="small muted" id="units-note">
+                    Simulation code units
+                  </p>
+                </div>
+              </div>
+            </details>
+            <div class="dashboard-grid">
+              <div class="dashboard-main">
+                <section class="card" id="current-card">
+                  <div class="card-head">
+                    <h2>Current state <span class="tag">GROUND TRUTH</span></h2>
+                    <span id="field-meta" class="small muted"></span>
+                  </div>
+                  <div class="current-layout">
+                    <div class="stage" id="stage">
+                      <div class="empty" id="stage-empty">
+                        Choose a sample to inspect a real field.
+                      </div>
+                      <div id="panels" class="panels" hidden></div>
+                    </div>
+                    <div class="view-info">
+                      <p class="eyebrow">ABOUT THIS VIEW</p>
+                      <p id="view-description">
+                        Four input frames and one reference next frame from a
+                        real simulation.
+                      </p>
+                      <p class="small muted" id="scale-note"></p>
+                      <div class="view-tools">
+                        <button
+                          class="icon-btn"
+                          id="zoom"
+                          aria-label="Zoom current field"
+                          title="Zoom current field"
+                        >
+                          ⊕</button
+                        ><button
+                          class="icon-btn"
+                          id="fullscreen"
+                          aria-label="Expand current field"
+                          title="Expand current field"
+                        >
+                          ⛶</button
+                        ><button
+                          class="icon-btn"
+                          id="download"
+                          aria-label="Download current field as PNG"
+                          title="Download field"
+                        >
+                          ↓
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="foot mono" id="foot"></div>
+                </section>
+                <section class="card comparison-card" id="comparison-card">
+                  <div class="card-head">
+                    <h2>Prediction comparison</h2>
+                    <span class="tag">LEARNED APPROXIMATION</span>
+                  </div>
+                  <div id="comparison-empty" class="empty">
+                    Run a prediction to compare the next state with ground
+                    truth.
+                  </div>
+                  <div id="comparison" class="comparison" hidden></div>
+                  <div class="quality" id="quality" hidden></div>
+                  <p class="comparison-note small muted">
+                    Errors use full-precision fields and ground truth resampled
+                    to 256 × 256. No acceptance threshold is established.
+                    Display colors are quantized and can clip predictions
+                    outside the reference range.
+                  </p>
+                </section>
+                <section class="card timeline" id="timeline" hidden>
+                  <div class="card-head">
+                    <h2>Time navigation</h2>
+                    <span class="small muted"
+                      >Recorded frames · not a rollout</span
+                    >
+                  </div>
+                  <div class="playback">
+                    <button
+                      class="icon-btn"
+                      id="prev-frame"
+                      aria-label="Previous frame"
+                    >
+                      Ⅰ‹</button
+                    ><button
+                      class="icon-btn"
+                      id="play"
+                      aria-label="Play recorded frames"
+                    >
+                      ▶</button
+                    ><button
+                      class="icon-btn"
+                      id="next-frame"
+                      aria-label="Next frame"
+                    >
+                      ›Ⅰ</button
+                    ><input
+                      id="scrubber"
+                      aria-label="Recorded frame"
+                      type="range"
+                      min="0"
+                      max="4"
+                      value="0"
+                      step="1"
+                    /><label class="small"
+                      >Playback<select
+                        id="fps"
+                        aria-label="Playback frame rate"
+                      >
+                        <option value="1">1 fps</option>
+                        <option value="2">2 fps</option>
+                        <option value="5">5 fps</option>
+                      </select></label
+                    >
+                  </div>
+                  <div class="tl-track" id="tl-track"></div>
+                  <p class="small muted" id="tl-info"></p>
+                </section>
+              </div>
+              <aside class="card history-rail">
+                <div class="card-head">
+                  <h2>Recent runs</h2>
+                  <span>◷</span>
+                </div>
+                <p class="small muted">Saved in this browser</p>
+                <div id="recent-runs"></div>
+                <a class="btn secondary small" href="#history"
+                  >View all runs →</a
+                >
+              </aside>
+            </div>
+          </section>
+          <section id="page-history" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">YOUR EXPLORATIONS</p>
+                <h1>Run history</h1>
+                <p>
+                  Results saved in this browser. Up to 20 runs; no account or
+                  server history.
+                </p>
+              </div>
+              <button id="clear-history" class="btn secondary small">
+                Clear history
+              </button>
+            </div>
+            <div id="history-list" class="history-grid"></div>
+            <div id="history-detail" class="card" hidden></div>
+          </section>
+          <section id="page-datasets" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">THE DATA BEHIND THE MODEL</p>
+                <h1>Three systems. Different dynamics.</h1>
+                <p>
+                  Real 2D simulations from Polymathic AI’s The Well. Six
+                  windows, two per system.
+                </p>
+              </div>
+              <a
+                class="btn secondary small"
+                href="https://huggingface.co/datasets/KrishMalik/deltav-fluid"
+                target="_blank"
+                rel="noopener"
+                >Dataset repository ↗</a
+              >
+            </div>
+            <div id="dataset-cards">
+              <p class="muted">Loading dataset metadata…</p>
+            </div>
+            <div class="prose card">
+              <h2>What a time instance means</h2>
+              <p>
+                Each sample contains five consecutive snapshots from one
+                simulation trajectory. Local frames t₀–t₃ are the model input;
+                t₄ is the next-state reference. Physical times come from the
+                sample metadata, in simulation code units. A local frame number
+                is not physical time.
+              </p>
+              <p>
+                The source start index identifies the first frame in the window.
+                Each catalog entry lists every timestamp and its spacing. The
+                extraction did not retain the original trajectory ID or file
+                path, so these sample IDs are not a complete trajectory catalog.
+              </p>
+              <p>
+                All fields are resampled to 256 × 256 for the model. The viewer
+                preserves the physical domain’s aspect ratio. Playback loops
+                recorded snapshots; longer trajectories and autoregressive
+                prediction are not available.
+              </p>
+            </div>
+          </section>
+          <section id="page-models" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">CURRENT IMPLEMENTATION</p>
+                <h1>The model behind the field.</h1>
+                <p>
+                  One served fluid checkpoint, shared across the three supported
+                  systems.
+                </p>
+              </div>
+            </div>
+            <div class="prose card">
+              <span class="tag">FOURIER NEURAL OPERATOR</span>
+              <h2>Four snapshots in. One learned next state out.</h2>
+              <p>
+                The model receives four fields across four history frames: 16
+                input channels. It produces density, buoyancy or tracer
+                (depending on the system), pressure, and two velocity components
+                on a 256 × 256 grid.
+              </p>
+              <dl class="model-facts">
+                <div>
+                  <dt>Checkpoint</dt>
+                  <dd id="model-epoch">Waiting for service…</dd>
+                </div>
+                <div>
+                  <dt>Spectral modes</dt>
+                  <dd>32 × 32</dd>
+                </div>
+                <div>
+                  <dt>Hidden channels</dt>
+                  <dd>128</dd>
+                </div>
+                <div>
+                  <dt>Serving</dt>
+                  <dd>CPU · one step</dd>
+                </div>
+              </dl>
+              <h3>Why FNO?</h3>
+              <p>
+                Fourier layers learn spatial relationships in the frequency
+                domain, a useful architectural choice for PDE-like fields. This
+                prototype uses a fixed inference grid; resolution-transfer
+                performance is not established here.
+              </p>
+              <h3>A separate fast tier</h3>
+              <p>
+                Numeric parameter estimates use interpolation over precomputed
+                tables. Their accuracy is not measured by the field comparison
+                metrics.
+              </p>
+              <a class="text-link" href="#about"
+                >Research history and limitations →</a
+              >
+            </div>
+          </section>
+          <section id="page-settings" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">MAKE IT YOURS</p>
+                <h1>Settings</h1>
+              </div>
+            </div>
+            <div class="prose card">
+              <h2>Appearance</h2>
+              <p>
+                Keep the original dark palette or use lighter surfaces. Your
+                choice stays in this browser.
+              </p>
+              <button id="settings-theme" class="btn secondary">
+                Switch theme
+              </button>
+              <h2>Local data</h2>
+              <p>
+                The last 20 runs, their metrics, and comparison previews are
+                stored locally. Other browsers do not share this history.
+                Clearing browser storage removes it. Full prediction arrays are
+                not retained.
+              </p>
+              <a class="text-link" href="#history">Manage run history →</a>
+            </div>
+          </section>
+          <section id="page-about" class="page about" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">THE PROJECT, EXPLAINED</p>
+                <h1>A first step toward<br />learned engineering tools.</h1>
+                <p>
+                  What Delta-V does, how to use it, and where the evidence ends.
+                </p>
+              </div>
+              <a class="btn primary" href="#simulator">Try it yourself ↗</a>
+            </div>
+            <nav class="article-nav" aria-label="Explanation sections">
+              <a href="#about" data-anchor="what">Overview</a
+              ><a href="#about" data-anchor="approach">Approach</a
+              ><a href="#about" data-anchor="limitations">Limitations</a
+              ><a href="#about" data-anchor="research">What we tried</a
+              ><a href="#about" data-anchor="walkthrough">Walkthrough</a>
+            </nav>
+            <div class="about-body">
+              <article class="prose">
+                <section id="what">
+                  <p class="eyebrow">01 / WHAT IS DELTA-V?</p>
+                  <h2>
+                    A place to explore learned approximations of physical
+                    systems.
+                  </h2>
+                  <p>
+                    Delta-V serves and visualizes surrogate models for fluid
+                    dynamics. It pairs quick, parameter-based outcome estimates
+                    with neural next-state prediction, then puts the field
+                    prediction beside the original simulation so you can inspect
+                    the agreement.
+                  </p>
+                  <p>
+                    The project began in a software engineering lab. This public
+                    prototype is an invitation to test the interaction,
+                    understand its usefulness, and give feedback. It uses only
+                    2D data from The Well and complements high-fidelity
+                    simulation. Its output is not validated industrial
+                    simulation.
+                  </p>
+                </section>
+                <section id="approach">
+                  <p class="eyebrow">02 / THE APPROACH</p>
+                  <h2>Fast estimates, with a reference you can inspect.</h2>
+                  <p>
+                    The distinction is the workflow: a numeric parameter
+                    explorer and a field-comparison viewer share one interface
+                    across three fluid systems. Open code and identifiable data
+                    make the implementation inspectable. This is a design
+                    choice, not evidence of superior accuracy or speed over
+                    other tools.
+                  </p>
+                  <p>
+                    The parametric tier interpolates outcome tables for flux and
+                    turbulent velocity. The field tier uses a Fourier Neural
+                    Operator (FNO) with per-system preprocessing. Changing an
+                    outcome dial does not generate a new field initial
+                    condition: field prediction uses a selected recorded sample.
+                  </p>
+                  <h3>Current stage</h3>
+                  <p>
+                    An experimental multi-system fluid prototype: three served
+                    systems, one shared field checkpoint, six demonstration
+                    windows, and browser-local history. Our starting point was
+                    the single-system engineering model (SEM). This shared
+                    serving setup is an early step toward a broader fluid model,
+                    but a validated large engineering model (LEM) requires
+                    evidence of generalization that this prototype does not yet provide.
+                  </p>
+                  <p>
+                    The research path is to compare per-system baselines with
+                    joint training, then evaluate generalization to unseen fluid
+                    systems. Those results are not established by this demo.
+                    Cross-domain or 3D generalization is not claimed.
+                  </p>
+                </section>
+                <section id="limitations">
+                  <p class="eyebrow">03 / CURRENT LIMITATIONS</p>
+                  <h2>The comparison is part of the product.</h2>
+                  <ul>
+                    <li>
+                      <strong>Uneven prediction quality.</strong> Inspect
+                      relative L2 and RMSE per channel after each run. Checks of
+                      all six bundled windows with the epoch-59 checkpoint on
+                      11 September 2026 measured roughly 0.3–38.8% relative-L2
+                      error across channels. These examples are not a held-out
+                      benchmark or guarantee. No pass/fail target is established.
+                    </li>
+                    <li>
+                      <strong>Six short windows.</strong> Two examples per
+                      system, drawn from training slices. They demonstrate
+                      behavior, not out-of-sample generalization. Each has four
+                      input snapshots and one reference next state.
+                    </li>
+                    <li>
+                      <strong>One step only.</strong> No autoregressive rollout.
+                      Playback shows recorded frames; it does not evolve the
+                      model.
+                    </li>
+                    <li>
+                      <strong>Fixed model grid.</strong> Fields are resampled to
+                      256 × 256. Images use 8-bit colors; metrics use
+                      full-precision fields before display quantization.
+                    </li>
+                    <li>
+                      <strong>Parameter-estimate evaluation is open.</strong>
+                      Field errors do not validate table interpolation. The
+                      parametric tier needs its own accuracy evaluation.
+                    </li>
+                    <li>
+                      <strong>Prototype hosting and storage.</strong> Startup
+                      can take a minute or two after sleep. History lives in
+                      your browser, without synchronization or saved
+                      full-resolution result arrays.
+                    </li>
+                  </ul>
+                </section>
+                <section id="research">
+                  <p class="eyebrow">04 / WHAT WE HAVE TRIED</p>
+                  <h2>Choices, experiments, and lessons.</h2>
+                  <h3>A common representation for different fluids</h3>
+                  <p>
+                    Density, buoyancy, and tracer map to a shared scalar channel
+                    alongside pressure and x/y velocity. Per-system
+                    normalization and adapters let the same pipeline handle
+                    radiative cooling, convection, and shear mixing.
+                  </p>
+                  <h3>Spectral prediction plus table interpolation</h3>
+                  <p>
+                    FNO was selected as a neural-operator baseline for spatial
+                    fields. A lightweight interpolator handles numeric outcomes
+                    without running the field model. Both are available here so
+                    their different roles stay visible.
+                  </p>
+                  <h3>A checkpoint-selection correction</h3>
+                  <p>
+                    During development, the file labeled “best” retained
+                    epoch-3 weights while later training reached epoch 59 with
+                    lower validation loss (0.0366 → 0.0251). Inference was
+                    compared and the artifact corrected. The live epoch appears
+                    on the Model page. Validation loss is not the same as the
+                    per-field error shown here.
+                  </p>
+                  <h3>An Euler-system research probe</h3>
+                  <p>
+                    The code retains an adapter for
+                    <code>euler_multi_quadrants_openBC</code> but excludes it
+                    from the served fluid family. This was explored as a
+                    generalization probe, rather than a fourth demo system.
+                    A reproducible evaluation with a documented training/test
+                    split remains to be published, so no unseen-system
+                    performance claim is made here.
+                  </p>
+                  <h3>Next questions</h3>
+                  <p>
+                    Which comparisons help people judge a prediction? Where do
+                    errors concentrate? Are more sample windows or longer
+                    rollouts useful? Feedback will guide the next iteration,
+                    alongside broader evaluation and clearer data provenance.
+                  </p>
+                </section>
+                <section id="walkthrough">
+                  <p class="eyebrow">05 / FEATURE WALKTHROUGH</p>
+                  <h2>Your first exploration.</h2>
+                  <ol>
+                    <li>
+                      <strong>Choose a physical system.</strong> Select
+                      cooling-driven turbulence, convection, or shear flow.
+                      Fields, samples, and ranges update together.
+                    </li>
+                    <li>
+                      <strong>Try the instant explorer.</strong> Adjust the
+                      logarithmic sliders and select Estimate outcomes. These
+                      are table-based estimates in simulation code units.
+                    </li>
+                    <li>
+                      <strong>Inspect a sample.</strong> Choose a bundled
+                      window, field, and frame. Each view has a numeric color
+                      scale and preserves the physical aspect ratio.
+                    </li>
+                    <li>
+                      <strong>Run a prediction.</strong> Four history frames
+                      predict the fifth. Compare prediction, reference, and
+                      signed prediction-minus-truth. Timeline selection does not
+                      change this fixed target.
+                    </li>
+                    <li>
+                      <strong>Read the errors.</strong> Relative L2 compares
+                      error magnitude with reference magnitude; lower is better.
+                      RMSE measures typical error magnitude in the field’s
+                      units. Near-zero references can make relative error hard
+                      to interpret.
+                    </li>
+                    <li>
+                      <strong>Inspect and revisit.</strong> Zoom, expand, or
+                      download the current field. History saves metrics and a
+                      comparison preview; reopening the sample and predicting
+                      again makes a fresh run.
+                    </li>
+                    <li>
+                      <strong>Explore the rest.</strong> Datasets explains
+                      domains, parameters, windows, source indices, and times.
+                      Model describes the architecture. Settings controls
+                      appearance. Feedback links open GitHub issues.
+                    </li>
+                  </ol>
+                  <button id="about-tour" class="btn secondary">
+                    Take the in-app walkthrough →
+                  </button>
+                </section>
+                <section>
+                  <h2>Built on open work.</h2>
+                  <p>
+                    <a
+                      href="https://polymathic-ai.org/the_well/"
+                      target="_blank"
+                      rel="noopener"
+                      >Polymathic AI’s The Well ↗</a
+                    ><br /><a
+                      href="https://github.com/krishoncloud/delta-v"
+                      target="_blank"
+                      rel="noopener"
+                      >Delta-V source code ↗</a
+                    ><br /><a
+                      href="https://huggingface.co/datasets/KrishMalik/deltav-fluid"
+                      target="_blank"
+                      rel="noopener"
+                      >Model and dataset artifacts ↗</a
+                    >
+                  </p>
+                  <p>
+                    Created by Krish Malik and Adya Anwesha.
+                    <a
+                      href="https://github.com/krishoncloud/delta-v/issues"
+                      target="_blank"
+                      rel="noopener"
+                      >Share feedback on GitHub ↗</a
+                    >
+                    (GitHub sign-in required).
+                  </p>
+                </section>
+              </article>
+              <aside class="about-aside">
+                <span class="eyebrow">AT A GLANCE</span>
+                <h3>Experimental prototype</h3>
+                <p>
+                  3 fluid systems<br />6 sample windows<br />4 input frames → 1
+                  prediction<br />2D only<br />Simulation code units
+                </p>
+                <a class="text-link" href="#datasets">Meet the datasets →</a>
+              </aside>
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
-  </div>
-</div>
-
-<script src="colormaps.js"></script>
-<script src="app.js"></script>
-</body>
+    <dialog id="field-dialog">
+      <div class="dialog-head">
+        <strong id="dialog-title">Field inspection</strong
+        ><button
+          id="dialog-close"
+          class="icon-btn"
+          aria-label="Close field inspection"
+        >
+          ✕
+        </button>
+      </div>
+      <div id="dialog-field"></div>
+      <p class="small muted">
+        Reference field · simulation code units · original physical aspect ratio
+      </p>
+    </dialog>
+    <script src="colormaps.js"></script>
+    <script src="app.js?v=prototype-1"></script>
+  </body>
 </html>
