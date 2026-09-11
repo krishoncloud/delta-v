@@ -1665,6 +1665,89 @@ dialog > p {
     gap: 9px;
   }
 }
+.quality-pass {
+  color: var(--live);
+}
+.q .s,
+.q .k,
+.comparison-note {
+  font-size: 12px;
+}
+.q .v {
+  font-size: 18px;
+}
+.quality-fail {
+  color: var(--warn);
+}
+.target-result {
+  margin-top: 10px;
+  font-size: 14px;
+}
+.target-note {
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+.skeleton {
+  width: 80%;
+  height: 185px;
+  margin: 18px auto;
+  border-radius: 4px;
+  background: var(--line);
+  animation: skeleton-pulse 1.2s ease-in-out infinite alternate;
+}
+@keyframes skeleton-pulse {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+.evidence-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.evidence-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+.evidence-table caption {
+  text-align: left;
+  padding: 16px;
+  line-height: 1.6;
+  background: var(--surface);
+  max-width: calc(100vw - 28px);
+}
+.evidence-table th,
+.evidence-table td {
+  padding: 12px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+.evidence-table th {
+  font-weight: 500;
+}
+.evidence-table td small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.evidence-table tbody tr:nth-child(4n + 1) {
+  border-top: 2px solid var(--line);
+}
+.evidence-table .mono {
+  white-space: nowrap;
+}
+.evidence-table .target-note {
+  min-width: 120px;
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

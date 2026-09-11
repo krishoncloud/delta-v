@@ -19,23 +19,26 @@ Environment variables (set these in your deploy target — Render/Railway/Fly):
 from __future__ import annotations
 
 import io
+import hashlib
 import json
 import os
 import shutil
 import tempfile
 import threading
 import time
+import uuid
 from contextlib import asynccontextmanager
 from typing import Optional
 
 import numpy as np
 import torch
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from skimage.metrics import structural_similarity
 
 import deltav_core as core
 
@@ -102,7 +105,11 @@ STATE: dict = {
     "checkpoint_epoch": None,
     "phase": "starting",   # startup progress, surfaced by /health
     "samples": {},          # id -> metadata dict (frames loaded lazily from disk)
+    "prediction_cache": {}, # id -> immutable serialized bundle + quality metadata
+    "cache_revision": uuid.uuid4().hex, # invalidates browser results after any restart
 }
+PREDICTION_LOCK = threading.Lock()
+PRIMARY_REL_L2_TARGET = 0.15  # Self-imposed v1 target; strict <, not <=.
 
 
 def _pull_artifacts():
@@ -178,7 +185,20 @@ def _load_everything():
             except FileNotFoundError as e:
                 print(f"[startup] WARNING: {e}")
 
-        STATE["model"] = model  # set last: model_loaded=True means everything is ready
+        STATE["phase"] = "precomputing predictions"
+        for sample_id, meta in STATE["samples"].items():
+            if meta["system"] not in STATE["stats_by"]:
+                print(f"[startup] SKIP precompute {sample_id}: missing normalization stats")
+                continue
+            try:
+                STATE["prediction_cache"][sample_id] = _build_prediction(sample_id, model)
+                print(f"[startup] precomputed prediction for {sample_id}")
+            except Exception as e:
+                # A failed window may be retried on demand; do not take other systems down.
+                print(f"[startup] WARNING: failed to precompute {sample_id}: {e}")
+
+        # Publish last: existing clients use model_loaded as their readiness gate.
+        STATE["model"] = model
         STATE["phase"] = "ready"
     except Exception as e:  # surfaced via /health rather than killing the server
         STATE["phase"] = f"error: {type(e).__name__}: {e}"
@@ -268,11 +288,18 @@ def health():
         "checkpoint_epoch": STATE["checkpoint_epoch"],
         "systems_with_stats": list(STATE["stats_by"].keys()),
         "systems_with_parametric_tier": list(STATE["predictors"].keys()),
+        "prediction_cache_count": len(STATE["prediction_cache"]),
+        "sample_count": len(STATE["samples"]),
+        "cache_revision": STATE["cache_revision"],
     }
 
 
 @app.get("/systems", response_model=list[SystemInfo])
-def list_systems():
+def list_systems(response: Response):
+    # Never cache a partial/empty catalog while startup is still in progress.
+    if STATE["model"] is None:
+        raise HTTPException(503, "model not ready", headers={"Cache-Control": "no-store"})
+    response.headers["Cache-Control"] = "public, max-age=300"
     out = []
     for name, predictor in STATE["predictors"].items():
         meta = SYSTEM_META[name]
@@ -294,7 +321,8 @@ def list_systems():
 
 
 @app.get("/samples", response_model=list[SampleInfo])
-def list_samples():
+def list_samples(response: Response):
+    response.headers["Cache-Control"] = "public, max-age=300"
     return [SampleInfo(**s) for s in STATE["samples"].values()]
 
 
@@ -347,47 +375,113 @@ def get_sample(sample_id: str):
     return _npy_response(q, {"X-Scales": json.dumps(scales), "Cache-Control": "public, max-age=86400"})
 
 
-@app.get("/samples/{sample_id}/predict")
-def predict_sample(sample_id: str):
-    """Runs the FNO on the sample's history and returns a display bundle:
-    uint8 .npy (2, C, 256, 256) = [prediction, prediction − truth], where the
-    prediction uses the sample's X-Scales and the error uses X-Error-Scales
-    (symmetric ±m per channel). X-Quality carries full-precision per-channel
-    relative L2 and RMSE against the truth frame resampled exactly as the
-    training target was; X-Inference-Seconds is the forward-pass wall time."""
-    if STATE["model"] is None:
-        raise HTTPException(503, f"model not ready ({STATE['phase']})")
-    meta = STATE["samples"].get(sample_id)
-    if meta is None:
-        raise HTTPException(404, f"unknown sample '{sample_id}'")
+def _quality_metrics(pred: np.ndarray, truth: np.ndarray) -> dict:
+    """Metrics are computed before quantization, never from display pixels."""
+    err = pred - truth
+    quality = {}
+    for c, canon in enumerate(core.CANONICAL):
+        se = float((err[c] ** 2).sum())
+        st = float((truth[c] ** 2).sum())
+        rel_l2 = (se / st) ** 0.5 if st > 0 else None
+        data_range = float(truth[c].max() - truth[c].min())
+        ssim = float(structural_similarity(truth[c], pred[c], data_range=data_range)) if data_range > 0 else None
+        threshold = PRIMARY_REL_L2_TARGET if canon in ("scalar", "pressure") else None
+        passes = rel_l2 < threshold if threshold is not None and rel_l2 is not None else None
+        note = ("Directional structure only — no quantitative target for this release."
+                if threshold is None else
+                "Relative L2 is undefined for a zero reference field." if rel_l2 is None else None)
+        quality[canon] = {
+            "rel_l2": rel_l2, "rmse": (se / err[c].size) ** 0.5,
+            "ssim": ssim, "threshold": threshold, "passes": passes, "note": note,
+        }
+    return quality
+
+
+def _build_prediction(sample_id: str, model) -> dict:
+    """One shared computation path for startup precomputation and cache misses."""
+    meta = STATE["samples"][sample_id]
     system = meta["system"]
+    if system not in STATE["stats_by"]:
+        raise HTTPException(503, "normalization statistics are not ready")
     arr = _load_sample(sample_id)
     frames = [arr[i].astype(np.float32) for i in range(core.N_HISTORY)]
 
     t0 = time.perf_counter()
-    pred = core.run_fno_inference(STATE["model"], frames, system, STATE["stats_by"][system], device=DEVICE)
+    pred = core.run_fno_inference(model, frames, system, STATE["stats_by"][system], device=DEVICE)
     dt = time.perf_counter() - t0
 
     truth_c, _ = core.build_canonical(arr[core.N_HISTORY], system)
     truth = core.resample(torch.tensor(truth_c)).numpy()          # (C, 256, 256), as in training
     err = pred - truth
-    quality = {}
-    for c, canon in enumerate(core.CANONICAL):
-        se = float((err[c] ** 2).sum()); st = float((truth[c] ** 2).sum())
-        quality[canon] = {"rel_l2": (se / st) ** 0.5 if st > 0 else None,
-                          "rmse": (se / err[c].size) ** 0.5}
+    quality = _quality_metrics(pred, truth)
 
     scales = _display_scales(arr)
     err_scales = [float(np.abs(err[c]).max()) for c in range(err.shape[0])]
     q_pred = np.stack([_quantize(pred[c], scales[c]) for c in range(pred.shape[0])])
     q_err = np.stack([_quantize(err[c], {"lo": -m, "hi": m, "log": False}) for c, m in enumerate(err_scales)])
-    return _npy_response(np.stack([q_pred, q_err]), {
+    response = _npy_response(np.stack([q_pred, q_err]), {
         "X-Scales": json.dumps(scales),
         "X-Error-Scales": json.dumps(err_scales),
         "X-Quality": json.dumps(quality),
         "X-Inference-Seconds": f"{dt:.2f}",
         "X-Checkpoint-Epoch": str(STATE["checkpoint_epoch"]),
+        "Cache-Control": "public, max-age=3600",
+        "X-Cache-Revision": STATE["cache_revision"],
     })
+    return {"body": response.body, "headers": {
+        **dict(response.headers),
+        "ETag": '"' + hashlib.sha256(response.body + json.dumps(quality).encode()).hexdigest() + '"',
+    }, "quality": quality}
+
+
+@app.get("/samples/{sample_id}/predict")
+def predict_sample(sample_id: str, request: Request):
+    """Serve a cached uint8 (2,4,256,256) bundle; compute once on a cache miss.
+
+    X-Inference-Seconds is the original model forward-pass time, NOT request
+    latency. X-Prediction-Cache distinguishes a cache hit from live computation.
+    """
+    t0 = time.perf_counter()
+    if STATE["model"] is None:
+        raise HTTPException(503, "model not ready", headers={"Cache-Control": "no-store"})
+    if sample_id not in STATE["samples"]:
+        raise HTTPException(404, "unknown sample")
+    revision = request.query_params.get("revision")
+    if revision is not None and revision != STATE["cache_revision"]:
+        raise HTTPException(409, "model revision changed; reload metadata", headers={"Cache-Control": "no-store"})
+    cached = STATE["prediction_cache"].get(sample_id)
+    source = "HIT"
+    if cached is None:
+        with PREDICTION_LOCK:
+            cached = STATE["prediction_cache"].get(sample_id)
+            if cached is None:
+                cached = _build_prediction(sample_id, STATE["model"])
+                STATE["prediction_cache"][sample_id] = cached
+                source = "MISS"
+    headers = {**cached["headers"], "X-Prediction-Cache": source,
+               "X-Response-Seconds": f"{time.perf_counter() - t0:.6f}"}
+    if request.headers.get("if-none-match") == headers["ETag"]:
+        headers.pop("content-length", None)
+        return Response(status_code=304, headers=headers)
+    return Response(content=cached["body"], media_type="application/octet-stream", headers=headers)
+
+
+@app.get("/quality")
+def quality_catalog(response: Response):
+    """Small evidence catalog from the same cache; no six-image download needed."""
+    if STATE["model"] is None:
+        raise HTTPException(503, "model not ready", headers={"Cache-Control": "no-store"})
+    response.headers["Cache-Control"] = "public, max-age=300"
+    return {
+        "checkpoint_epoch": STATE["checkpoint_epoch"],
+        "cache_revision": STATE["cache_revision"],
+        "scope": "Six bundled windows from training slices; not a held-out benchmark.",
+        "target_policy": "Self-imposed v1: scalar and pressure relative L2 < 0.15; velocity has no quantitative target.",
+        "samples": [{
+            "id": sid, "system": meta["system"],
+            "quality": STATE["prediction_cache"].get(sid, {}).get("quality"),
+        } for sid, meta in STATE["samples"].items()],
+    }
 
 
 @app.post("/predict/parametric", response_model=ParametricResponse)

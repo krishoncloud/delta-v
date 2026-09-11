@@ -25,7 +25,77 @@ const S = {
   running: false,
   loadVersion: 0,
   paramVersion: 0,
+  cacheRevision: null,
+  resultSource: null,
+  retrievalMs: null,
 };
+let fieldAbortController = null,
+  sampleAbortController = null,
+  parametricController = null,
+  parametricDebounce = null;
+const predictionMemory = new Map();
+const PREDICTION_KEY = "deltav-predictions-v2";
+function predictionKey(sampleId) {
+  return S.cacheRevision + ":" + sampleId;
+}
+function cachedPrediction(key) {
+  let entry = predictionMemory.get(key);
+  if (!entry) {
+    try {
+      entry = JSON.parse(sessionStorage.getItem(PREDICTION_KEY) || "[]").find(
+        (e) => e.key === key,
+      );
+      if (entry)
+        entry.data = Uint8Array.from(atob(entry.data), (c) => c.charCodeAt(0));
+    } catch {
+      return null;
+    }
+  }
+  if (
+    !entry ||
+    Date.now() - entry.savedAt >= 3600000 ||
+    entry.data.length !== 524288
+  )
+    return null;
+  predictionMemory.set(key, entry);
+  return entry;
+}
+function cachePrediction(key, result) {
+  const entry = { ...result, key, savedAt: Date.now() };
+  predictionMemory.set(key, entry);
+  try {
+    let binary = "";
+    for (let i = 0; i < entry.data.length; i += 8192)
+      binary += String.fromCharCode(...entry.data.subarray(i, i + 8192));
+    const old = JSON.parse(sessionStorage.getItem(PREDICTION_KEY) || "[]");
+    sessionStorage.setItem(
+      PREDICTION_KEY,
+      JSON.stringify([
+        { ...entry, data: btoa(binary) },
+        ...old
+          .filter((e) => e.key !== key && Date.now() - e.savedAt < 3600000)
+          .slice(0, 2),
+      ]),
+    );
+  } catch {
+    /* Storage is optional; the in-memory cache remains usable. */
+  }
+}
+function apiErrorMessage(status) {
+  if (status === 503)
+    return "The model is still warming up. Check the status indicator and try again in a moment.";
+  if (status === 404) return "That sample or system is not available.";
+  if (status === 422)
+    return "One or more inputs are outside the supported range. Try values closer to a bundled sample.";
+  if (status === 409)
+    return "The model has been updated. Reload this page to use the latest results.";
+  return "The service could not complete this request. Check your connection and try again.";
+}
+function friendlyError(e) {
+  if (e.name === "TimeoutError")
+    return "This request took too long. Check your connection and try again.";
+  return e.userMessage || apiErrorMessage(0);
+}
 const HISTORY_KEY = "deltav-runs-v1";
 let page = "home",
   playback = null,
@@ -119,18 +189,13 @@ function route() {
 async function request(url, options = {}) {
   const response = await fetch(url, {
     ...options,
-    signal: AbortSignal.timeout(120000),
+    signal: options.signal
+      ? AbortSignal.any([options.signal, AbortSignal.timeout(120000)])
+      : AbortSignal.timeout(120000),
   });
   if (!response.ok) {
-    const e = new Error(
-      response.status === 503
-        ? "The model is still warming up. Please try again shortly."
-        : response.status === 422
-          ? "That parameter combination is not supported by the table. Try values closer to a bundled sample."
-          : response.status === 404
-            ? "This sample or system is unavailable. Choose another one."
-            : "The service could not complete this request. Please try again.",
-    );
+    const e = new Error("API request failed");
+    e.userMessage = apiErrorMessage(response.status);
     throw e;
   }
   return response;
@@ -273,7 +338,10 @@ function renderDials() {
       S.dialPos[sys.system][d] = Number(e.target.value) / 1000;
       el.querySelector(".val").textContent = fmtSci(dialValue(sys, d));
       S.paramVersion++;
+      parametricController?.abort();
+      clearTimeout(parametricDebounce);
       clearMetrics();
+      parametricDebounce = setTimeout(predict, 150);
     };
     $("dials").append(el);
   });
@@ -344,6 +412,10 @@ function syncControls() {
 async function selectSystem(sys, sampleId) {
   if (!sys) return;
   stopPlayback();
+  clearTimeout(parametricDebounce);
+  parametricController?.abort();
+  fieldAbortController?.abort();
+  sampleAbortController?.abort();
   S.loadVersion++;
   S.paramVersion++;
   S.active = sys;
@@ -357,6 +429,7 @@ async function selectSystem(sys, sampleId) {
   S.tIdx = 0;
   renderDials();
   clearMetrics();
+  $("predict").textContent = "Estimate outcomes →";
   syncControls();
   renderStage();
   renderTimeline();
@@ -367,7 +440,11 @@ async function selectSystem(sys, sampleId) {
   if (sample) await loadSample(sample);
 }
 async function loadSample(sample) {
+  if (!sample) return;
   stopPlayback();
+  fieldAbortController?.abort();
+  sampleAbortController?.abort();
+  const controller = (sampleAbortController = new AbortController());
   const version = ++S.loadVersion;
   S.sample = sample;
   S.frames = null;
@@ -383,7 +460,9 @@ async function loadSample(sample) {
   renderStage();
   renderTimeline();
   try {
-    const r = await request("/samples/" + encodeURIComponent(sample.id));
+    const r = await request("/samples/" + encodeURIComponent(sample.id), {
+      signal: controller.signal,
+    });
     const parsed = parseNpy(await r.arrayBuffer());
     if (version !== S.loadVersion) return;
     if (
@@ -398,14 +477,8 @@ async function loadSample(sample) {
     S.shape = parsed.shape;
     S.scales = JSON.parse(r.headers.get("X-Scales"));
   } catch (e) {
-    if (version === S.loadVersion)
-      notice(
-        e.name === "TimeoutError"
-          ? "The sample took too long to load. Select it again to retry."
-          : e.message === "Failed to fetch"
-            ? "Connection lost. Check your connection and select the sample again."
-            : e.message,
-      );
+    if (version === S.loadVersion && e.name !== "AbortError")
+      notice(friendlyError(e));
   } finally {
     if (version === S.loadVersion) {
       S.loading = false;
@@ -419,9 +492,10 @@ function renderStage() {
   const has = !!S.frames;
   $("stage-empty").hidden = has;
   $("panels").hidden = !has;
-  $("comparison").hidden = !S.pred;
-  $("comparison-empty").hidden = !!S.pred;
-  $("quality").hidden = !S.quality;
+  $("comparison").hidden = !S.pred && !S.running;
+  $("comparison-empty").hidden = !!S.pred || S.running;
+  $("comparison").setAttribute("aria-busy", String(S.running));
+  $("quality").hidden = !S.quality || S.running;
   if (!has) {
     $("stage-empty").textContent = S.loading
       ? "Loading real simulation frames…"
@@ -469,7 +543,22 @@ function renderStage() {
     "] · y ∈ [" +
     sys.domain.y.join(", ") +
     "] · y up · code units";
-  if (S.pred) {
+  if (S.running) {
+    $("comparison").innerHTML = [
+      "Predicted",
+      "Ground truth",
+      "Signed difference",
+    ]
+      .map(
+        (label) =>
+          '<div class="panel"><div class="ptitle">' +
+          label +
+          '</div><div class="skeleton" role="status" aria-label="Loading ' +
+          label.toLowerCase() +
+          '"></div></div>',
+      )
+      .join("");
+  } else if (S.pred) {
     const mobile = window.innerWidth <= 600;
     const cw = $("comparison-card").clientWidth;
     const size = panelSize(
@@ -517,6 +606,22 @@ function renderStage() {
   renderQuality();
   selectionInfo();
 }
+function qualityTarget(q) {
+  const result =
+    q.passes === true
+      ? '<span class="quality-pass">✓ Meets target</span>'
+      : q.passes === false
+        ? '<span class="quality-fail">△ Outside target</span>'
+        : '<span class="muted">— No pass/fail</span>';
+  return (
+    result +
+    '<div class="target-note">' +
+    (Number.isFinite(q.threshold)
+      ? "Target: &lt;" + pct(q.threshold).replace(".0%", "%") + " rel. L2"
+      : escapeHtml(q.note || "Target unavailable in this saved result.")) +
+    "</div>"
+  );
+}
 function qualityHtml(quality, channels, selected = -1) {
   return channels
     .map((name, c) => {
@@ -530,13 +635,17 @@ function qualityHtml(quality, channels, selected = -1) {
         pct(q.rel_l2) +
         ' <span class="s">rel. L2</span></div><div class="s mono">RMSE ' +
         fmtSci(q.rmse) +
+        '</div><div class="s mono">SSIM ' +
+        (Number.isFinite(q.ssim) ? q.ssim.toFixed(3) : "—") +
+        '</div><div class="target-result">' +
+        qualityTarget(q) +
         "</div></div>"
       );
     })
     .join("");
 }
 function renderQuality() {
-  $("quality").hidden = !S.quality;
+  $("quality").hidden = !S.quality || S.running;
   if (S.quality)
     $("quality").innerHTML = qualityHtml(S.quality, S.active.channels, S.ch);
 }
@@ -595,7 +704,10 @@ function renderTimeline() {
     S.sample.t_index +
     ". " +
     (S.runTime !== null
-      ? "Last inference: " +
+      ? S.resultSource +
+        " · retrieved in " +
+        Math.round(S.retrievalMs) +
+        " ms. Original model computation: " +
         S.runTime.toFixed(2) +
         " s (model computation only)."
       : "Times are simulation code units.");
@@ -603,6 +715,9 @@ function renderTimeline() {
 async function predict() {
   const sys = S.active;
   if (!sys) return;
+  clearTimeout(parametricDebounce);
+  parametricController?.abort();
+  const controller = (parametricController = new AbortController());
   const version = ++S.paramVersion;
   const dials = Object.fromEntries(
     sys.dials.map((d) => [d, dialValue(sys, d)]),
@@ -615,6 +730,7 @@ async function predict() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ system: sys.system, dials }),
+      signal: controller.signal,
     });
     const j = await r.json();
     if (version !== S.paramVersion || S.active !== sys) return;
@@ -629,43 +745,79 @@ async function predict() {
       metrics: j.metrics,
     });
   } catch (e) {
-    if (version === S.paramVersion)
-      notice(
-        e.message === "Failed to fetch"
-          ? "Connection lost. Please try the estimate again."
-          : e.message,
-      );
+    if (version === S.paramVersion && e.name !== "AbortError")
+      notice(friendlyError(e));
   } finally {
-    $("predict").disabled = !S.active;
-    $("predict").textContent = "Estimate outcomes →";
+    if (version === S.paramVersion) {
+      $("predict").disabled = !S.active;
+      $("predict").textContent = "Estimate outcomes →";
+    }
   }
 }
 async function runField() {
-  if (!S.frames || S.running || S.loading) return;
+  if (!S.frames || S.loading) return;
   stopPlayback();
+  fieldAbortController?.abort();
+  const controller = (fieldAbortController = new AbortController());
   const version = S.loadVersion,
     sample = S.sample,
     sys = S.active;
+  const isCurrent = () =>
+    version === S.loadVersion &&
+    controller === fieldAbortController &&
+    !controller.signal.aborted;
+  const started = performance.now();
   S.running = true;
   notice("");
   syncControls();
+  renderStage();
   try {
-    const r = await request(
-      "/samples/" + encodeURIComponent(sample.id) + "/predict",
-      { cache: "no-store" },
-    );
-    const parsed = parseNpy(await r.arrayBuffer());
-    if (version !== S.loadVersion) return;
-    if (parsed.shape.join(",") !== "2,4,256,256")
-      throw new Error(
-        "The prediction format could not be displayed. Please try again.",
+    const key = predictionKey(sample.id);
+    let result = cachedPrediction(key);
+    let source = "Session-cached prediction";
+    if (!result) {
+      const r = await request(
+        "/samples/" +
+          encodeURIComponent(sample.id) +
+          "/predict?revision=" +
+          encodeURIComponent(S.cacheRevision),
+        { signal: controller.signal },
       );
+      const parsed = parseNpy(await r.arrayBuffer());
+      if (!isCurrent()) return;
+      if (
+        parsed.shape.join(",") !== "2,4,256,256" ||
+        parsed.data.length !== 524288
+      )
+        throw new Error("Unexpected prediction format");
+      if (r.headers.get("X-Cache-Revision") !== S.cacheRevision) {
+        const e = new Error("Outdated model");
+        e.userMessage = apiErrorMessage(409);
+        throw e;
+      }
+      result = {
+        data: parsed.data,
+        errScales: JSON.parse(r.headers.get("X-Error-Scales")),
+        quality: JSON.parse(r.headers.get("X-Quality")),
+        seconds: Number(r.headers.get("X-Inference-Seconds")),
+        epoch: r.headers.get("X-Checkpoint-Epoch"),
+      };
+      source =
+        r.headers.get("X-Prediction-Cache") === "HIT"
+          ? "Server/browser-cached prediction"
+          : "Computed prediction";
+      cachePrediction(key, result);
+    }
+    if (!isCurrent()) return;
     const n = 4 * 256 * 256;
-    S.pred = parsed.data.subarray(0, n);
-    S.err = parsed.data.subarray(n, 2 * n);
-    S.errScales = JSON.parse(r.headers.get("X-Error-Scales"));
-    S.quality = JSON.parse(r.headers.get("X-Quality"));
-    S.runTime = Number(r.headers.get("X-Inference-Seconds"));
+    S.pred = result.data.subarray(0, n);
+    S.err = result.data.subarray(n, 2 * n);
+    S.errScales = result.errScales;
+    S.quality = result.quality;
+    S.runTime = result.seconds;
+    S.resultSource = source;
+    S.retrievalMs = performance.now() - started;
+    S.running = false;
     S.tIdx = 4;
     renderTimeline();
     renderStage();
@@ -679,20 +831,17 @@ async function runField() {
       quality: S.quality,
       dials: sample.dials,
       seconds: S.runTime,
-      epoch: r.headers.get("X-Checkpoint-Epoch"),
+      epoch: result.epoch,
+      source,
       preview: comparisonPreview(),
     });
   } catch (e) {
-    if (version === S.loadVersion)
-      notice(
-        e.message === "Failed to fetch"
-          ? "Connection lost during prediction. Your sample is still selected; try again."
-          : e.message,
-      );
+    if (isCurrent() && e.name !== "AbortError") notice(friendlyError(e));
   } finally {
-    if (version === S.loadVersion) {
+    if (isCurrent()) {
       S.running = false;
       syncControls();
+      renderStage();
     }
   }
 }
@@ -1041,7 +1190,7 @@ const TOUR = [
   [
     "comparison-card",
     "Predict and inspect the difference",
-    "Run prediction to see the learned next frame, reference, and signed error. Read the measured relative L2 and RMSE for every field. There is no pass/fail target.",
+    "Show the learned next frame, reference, and signed error. Read relative L2, RMSE and SSIM. Scalar and pressure have a self-imposed target below 15% relative L2; velocities have no quantitative target. Fixed predictions are cached, not recomputed on each click.",
   ],
   [
     "timeline",
@@ -1071,6 +1220,50 @@ function showTour(step) {
   $(id).classList.add("tour-highlight");
   if (id === "parametric") $("parametric").open = true;
 }
+async function loadEvidence() {
+  try {
+    const response = await request(
+      "/quality?revision=" + encodeURIComponent(S.cacheRevision),
+    );
+    const catalog = await response.json();
+    if (catalog.cache_revision !== S.cacheRevision)
+      throw new Error("Stale quality catalog");
+    $("evidence-body").innerHTML = catalog.samples
+      .map((sample) => {
+        const sys = S.systems.find((s) => s.system === sample.system);
+        return CH_CANON.map((channel, c) => {
+          const q = sample.quality?.[channel] || {};
+          return (
+            "<tr><td>" +
+            escapeHtml(sys?.display_name || pretty(sample.system)) +
+            '<small class="mono">' +
+            escapeHtml(sample.id) +
+            '</small></td><th scope="row">' +
+            escapeHtml(pretty(sys?.channels[c] || channel)) +
+            '</th><td class="mono">' +
+            pct(q.rel_l2) +
+            '</td><td class="mono">' +
+            fmtSci(q.rmse) +
+            '</td><td class="mono">' +
+            (Number.isFinite(q.ssim) ? q.ssim.toFixed(3) : "—") +
+            "</td><td>" +
+            qualityTarget(q) +
+            "</td></tr>"
+          );
+        }).join("");
+      })
+      .join("");
+    $("evidence-status").textContent =
+      "Epoch " +
+      catalog.checkpoint_epoch +
+      " · " +
+      catalog.samples.length +
+      " windows · metrics from the live prediction cache.";
+  } catch {
+    $("evidence-status").textContent =
+      "The measured results could not load. Reload the page to retry; no substitute scores are shown.";
+  }
+}
 async function boot() {
   const started = Date.now();
   for (;;) {
@@ -1083,6 +1276,7 @@ async function boot() {
         const health = await response.json();
         if (health.model_loaded) {
           S.epoch = health.checkpoint_epoch;
+          S.cacheRevision = health.cache_revision;
           $("wake").hidden = true;
           $("dot").className = "dot on";
           $("status-text").textContent = "Online · " + health.device;
@@ -1091,7 +1285,9 @@ async function boot() {
         }
         $("wake-phase").textContent = String(health.phase).startsWith("error")
           ? "Model unavailable"
-          : "Loading model";
+          : health.phase === "precomputing predictions"
+            ? "Preparing six predictions"
+            : "Loading model";
         $("wake-title").textContent = String(health.phase).startsWith("error")
           ? "The model could not start"
           : "Waking up the model";
@@ -1100,6 +1296,7 @@ async function boot() {
             "downloading artifacts": 35,
             "loading model": 70,
             "loading tables": 90,
+            "precomputing predictions": 95,
           }[health.phase] || 10) + "%";
       }
     } catch {
@@ -1114,8 +1311,8 @@ async function boot() {
   }
   try {
     const [sysResponse, sampleResponse] = await Promise.all([
-      request("/systems"),
-      request("/samples"),
+      request("/systems?revision=" + encodeURIComponent(S.cacheRevision)),
+      request("/samples?revision=" + encodeURIComponent(S.cacheRevision)),
     ]);
     S.systems = await sysResponse.json();
     S.samples = await sampleResponse.json();
@@ -1136,6 +1333,7 @@ async function boot() {
       )
       .join("");
     renderDatasets();
+    loadEvidence();
     await selectSystem(
       S.systems.find((s) => s.system === (pendingSystem || "shear_flow")) ||
         S.systems[0],
