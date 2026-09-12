@@ -48,7 +48,16 @@ import deltav_core as core
 
 HF_REPO = os.environ.get("HF_REPO", "KrishMalik/deltav-fluid")
 HF_TOKEN = os.environ.get("HF_TOKEN")  # optional if repo is public
+# Pinned so a compromised or accidentally-updated artifact repo cannot change
+# what gets torch.load'ed at startup. This revision holds epoch-59
+# domain_fluid.pt and the four stats files; rollout clips are pinned separately.
+HF_REVISION = os.environ.get("HF_REVISION", "7bf3f989dcfab6d0f43ea482ab8f26ddbdec3752")
 DEVICE = os.environ.get("DEVICE", "cpu")
+# Browser origins allowed to call the API cross-origin. The frontend is served
+# from the same origin and needs none of this; the default only covers local
+# development. Comma-separated.
+ALLOWED_ORIGINS = [o.strip() for o in os.environ.get(
+    "ALLOWED_ORIGINS", "http://localhost:7860,http://127.0.0.1:7860").split(",") if o.strip()]
 ARTIFACT_ROOT = os.environ.get("ARTIFACT_ROOT", tempfile.mkdtemp(prefix="deltav_"))
 CKPT_DIR = os.path.join(ARTIFACT_ROOT, "checkpoints")
 STATS_DIR = os.path.join(ARTIFACT_ROOT, "stats")
@@ -139,14 +148,15 @@ def _pull_artifacts():
     # "_best" is kept only as a fallback if domain_fluid.pt is ever missing.
     snapshot_download(
         repo_id=HF_REPO, repo_type="dataset", local_dir=ARTIFACT_ROOT,
-        token=HF_TOKEN,
+        token=HF_TOKEN, revision=HF_REVISION,
         allow_patterns=["checkpoints/domain_fluid.pt", "checkpoints/parametric_*.npz"],
     )
     final_path = os.path.join(CKPT_DIR, "domain_fluid.pt")
     if not os.path.exists(final_path):
         snapshot_download(
             repo_id=HF_REPO, repo_type="dataset", local_dir=ARTIFACT_ROOT,
-            token=HF_TOKEN, allow_patterns=["checkpoints/domain_fluid_best.pt"],
+            token=HF_TOKEN, revision=HF_REVISION,
+            allow_patterns=["checkpoints/domain_fluid_best.pt"],
         )
     # stats .npz files were saved under the notebook's STATS dir, not pushed
     # to HF by default in the current pipeline. If you push them (recommended:
@@ -156,7 +166,7 @@ def _pull_artifacts():
     try:
         snapshot_download(
             repo_id=HF_REPO, repo_type="dataset", local_dir=ARTIFACT_ROOT,
-            token=HF_TOKEN, allow_patterns=["stats/**"],
+            token=HF_TOKEN, revision=HF_REVISION, allow_patterns=["stats/**"],
         )
     except Exception:
         pass
@@ -256,7 +266,111 @@ async def lifespan(app: FastAPI):
     shutil.rmtree(ARTIFACT_ROOT, ignore_errors=True)
 
 
-app = FastAPI(title="Delta-V Inference API", version="0.1.0", lifespan=lifespan)
+# The API exists to serve the same-origin frontend; it is not a published
+# product, so the interactive OpenAPI pages are disabled.
+app = FastAPI(title="Delta-V Inference API", version="0.1.0", lifespan=lifespan,
+              docs_url=None, redoc_url=None, openapi_url=None)
+
+
+class RateLimiter:
+    """Sliding-window limiter, in-process. Per-client windows plus a global
+    window so a spoofed X-Forwarded-For still cannot buy unlimited CPU."""
+    MAX_KEYS = 5000
+
+    def __init__(self):
+        self._hits: dict[str, list[float]] = {}
+        self._lock = threading.Lock()
+
+    def reset(self):
+        with self._lock:
+            self._hits.clear()
+
+    def hit(self, key: str, limit: int, window: float) -> Optional[int]:
+        """Record a hit; return seconds-to-wait if over limit, else None."""
+        now = time.monotonic()
+        with self._lock:
+            if key not in self._hits and len(self._hits) >= self.MAX_KEYS:
+                stale = [k for k, ts in self._hits.items() if not ts or ts[-1] < now - 3600]
+                for k in stale or list(self._hits)[: self.MAX_KEYS // 10]:
+                    self._hits.pop(k, None)
+            ts = self._hits.setdefault(key, [])
+            cutoff = now - window
+            while ts and ts[0] < cutoff:
+                ts.pop(0)
+            if len(ts) >= limit:
+                return max(1, int(ts[0] + window - now) + 1)
+            ts.append(now)
+            return None
+
+
+RATE_LIMITER = RateLimiter()
+# (per-client limit, per-client window s, global limit, global window s)
+RATE_LIMITS = {
+    "rollout":    (3,  60,  20,  60),
+    "field":      (10, 60,  60,  60),
+    "parametric": (120, 60, 1200, 60),
+    "events":     (60, 60,  3000, 60),
+}
+
+
+def _client_key(request: Request) -> str:
+    # Rightmost X-Forwarded-For entry is the one appended by the trusted
+    # proxy in front of the Space; earlier entries are client-supplied.
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.rsplit(",", 1)[-1].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _rate_limit(request: Request, bucket: str):
+    per_limit, per_window, global_limit, global_window = RATE_LIMITS[bucket]
+    wait = RATE_LIMITER.hit(f"{bucket}:{_client_key(request)}", per_limit, per_window)
+    if wait is None:
+        wait = RATE_LIMITER.hit(f"{bucket}:*", global_limit, global_window)
+    if wait is not None:
+        raise HTTPException(429, "Too many requests; slow down",
+                            headers={"Retry-After": str(wait), "Cache-Control": "no-store"})
+
+
+SECURITY_HEADERS = {
+    "Content-Security-Policy": "; ".join([
+        "default-src 'self'",
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data: blob:",
+        "connect-src 'self'",
+        "frame-ancestors 'self' https://huggingface.co https://*.huggingface.co",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+    ]),
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+}
+
+
+class SecurityHeaders:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+
+        async def send_with_headers(message):
+            if message["type"] == "http.response.start":
+                headers = list(message.get("headers", []))
+                present = {k.lower() for k, _ in headers}
+                for name, value in SECURITY_HEADERS.items():
+                    if name.lower().encode() not in present:
+                        headers.append((name.lower().encode(), value.encode()))
+                message = {**message, "headers": headers}
+            await send(message)
+
+        await self.app(scope, receive, send_with_headers)
 
 
 class BodyLimit:
@@ -267,7 +381,7 @@ class BodyLimit:
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http" or scope.get("method") not in ("POST", "PUT", "PATCH"):
             return await self.app(scope, receive, send)
-        limit = 64 * 1024 * 1024 if scope["path"] == "/predict/rollout" else 24 * 1024 * 1024 if scope["path"] == "/predict/field" else 16384
+        limit = 24 * 1024 * 1024 if scope["path"] == "/predict/field" else 16384
         chunks, size = [], 0
         while True:
             message = await receive()
@@ -285,13 +399,14 @@ class BodyLimit:
 
 
 app.add_middleware(BodyLimit)
+app.add_middleware(SecurityHeaders)
 
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: restrict once frontend domain is known
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "If-None-Match"],
     expose_headers=["X-Scales", "X-Error-Scales", "X-Quality", "X-Inference-Seconds",
                     "X-Checkpoint-Epoch", "X-Canonical-Fields", "X-System", "X-Rollout-Meta"],
 )
@@ -572,9 +687,10 @@ class UsageEvent(BaseModel):
 
 
 @app.post("/events", status_code=204)
-def record_event(payload: UsageEvent):
+def record_event(payload: UsageEvent, request: Request):
     if payload.event not in EVENTS:
         raise HTTPException(422, "unsupported event")
+    _rate_limit(request, "events")
     with ANALYTICS_LOCK:
         ANALYTICS[payload.event] += 1
     return Response(status_code=204)
@@ -608,12 +724,13 @@ def quality_catalog(response: Response):
 
 
 @app.post("/predict/parametric", response_model=ParametricResponse)
-def predict_parametric(req: ParametricRequest):
+def predict_parametric(req: ParametricRequest, request: Request):
     """Fast tier — sub-second, no NN. REQ-4 compliant."""
     if STATE["model"] is None:
         raise HTTPException(503, f"model not ready ({STATE['phase']})")
     if req.system not in STATE["predictors"]:
         raise HTTPException(404, f"no parametric tier loaded for '{req.system}'")
+    _rate_limit(request, "parametric")
     predictor = STATE["predictors"][req.system]
     try:
         result = predictor(**req.dials)
@@ -629,6 +746,7 @@ def predict_parametric(req: ParametricRequest):
 
 @app.post("/predict/field")
 async def predict_field(
+    request: Request,
     system: str = Form(...),
     file: Optional[UploadFile] = File(None),
     sample_id: Optional[str] = Form(None),
@@ -682,6 +800,7 @@ async def predict_field(
         raise HTTPException(422, "provide either `file` (.npy upload) or `sample_id`")
 
     _validate_history(arr, system)
+    _rate_limit(request, "field")
 
     frames = [arr[i].astype(np.float32) for i in range(arr.shape[0])]
     try:
@@ -724,35 +843,29 @@ def _validate_history(arr, system):
 class RolloutRequest(BaseModel):
     model_config = {"extra": "forbid"}
     system: str = Field(max_length=80)
-    sample_id: Optional[str] = Field(default=None, max_length=100)
-    history_frames: Optional[list] = None
+    sample_id: str = Field(max_length=100)
     n_steps: int = Field(ge=1, le=30, strict=True)
     revision: Optional[str] = Field(default=None, max_length=100)
 
 
 @app.post("/predict/rollout")
-async def predict_rollout(req: RolloutRequest):
+async def predict_rollout(req: RolloutRequest, request: Request):
+    """Rollout runs only from the bundled reference clips. Seeding from a
+    caller-supplied array was removed: it was a 64 MiB JSON request and a
+    ~150 MB JSON response that nothing on the site used."""
     if STATE["model"] is None:
         raise HTTPException(503, "model not ready")
     if req.system not in STATE["stats_by"]:
         raise HTTPException(404, "No served checkpoint/statistics for this system")
-    if (req.sample_id is None) == (req.history_frames is None):
-        raise HTTPException(422, "Provide exactly one of sample_id or history_frames")
     if req.revision is not None and req.revision != STATE["cache_revision"]:
         raise HTTPException(409, "Server revision changed; reload the sample")
-    references = None
-    if req.sample_id is not None:
-        meta = STATE["samples"].get(req.sample_id)
-        if meta is None or meta["system"] != req.system:
-            raise HTTPException(422, "Sample does not belong to the selected system")
-        references = _load_sample(req.sample_id)
-        arr = references[:core.N_HISTORY]
-    else:
-        try:
-            arr = np.asarray(req.history_frames, dtype=np.float32)
-        except (ValueError, TypeError, OverflowError):
-            raise HTTPException(422, "Invalid numeric history array")
+    meta = STATE["samples"].get(req.sample_id)
+    if meta is None or meta["system"] != req.system:
+        raise HTTPException(422, "Sample does not belong to the selected system")
+    references = _load_sample(req.sample_id)
+    arr = references[:core.N_HISTORY]
     _validate_history(arr, req.system)
+    _rate_limit(request, "rollout")
     started = time.perf_counter()
     try:
         predicted = await run_in_threadpool(_bounded_inference, core.run_fno_rollout,
@@ -765,7 +878,7 @@ async def predict_rollout(req: RolloutRequest):
     for i, pred in enumerate(predicted):
         frame = core.N_HISTORY + i
         quality = None
-        if references is not None and frame < len(references):
+        if frame < len(references):
             canonical, _ = core.build_canonical(references[frame], req.system)
             if core.DATASETS[req.system].get("derive_velocity"):
                 canonical = core.derive_velocity_inplace(canonical)
@@ -776,9 +889,6 @@ async def predict_rollout(req: RolloutRequest):
         "sample_id": req.sample_id, "cache_revision": STATE["cache_revision"],
         "first_frame": 4, "checkpoint_epoch": STATE["checkpoint_epoch"],
         "inference_seconds": elapsed, "mean_step_seconds": elapsed / req.n_steps, "steps": steps}
-    if req.history_frames is not None:
-        return {"system": req.system, "checkpoint_epoch": STATE["checkpoint_epoch"],
-            "predicted_frames": predicted.tolist(), "canonical_fields": core.CANONICAL, "metadata": metadata}
     buf = io.BytesIO()
     np.save(buf, predicted, allow_pickle=False)
     return Response(buf.getvalue(), media_type="application/octet-stream", headers={

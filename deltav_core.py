@@ -189,7 +189,16 @@ def build_fno(device: str = "cpu"):
 def load_fno_checkpoint(model: "torch.nn.Module", ckpt_path: str, device: str = "cpu"):
     if not os.path.exists(ckpt_path):
         raise FileNotFoundError(f"No checkpoint at {ckpt_path}")
-    ck = torch.load(ckpt_path, map_location=device, weights_only=False)
+    # weights_only=True refuses arbitrary pickled objects, so a tampered
+    # checkpoint cannot execute code at load. The notebook saved plain
+    # tensors/ints/lists, which the safe loader accepts; the fallback exists
+    # only in case an older artifact carries a numpy scalar or similar.
+    try:
+        ck = torch.load(ckpt_path, map_location=device, weights_only=True)
+    except Exception as exc:
+        print(f"[checkpoint] weights_only load refused ({type(exc).__name__}); "
+              f"falling back to full unpickle of pinned artifact")
+        ck = torch.load(ckpt_path, map_location=device, weights_only=False)
     model.load_state_dict(ck["model"])
     model.eval()
     return model, ck.get("epoch")

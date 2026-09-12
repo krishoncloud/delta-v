@@ -1,10 +1,16 @@
 FROM python:3.11-slim
 
-WORKDIR /app
-
 ENV PYTHONUNBUFFERED=1 \
     DEVICE=cpu \
-    HF_REPO=KrishMalik/deltav-fluid
+    HF_REPO=KrishMalik/deltav-fluid \
+    HF_HUB_DISABLE_TELEMETRY=1
+
+# Run as an unprivileged user (uid 1000, as Hugging Face Spaces expects).
+RUN useradd -m -u 1000 app
+ENV HOME=/home/app \
+    PATH=/home/app/.local/bin:$PATH
+
+WORKDIR /app
 
 COPY requirements.txt .
 
@@ -13,9 +19,11 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
     && pip install --no-cache-dir -r requirements.txt
 
-COPY main.py deltav_core.py ./
-COPY static/ ./static/
-COPY samples/ ./samples/
+COPY --chown=app:app main.py deltav_core.py ./
+COPY --chown=app:app static/ ./static/
+COPY --chown=app:app samples/ ./samples/
+
+USER app
 
 EXPOSE 7860
 

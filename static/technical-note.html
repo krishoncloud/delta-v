@@ -38,10 +38,9 @@
         full trajectory sets; this training scale, rather than the
         architecture, is the main limit on current accuracy and rollout
         horizon. The FNO uses 32 × 32 spectral modes and 128 hidden channels.
-        The live epoch is exposed by
-        <a href="/health">/health</a>. Runtime artifact downloads follow the
-        repository’s current revision, so reproduce this note by explicitly
-        pinning the linked revision.
+        The live epoch is shown on the Model page. Runtime artifact downloads
+        are pinned to the linked revision, so the served weights cannot change
+        under the deployment without a code change.
       </p>
       <h2>Inputs, outputs and preprocessing</h2>
       <p>
