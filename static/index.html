@@ -574,6 +574,18 @@
               <p id="rollout-status" role="status">
                 Checking the selected system's rollout capability…
               </p>
+              <div id="rollout-clip-notice" class="launch-explanation" hidden>
+                <strong>This example has ground truth only through f4.</strong>
+                Training windows contain five recorded frames, so generated
+                frames f5 onward cannot be scored here. To see measured error
+                for every step through f10, use this system’s official-test
+                clip (eleven recorded frames).
+                <div class="hero-actions">
+                  <button id="rollout-use-clip" class="btn primary small">
+                    Switch to the f0–f10 test clip →
+                  </button>
+                </div>
+              </div>
               <p id="rollout-reference" class="small muted"></p>
               <div id="rollout-playback" hidden>
                 <div class="rollout-controls">

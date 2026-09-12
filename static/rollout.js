@@ -25,6 +25,12 @@ function rolloutRange(first, last, cap) {
   // To display f7 onward, the model still has to generate f4, f5 and f6.
   return { first, last, n_steps: last - 3 };
 }
+function rolloutClipFor(system) {
+  if (!system) return null;
+  return (S.samples || []).find(
+    (s) => s.system === system.system && s.id.startsWith("rollout-test-") && (s.shape?.[0] ?? 0) > 5,
+  ) || null;
+}
 function rolloutCapability(system) {
   const c = system?.rollout;
   return c?.contract === "deltav-rollout-v1" &&
@@ -65,6 +71,9 @@ function updateRolloutControls() {
       (S.shape[0] - 1) +
       ". Later steps without matching reference data will be labeled “ground truth unavailable”; no error will be invented."
     : "Reference availability is checked from the loaded sample, not assumed from the requested range.";
+  const clip = rolloutClipFor(S.active);
+  const shortReference = S.shape && S.shape[0] - 1 < 10;
+  $("rollout-clip-notice").hidden = !(capability && shortReference && clip && S.sample?.id !== clip.id);
   if (!ROLL.busy && !ROLL.result)
     $("rollout-status").textContent = capability
       ? "Choose a range. Every intermediate prediction from f4 is generated; only the requested range is played. The default is 7 steps. A 30-step CPU request measured about 85 seconds including transfer; slower requests may time out."
@@ -375,6 +384,12 @@ function renderRollout() {
 }
 function initRollout() {
   $("rollout-run").onclick = runRollout;
+  $("rollout-use-clip").onclick = () => {
+    const clip = rolloutClipFor(S.active);
+    if (!clip) return;
+    $("samples").value = clip.id;
+    loadSample(clip);
+  };
   $("rollout-scrubber").oninput = (e) => {
     stopRolloutPlayback();
     ROLL.frame = Number(e.target.value);
