@@ -9,29 +9,27 @@
       content="Explore three fluid systems with fast parameter estimates and neural next-state predictions compared with real simulation data. An experimental Delta-V prototype."
     />
     <meta name="theme-color" content="#0B0A12" />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 5L36 34H4Z' fill='none' stroke='%239B7BFF' stroke-width='3'/%3E%3C/svg%3E"
-    />
+    <link rel="icon" href="logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="app.css?v=prototype-2" />
+    <link rel="stylesheet" href="app.css?v=prototype-3" />
   </head>
   <body>
     <a class="skip" href="#main-content">Skip to content</a>
     <header class="topbar">
       <a href="#home" class="brand" aria-label="Delta-V home"
-        ><svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        ><svg viewBox="0 0 60 40" fill="none" aria-hidden="true">
           <path
-            d="M16 3 29 27H3L16 3Z"
+            d="M4 35 20 5 36 35H4M36 35 56 5"
             stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path d="m16 11 8 16" stroke="currentColor" /></svg
+            stroke-width="3.4"
+            stroke-linejoin="round"
+            stroke-linecap="round"
+          /></svg
         ><span>DELTA-V</span><span class="badge">PROTOTYPE</span></a
       >
       <nav class="topnav" aria-label="Main navigation">
@@ -44,6 +42,15 @@
         >
       </nav>
       <div class="top-actions">
+        <button
+          id="menu-toggle"
+          class="icon-btn"
+          aria-expanded="false"
+          aria-controls="workspace-menu"
+          aria-label="Toggle workspace navigation"
+        >
+          ☰
+        </button>
         <button
           id="theme"
           class="icon-btn"
@@ -68,8 +75,10 @@
               agrees with simulation.
             </p>
             <div class="hero-actions">
-              <a class="btn primary" href="#simulator"
-                >Explore the simulator ↗</a
+              <a
+                class="btn primary"
+                href="#simulator?system=shear_flow&amp;sample=sf_Re1e5_Sc1&amp;field=pressure&amp;example=1"
+                >Explore a 30-second example ↗</a
               ><a class="text-link" href="#about">Understand Delta-V →</a>
             </div>
             <p class="hero-note">
@@ -164,7 +173,17 @@
           </div>
         </section>
         <footer>
-          <span class="brand">△ DELTA-V</span
+          <span class="brand"
+            ><svg viewBox="0 0 60 40" fill="none" aria-hidden="true">
+              <path
+                d="M4 35 20 5 36 35H4M36 35 56 5"
+                stroke="currentColor"
+                stroke-width="3.4"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+              />
+            </svg>
+            DELTA-V</span
           ><span>Built with The Well · Krish Malik &amp; Adya Anwesha</span
           ><a
             href="https://github.com/krishoncloud/delta-v/issues"
@@ -177,7 +196,7 @@
       <div id="workspace" hidden>
         <aside class="sidebar">
           <p class="eyebrow">WORKSPACE</p>
-          <nav aria-label="Workspace navigation">
+          <nav id="workspace-menu" aria-label="Workspace navigation">
             <a href="#simulator" data-nav="simulator"
               ><span>◈</span> Simulator</a
             ><a href="#history" data-nav="history"><span>◷</span> Run history</a
@@ -185,6 +204,7 @@
             ><a href="#models" data-nav="models"><span>◇</span> Model</a
             ><a href="#settings" data-nav="settings"><span>⚙</span> Settings</a
             ><a href="#about" data-nav="about"><span>ⓘ</span> About Delta-V</a>
+            <a href="#feedback" data-nav="feedback"><span>✎</span> Feedback</a>
           </nav>
           <div class="sidebar-info">
             <span class="eyebrow">CURRENT SELECTION</span>
@@ -219,8 +239,8 @@
             <div class="page-heading">
               <div>
                 <p class="eyebrow">FLUID DYNAMICS / EXPERIMENTAL</p>
-                <h1>Simulator</h1>
-                <p>A faster estimate. A closer look at the physics.</p>
+                <h1>Explore fluid predictions</h1>
+                <p>Can four recorded snapshots predict what happens next?</p>
               </div>
               <button class="btn secondary small" id="tour-start">
                 Feature walkthrough →
@@ -248,26 +268,116 @@
                   <option>Loading systems…</option>
                 </select></label
               ><label
-                >FIELD<select id="channels" disabled>
+                >WHAT TO VIEW<select id="channels" disabled>
                   <option>—</option>
                 </select></label
               ><label
-                >SAMPLE WINDOW<select id="samples" disabled>
+                >RECORDED EXAMPLE<select id="samples" disabled>
                   <option>—</option>
                 </select></label
               ><label
-                >FRAME<select id="time-select" disabled>
+                >SNAPSHOT<select id="time-select" disabled>
                   <option>—</option>
                 </select></label
               ><button class="btn primary" id="run" disabled>
-                Run prediction ↗
+                Show prediction ↗
               </button>
             </div>
+            <div class="selection-context">
+              <p id="sample-description"></p>
+              <p id="load-status" role="status">Connecting to the model…</p>
+              <button id="share-result" class="btn secondary small" disabled>
+                Share this comparison ↗
+              </button>
+              <a
+                id="binary-result"
+                class="text-link"
+                hidden
+                download="delta-v-prediction.npy"
+                >Download display arrays (.npy)</a
+              >
+              <div id="share-box" hidden>
+                <label id="share-label" for="share-url">Comparison link</label
+                ><input id="share-url" readonly />
+              </div>
+            </div>
+            <section id="example-guide" class="card launch-guide" hidden>
+              <p class="eyebrow">YOUR FIRST COMPARISON</p>
+              <h2>Will the model match the next snapshot?</h2>
+              <p id="example-progress" role="status"></p>
+              <ol>
+                <li>
+                  <strong>Model prediction:</strong> the next selected field
+                  estimated from four earlier snapshots.
+                </li>
+                <li>
+                  <strong>Recorded simulation:</strong> the actual next snapshot
+                  from the original simulation.
+                </li>
+                <li>
+                  <strong>Where they differ:</strong> signed prediction minus
+                  reference. Read the numeric error alongside the image.
+                </li>
+              </ol>
+              <p>
+                The starting pressure view falls below the release error target.
+                Switch to <strong>Tracer</strong> to see a field that misses it.
+              </p>
+              <a
+                id="example-complete"
+                href="#feedback"
+                class="btn primary small"
+                hidden
+                >Was this comparison useful? →</a
+              >
+            </section>
+            <section id="euler-research" class="card prose launch-guide" hidden>
+              <p class="eyebrow">FOURTH SYSTEM / RESEARCH PLANNED</p>
+              <h2>Euler shock interactions</h2>
+              <p>
+                Compressible fluid regions meet and produce interacting waves.
+                This view tracks the next research question: can a model trained
+                on three other fluid systems learn this fourth system with less
+                new data?
+              </p>
+              <p>
+                <strong>Current status:</strong> the training notebook includes
+                full fine-tuning versus training from scratch, plus a data
+                mapping and normalization artifact. Its exported code contains
+                no saved scores. The learned-adapter arm and a
+                trajectory-separated evaluation are new work; prediction
+                controls are unavailable here.
+              </p>
+              <h3>What the experiment will compare</h3>
+              <ul>
+                <li>
+                  <strong>Learn from scratch:</strong> train all model weights
+                  from a random start.
+                </li>
+                <li>
+                  <strong>Adapt all weights:</strong> start from the shared
+                  checkpoint and fine-tune the complete model.
+                </li>
+                <li>
+                  <strong>Train small adapters:</strong> freeze the shared model
+                  and learn small input/output mappings.
+                </li>
+              </ul>
+              <p>
+                Use the same held-out trajectories for all methods; compare 1%,
+                5%, 10%, 25%, 50% and 100% of training trajectories. Report
+                error by field, training time, and the number of trainable
+                parameters. Planned fractions are not completed experiments.
+              </p>
+              <a class="text-link" href="technical-note.html#evaluation"
+                >Read the evaluation protocol →</a
+              >
+            </section>
             <details class="parametric card" id="parametric" open>
               <summary>
                 <span
-                  >Instant parameter explorer
-                  <span class="tag">TABLE INTERPOLATION</span></span
+                  >Parameter explorer — estimate overall outcomes
+                  <span class="tag">TABLE-BASED ESTIMATE</span></span
                 ><span>⌄</span>
               </summary>
               <div class="parametric-body">
@@ -277,8 +387,9 @@
                     Estimate outcomes →
                   </button>
                   <p class="small muted">
-                    These dials control numeric estimates only. Field prediction
-                    uses the fixed parameters of the selected sample.
+                    Moving these sliders changes the two numeric estimates. It
+                    does not change the recorded example or its predicted image.
+                    Values update after you pause dragging.
                   </p>
                 </div>
                 <div>
@@ -289,7 +400,7 @@
                 </div>
               </div>
             </details>
-            <div class="dashboard-grid">
+            <div class="dashboard-grid" id="field-workspace">
               <div class="dashboard-main">
                 <section class="card" id="current-card">
                   <div class="card-head">
@@ -340,7 +451,7 @@
                 </section>
                 <section class="card comparison-card" id="comparison-card">
                   <div class="card-head">
-                    <h2>Prediction comparison</h2>
+                    <h2>Field comparison — predict the next snapshot</h2>
                     <span class="tag">LEARNED APPROXIMATION</span>
                   </div>
                   <div id="comparison-empty" class="empty">
@@ -349,6 +460,36 @@
                   </div>
                   <div id="comparison" class="comparison" hidden></div>
                   <div class="quality" id="quality" hidden></div>
+                  <p
+                    id="result-explanation"
+                    class="launch-explanation"
+                    hidden
+                  ></p>
+                  <details class="metric-help">
+                    <summary>What are these numbers testing?</summary>
+                    <p>
+                      <strong>Relative error (rel. L2):</strong> total
+                      prediction error compared with the size of the reference
+                      field. Lower is better; it is not a percentage accuracy
+                      score.
+                    </p>
+                    <p>
+                      <strong>Typical error (RMSE):</strong> error magnitude in
+                      this field’s simulation units. Different fields have
+                      different scales.
+                    </p>
+                    <p>
+                      <strong>Structure match (SSIM):</strong> local image
+                      structure similarity. 1 is an exact match; it does not
+                      prove conservation or physical correctness.
+                    </p>
+                    <p>
+                      These scores test one next-step prediction on a training
+                      example. Parameter-slider estimates, unseen trajectories,
+                      long rollouts, and transfer to Euler are not validated by
+                      them.
+                    </p>
+                  </details>
                   <p class="comparison-note small muted">
                     Errors use full-precision fields and ground truth resampled
                     to 256 × 256. Self-imposed v1 target: scalar and pressure
@@ -554,6 +695,31 @@
                 Switch theme
               </button>
               <h2>Local data</h2>
+              <h3>Anonymous usage counts</h3>
+              <label class="analytics-choice"
+                ><input id="analytics-toggle" type="checkbox" checked /> Share
+                anonymous feature-use counts</label
+              >
+              <p>
+                Only fixed event names are sent to this app: page views,
+                selections, completed examples, prediction success/failure and
+                feedback visits. No visitor IDs, field arrays or feedback text
+                are included. Do Not Track and Global Privacy Control are
+                respected. Counts reset when the server restarts; hosting
+                providers may keep their own request logs.
+              </p>
+              <a
+                class="text-link"
+                href="/analytics"
+                target="_blank"
+                rel="noopener"
+                >View aggregate counts →</a
+              >
+              <h3>Loading measurements</h3>
+              <p id="server-startup">Waiting for server startup measurement.</p>
+              <p id="timing-summary">
+                Open an example to measure comparison loading.
+              </p>
               <p>
                 The last 20 runs, their metrics, and comparison previews are
                 stored locally. Other browsers do not share this history.
@@ -563,6 +729,96 @@
               </p>
               <a class="text-link" href="#history">Manage run history →</a>
             </div>
+          </section>
+          <section id="page-feedback" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">HELP SHAPE DELTA-V</p>
+                <h1>What did you discover?</h1>
+                <p>
+                  Your response stays in this page until you choose how to send
+                  it. No sign-in is needed to prepare or download it.
+                </p>
+              </div>
+            </div>
+            <form id="feedback-form" class="card feedback-form">
+              <label
+                >What were you trying to understand?<textarea
+                  name="Goal"
+                  maxlength="1000"
+                  required
+                ></textarea>
+              </label>
+              <label
+                >Was the comparison clear?<select name="Clarity" required>
+                  <option value="">Choose one</option>
+                  <option>Yes</option>
+                  <option>Partly</option>
+                  <option>No</option>
+                </select></label
+              >
+              <label
+                >Which system or feature would make this useful?<textarea
+                  name="Useful next step"
+                  maxlength="1000"
+                ></textarea>
+              </label>
+              <label
+                >What confused you?<textarea
+                  name="Confusion"
+                  maxlength="1000"
+                ></textarea>
+              </label>
+              <label
+                >Would you use this before running a full simulation?<select
+                  name="Would use before simulation"
+                  required
+                >
+                  <option value="">Choose one</option>
+                  <option>Yes</option>
+                  <option>Maybe</option>
+                  <option>No</option>
+                  <option>I do not run simulations</option>
+                </select></label
+              >
+              <button class="btn primary" type="submit">
+                Prepare my feedback →
+              </button>
+            </form>
+            <section id="feedback-options" class="card launch-guide" hidden>
+              <h2>Your feedback is ready to send</h2>
+              <p>
+                Copy or download it to send directly to the project creator.
+                GitHub submission requires an account and creates a public
+                issue. Nothing has been submitted yet.
+              </p>
+              <textarea
+                id="feedback-output"
+                readonly
+                aria-label="Prepared feedback"
+              ></textarea>
+              <div class="hero-actions">
+                <button id="feedback-copy" class="btn secondary">
+                  Copy response</button
+                ><a
+                  id="feedback-download"
+                  class="btn secondary"
+                  download="delta-v-feedback.txt"
+                  >Download response</a
+                ><a
+                  id="feedback-github"
+                  class="text-link"
+                  target="_blank"
+                  rel="noopener"
+                  >Submit on GitHub ↗</a
+                >
+              </div>
+            </section>
+            <p>
+              <a href="usability-test.html"
+                >Try the five-minute usability test →</a
+              >
+            </p>
           </section>
           <section id="page-about" class="page about" hidden>
             <div class="page-heading">
@@ -696,8 +952,7 @@
                       <caption>
                         Measured on 6 bundled samples (2 per system), drawn from
                         model training trajectories. Not a held-out benchmark.
-                        Out-of-sample performance has not been formally
-                        evaluated.
+                        See the separate official-test check below.
                       </caption>
                       <thead>
                         <tr>
@@ -719,6 +974,53 @@
                     reference field’s data range and is undefined for a constant
                     reference. A dash means unavailable or undefined, never zero
                     error.
+                  </p>
+                  <h3>Separate check: six official test windows</h3>
+                  <p>
+                    Two fixed test files per system, one window from trajectory
+                    0 in each. These are outside the supplied notebook's
+                    train-only source path. The notebook's original validation
+                    split mixed windows from shared trajectories; these new
+                    scores do not repair that old split. Checkpoint lineage is
+                    owner-supplied, not cryptographically established. This is a
+                    small check, not a broad generalization benchmark or adapter
+                    experiment.
+                  </p>
+                  <p id="heldout-status" role="status">
+                    Loading the published test check…
+                  </p>
+                  <div
+                    class="evidence-scroll"
+                    role="region"
+                    aria-label="Official test window results"
+                    tabindex="0"
+                  >
+                    <table class="evidence-table">
+                      <caption>
+                        Epoch 59 · fixed official test sources · no training or
+                        tuning on these results
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">System / test window</th>
+                          <th scope="col">Field</th>
+                          <th scope="col">Rel. L2</th>
+                          <th scope="col">RMSE<br />(code units)</th>
+                          <th scope="col">SSIM</th>
+                          <th scope="col">Self-imposed v1 target</th>
+                        </tr>
+                      </thead>
+                      <tbody id="heldout-body"></tbody>
+                    </table>
+                  </div>
+                  <p>
+                    <a href="heldout-results.json"
+                      >Download scores and exact source identifiers →</a
+                    >
+                    ·
+                    <a href="technical-note.html#evaluation"
+                      >Method and caveats →</a
+                    >
                   </p>
                 </section>
                 <section id="research">
@@ -754,12 +1056,12 @@
                     The code retains an adapter for
                     <code>euler_multi_quadrants_openBC</code> but excludes it
                     from the served fluid family. This was explored as a
-                    generalization probe, rather than a fourth demo system. The
-                    frozen-backbone, learned-adapter transfer experiment has not
-                    been run. A documented held-out split and comparison against
-                    training from scratch and full fine-tuning are planned work,
-                    not demonstrated results. No unseen-system performance claim
-                    is made here.
+                    generalization probe. The supplied notebook implements full
+                    fine-tuning versus training from scratch on Euler; saved
+                    results were not included. A frozen-backbone learned-adapter
+                    arm, a trajectory-separated evaluation and comparisons
+                    across data fractions are new work. No adaptation advantage
+                    is claimed.
                   </p>
                   <h3>Next questions</h3>
                   <p>
@@ -826,6 +1128,11 @@
                 <section>
                   <h2>Built on open work.</h2>
                   <p>
+                    <a href="technical-note.html"
+                      >Read the technical note and reproduction steps →</a
+                    >
+                  </p>
+                  <p>
                     <a
                       href="https://polymathic-ai.org/the_well/"
                       target="_blank"
@@ -886,6 +1193,7 @@
       </p>
     </dialog>
     <script src="colormaps.js"></script>
-    <script src="app.js?v=prototype-2"></script>
+    <script src="launch.js?v=prototype-3"></script>
+    <script src="app.js?v=prototype-3"></script>
   </body>
 </html>

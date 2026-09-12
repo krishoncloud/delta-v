@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const source = fs
   .readFileSync(path.join(__dirname, "../static/app.js"), "utf8")
-  .split("setTheme(storageGet(")[0];
+  .split("initLaunch();")[0];
 function harness() {
   const nodes = new Map();
   const element = () => ({
@@ -41,6 +41,8 @@ function harness() {
     Float32Array,
     TextDecoder,
     performance,
+    URLSearchParams,
+    navigator: { doNotTrack: "1" },
     Date,
     btoa,
     atob,
@@ -69,6 +71,7 @@ function harness() {
     },
   });
   const run = (code) => vm.runInContext(code, ctx);
+  run(fs.readFileSync(path.join(__dirname, "../static/launch.js"), "utf8"));
   run(source);
   run(
     'stopPlayback = syncControls = renderStage = renderTimeline = selectionInfo = () => {}; saveRun = r => saved.push(r); comparisonPreview = () => "";',
@@ -81,6 +84,46 @@ function setupField(h) {
     'S.frames = new Uint8Array(1); S.sample = {id:"sample-a",dials:{}}; S.active = {system:"shear_flow",display_name:"Shear",channels:CH_CANON}; S.cacheRevision="rev1";',
   );
 }
+test("shared links encode identifiers, field and frame without arrays", () => {
+  const h = harness();
+  setupField(h);
+  h.ctx.location = { origin: "https://example.test", pathname: "/", hash: "" };
+  h.run("S.ch=2; S.tIdx=3");
+  assert.equal(
+    h.run("shareLink()"),
+    "https://example.test/#simulator?system=shear_flow&sample=sample-a&field=velocity_x&frame=3",
+  );
+  assert.equal(
+    h.run('sharedSelection("#simulator?system=shear_flow&frame=3").frame'),
+    3,
+  );
+  h.run("LAUNCH.research=true");
+  assert.equal(
+    h.run("shareLink()"),
+    "https://example.test/#simulator?system=euler_multi_quadrants_openBC",
+  );
+});
+test("anonymous tracking respects privacy signals and sends only an event name", async () => {
+  const h = harness();
+  const calls = [];
+  h.ctx.fetch = async (url, options) => {
+    calls.push({ url, options });
+  };
+  h.run('track("landing_viewed")');
+  assert.equal(calls.length, 0);
+  h.ctx.navigator.doNotTrack = "0";
+  h.ctx.navigator.globalPrivacyControl = true;
+  h.run('track("landing_viewed")');
+  assert.equal(calls.length, 0);
+  h.ctx.navigator.globalPrivacyControl = false;
+  h.run('track("landing_viewed")');
+  assert.deepEqual(JSON.parse(calls[0].options.body), {
+    event: "landing_viewed",
+  });
+  h.ctx.localStorage.getItem = () => "false";
+  h.run('track("landing_viewed")');
+  assert.equal(calls.length, 1);
+});
 test("quality uses explicit server booleans and includes SSIM without inventing old scores", () => {
   const h = harness();
   assert.match(
@@ -100,7 +143,7 @@ test("quality uses explicit server booleans and includes SSIM without inventing 
   assert.match(h.run("qualityTarget({})"), /unavailable/);
   assert.match(
     h.run('qualityHtml({scalar:{ssim:.8765,rel_l2:.27}},["tracer"])'),
-    /27.0%.*SSIM 0.876/,
+    /27.0%.*SSIM\) 0.876/,
   );
 });
 test("request keeps caller cancellation and maps API errors, not private detail strings", async () => {

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Delta-V — Technical note, prototype 3</title>
+    <link rel="icon" href="logo.svg" />
+    <link rel="stylesheet" href="app.css?v=prototype-3" />
+  </head>
+  <body>
+    <main class="technical-page">
+      <a href="/#about">← Back to Delta-V</a>
+      <p class="eyebrow">TECHNICAL NOTE · 11 SEPTEMBER 2026 · PROTOTYPE 3</p>
+      <h1>What the current prototype tests</h1>
+      <p>
+        Delta-V compares one neural next-step prediction with the recorded next
+        snapshot. It also offers a separate table-based estimator of overall
+        fluid outcomes. The six displayed examples show training-data behavior.
+        A separate six-window official-test check is reported below; broad
+        generalization and a learned-adapter advantage are not established.
+      </p>
+      <h2>Model and artifacts</h2>
+      <p>
+        The served model is <code>checkpoints/domain_fluid.pt</code>, epoch 59,
+        in
+        <a
+          href="https://huggingface.co/datasets/KrishMalik/deltav-fluid/tree/7bf3f989dcfab6d0f43ea482ab8f26ddbdec3752"
+          >artifact revision 7bf3f989dcfab6d0f43ea482ab8f26ddbdec3752</a
+        >. The checkpoint was trained across turbulent radiative layer 2D,
+        Rayleigh–Bénard convection and shear flow. The FNO uses 32 × 32 spectral
+        modes and 128 hidden channels. The live epoch is exposed by
+        <a href="/health">/health</a>. Runtime artifact downloads follow the
+        repository’s current revision, so reproduce this note by explicitly
+        pinning the linked revision.
+      </p>
+      <h2>Inputs, outputs and preprocessing</h2>
+      <p>
+        Four consecutive snapshots are mapped to density/buoyancy/tracer (the
+        shared scalar channel), pressure, horizontal velocity and vertical
+        velocity. Per-system means and standard deviations normalize each
+        channel as (x − mean)/(std + 10⁻⁶). Bilinear resampling with
+        align_corners=False produces 256 × 256 fields. The model receives
+        [batch,16,256,256] and produces [batch,4,256,256]. Outputs are
+        denormalized using the same statistics.
+      </p>
+      <p>
+        These are fixed data mappings, not learned adapters. Native grids are
+        128 × 384 for radiative cooling, 512 × 128 for convection and 256 × 512
+        for shear flow. Displays preserve each physical domain’s aspect ratio
+        and use simulation code units.
+      </p>
+      <h2>Measured quantities</h2>
+      <ul>
+        <li>
+          <strong>Relative L2:</strong> ‖prediction − reference‖₂ /
+          ‖reference‖₂. Undefined for a zero-norm reference.
+        </li>
+        <li>
+          <strong>RMSE:</strong> square root of mean squared error, in the
+          field’s code units.
+        </li>
+        <li>
+          <strong>SSIM:</strong> scikit-image structural_similarity with the
+          reference’s maximum minus minimum as data_range and library defaults
+          (7 × 7 window). Undefined for constant reference fields.
+        </li>
+      </ul>
+      <p>
+        All scores use floating-point fields before quantization and a reference
+        resampled to the model grid. The self-imposed v1 policy is strictly
+        relative L2 &lt;15% for scalar and pressure; velocities have no
+        quantitative target. SSIM is an image-structure measure and does not
+        establish physical conservation. See the
+        <a href="/#about">24-row measured results table</a> and
+        <a href="/quality">machine-readable scores</a>.
+      </p>
+      <h2>Data provenance and time</h2>
+      <p>
+        Six bundled windows, two per served system, contain four input snapshots
+        and one next-step reference. They come from training slices.
+        <code>samples/index.json</code> records window IDs, dial values, start
+        indices, times and shapes. These bundled files lack complete original
+        trajectory identifiers and are not used as the new test set. Moving a
+        time control shows recorded snapshots; it is not a model rollout. Moving
+        parameter sliders estimates aggregate outcomes from tables and does not
+        change the field’s initial condition.
+      </p>
+      <h2>Transport, caching and timing</h2>
+      <p>
+        Predictions are computed once during startup and cached. The display
+        endpoints send lossless grayscale PNG atlases of the same quantized
+        8-bit values previously transported in NumPy arrays; the browser
+        reconstructs the channel arrays before applying the established color
+        maps. Full-precision quality scores accompany the images. Binary
+        <code>/samples/{id}</code> and <code>/samples/{id}/predict</code> remain
+        available. <code>POST /predict/field</code> returns floating-point
+        predictions for correctly formatted inputs.
+      </p>
+      <p>
+        The Settings page separates server startup, browser readiness, first
+        comparison including sample load, and repeat cache retrieval. Original
+        model computation is labeled separately. Timing varies by network and
+        hardware; a 200 ms network response is not guaranteed.
+      </p>
+      <h2 id="evaluation">Held-out evaluation and fourth-system protocol</h2>
+      <p>
+        <strong>Notebook audit:</strong> the supplied training export reads only
+        official <code>data/train/</code> files. Its joint-model validation uses
+        a seeded random split of sliding windows, so neighboring windows from
+        one trajectory can appear in both sets. Normalization is estimated
+        before that split. The old validation loss is not trajectory-held-out.
+        New tooling assigns whole trajectories before training and rejects
+        overlap and validation/test data in normalization.
+      </p>
+      <p>
+        <strong>Small official-test check:</strong> six predeclared windows, two
+        source files per system, from pinned official <code>data/test/</code>
+        paths outside that notebook's train-only input. Each uses trajectory 0,
+        four input snapshots and the fifth as reference. The selected starts are
+        40 (radiative), 100 (convection), and 60 (shear). No training or tuning
+        used these results. The checkpoint-to-notebook lineage is
+        owner-supplied, not cryptographically established. This limited check
+        does not replace a new fixed train/validation/test training run.
+        <a href="heldout-results.json"
+          >All scores, source revisions, identifiers and hashes</a
+        >
+        are published, including failed targets. See <a href="/#about">About</a>
+        for the readable table and
+        <a href="https://github.com/krishoncloud/delta-v/tree/main/research"
+          >the audit and evaluation scripts</a
+        >.
+      </p>
+      <p>
+        The evaluation tooling groups all windows from the same source
+        trajectory, rejects overlap between train/validation/test, verifies
+        local file hashes, and requires explicit checkpoint-exposure records
+        before accepting held-out evaluation. Hold the test set fixed, select
+        checkpoints using validation only, and report all four channels by
+        trajectory and system. Test results must not guide tuning.
+      </p>
+      <p>
+        The fourth research system is <code>euler_multi_quadrants_openBC</code>.
+        Its source includes density, energy, pressure and momentum components;
+        the fixed preprocessing derives velocities from momentum/density.
+        Compare scratch training, full fine-tuning and a frozen backbone with
+        learned 1 × 1 input/output projections. Use nested training fractions
+        1%, 5%, 10%, 25%, 50%, 100%, identical splits and validation budgets,
+        and report trainable parameters, wall time and per-channel errors. The
+        supplied notebook excludes Euler from joint training, but includes a
+        scratch-versus-full-fine-tuning experiment on fresh models. Saved scores
+        were not supplied. The new learned-adapter arm has 292 trainable real
+        parameters; the three-arm runner is implemented but has not been run.
+        Target normalization is fitted only on each training fraction,
+        identically for all arms. Complete exposure records remain required for
+        that experiment.
+      </p>
+      <h2>Reproduction</h2>
+      <p>
+        Clone
+        <a href="https://github.com/krishoncloud/delta-v">the code repository</a
+        >, install its requirements plus CPU PyTorch, and start:
+      </p>
+      <pre>
+uvicorn main:app --host 127.0.0.1 --port 7860
+python -m pytest -q tests
+node --test tests/frontend.test.cjs
+python research/evaluate.py --help
+python research/experiment.py --help</pre
+      >
+      <p>
+        Runtime downloads are restricted to checkpoints and statistics. Never
+        download the 92 GB <code>slices/</code> directory. Research tools use
+        explicitly prepared local windows and require a provenance manifest. The
+        separate <code>research/source_probe.py</code> reproduces the small test
+        check using exact 256 KB HTTP ranges with a 96 MB limit per official
+        source file; it refuses full-file responses and never accesses
+        <code>slices/</code>.
+      </p>
+      <h2>Anonymous feedback and usage</h2>
+      <p>
+        The feedback form creates a response locally for copying/downloading or
+        explicit submission as a public GitHub issue. Event tracking stores only
+        aggregate counts of fixed event names, with no user/session identifiers
+        or arrays; it respects browser privacy signals and the Settings opt-out.
+        Counts are public, can include automated traffic, and reset on restart.
+        They cannot measure unique users or a person-level funnel. The host may
+        independently retain access logs.
+      </p>
+    </main>
+  </body>
+</html>

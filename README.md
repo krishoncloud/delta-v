@@ -92,3 +92,42 @@ as new inference. Model computation is labeled separately in the interface.
 Keep the Space's Docker configuration, samples, and model artifacts unchanged.
 Never download `slices/`; runtime artifact pulls stay scoped to checkpoints
 and normalization statistics.
+
+## Prototype 3 launch iteration
+
+- Prepared-example CTA, automatic sample comparisons, loading progress, friendly
+  system/sample/field labels, result explanations and shareable selections.
+- Lossless channel-planar PNG display transport, retaining binary NumPy endpoints
+  and full-precision metrics. A native shear sample is 457,789 bytes as PNG versus
+  1,568,710 bytes as gzip NumPy (about 71% smaller). This is payload size, not a
+  promise of network latency. Startup duration is reported separately by `/health`.
+- Mobile navigation drawer, fixed mobile prediction action, original dark/light
+  palette and a new shared-stroke Delta-V logo based on the supplied shape.
+- In-app five-question feedback preparation (copy/download/public GitHub issue),
+  a 5–10 participant [usability test kit](static/usability-test.html), and anonymous
+  aggregate `/events` + `/analytics`. Counts reset on restart, include automated
+  traffic, and do not identify users. Respect DNT/GPC and the Settings opt-out.
+- [Technical note](static/technical-note.html) and [research tooling](research/README.md).
+  The Euler physical-system tab explains planned scratch/full-fine-tuning/learned
+  adapter comparisons; it deliberately has no fabricated predictions or scores.
+
+### Notebook audit and real test-file check
+
+The supplied training notebook used official `data/train/` sources and split
+sliding windows randomly, not trajectories; statistics were fitted before that
+split. The old validation loss is therefore not trajectory-held-out. New offline
+tools split whole trajectories, validate hashes/exposure, fit training-only
+normalization per data fraction, and implement the three-arm Euler comparison.
+The full new training experiment has not been run; it needs prepared data and
+training compute. The original notebook's destructive cleanup cells were not run.
+
+Separately, six fixed official `data/test/` windows were evaluated through the
+served epoch-59 binary field API. All 12 scalar/pressure scores meet the strictly
+<15% target in this small check. The 12 velocity scores have no target. These
+scores are separate from the six bundled training windows (whose four primary
+failures remain visible). See [all 24 test scores and exact pinned identifiers](static/heldout-results.json).
+Source files were read using bounded HTTP ranges, never the 92 GB `slices/`
+directory. No tuning used the test results. Notebook-to-checkpoint lineage is
+owner-supplied, not cryptographically established; broad generalization is not
+claimed. Actual stranger sessions and completed learned-adapter experiments
+remain pending, not simulated achievements.

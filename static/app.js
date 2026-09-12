@@ -159,7 +159,7 @@ function toggleTheme() {
   );
 }
 function route() {
-  const hash = location.hash.slice(1);
+  const hash = location.hash.slice(1).split("?")[0];
   page = [
     "simulator",
     "history",
@@ -167,6 +167,7 @@ function route() {
     "models",
     "settings",
     "about",
+    "feedback",
   ].includes(hash)
     ? hash
     : "home";
@@ -174,6 +175,7 @@ function route() {
     .querySelectorAll(".page")
     .forEach((el) => (el.hidden = el.id !== "page-" + page));
   $("workspace").hidden = page === "home";
+  $("menu-toggle").hidden = page === "home";
   document.querySelectorAll("[data-nav]").forEach((el) => {
     el.classList.toggle("active", el.dataset.nav === page);
     if (el.dataset.nav === page) el.setAttribute("aria-current", "page");
@@ -185,6 +187,16 @@ function route() {
   if (page !== "simulator") stopPlayback();
   if (page === "simulator" && S.frames) requestAnimationFrame(renderStage);
   window.scrollTo(0, 0);
+  $("workspace").classList.remove("menu-open");
+  $("menu-toggle").setAttribute("aria-expanded", "false");
+  track(
+    {
+      home: "landing_viewed",
+      simulator: "simulator_opened",
+      about: "about_opened",
+      feedback: "feedback_opened",
+    }[page] || "",
+  );
 }
 async function request(url, options = {}) {
   const response = await fetch(url, {
@@ -381,7 +393,9 @@ function syncControls() {
   $("samples").disabled = !ready;
   $("time-select").disabled = !S.frames || S.loading;
   $("run").disabled = !S.frames || S.loading || S.running;
-  $("run").textContent = S.running ? "Predicting…" : "Run prediction ↗";
+  $("run").textContent = S.running
+    ? "Fetching cached prediction…"
+    : "Show prediction ↗";
   $("predict").disabled = !ready;
   ["zoom", "fullscreen", "download"].forEach(
     (id) => ($(id).disabled = !S.frames || S.loading),
@@ -391,7 +405,11 @@ function syncControls() {
   $("channels").innerHTML = S.active.channels
     .map(
       (c, i) =>
-        '<option value="' + i + '">' + escapeHtml(pretty(c)) + "</option>",
+        '<option value="' +
+        i +
+        '">' +
+        escapeHtml(FIELD_NAMES[c] || pretty(c)) +
+        "</option>",
     )
     .join("");
   $("channels").value = S.ch;
@@ -402,15 +420,18 @@ function syncControls() {
         '<option value="' +
         escapeHtml(s.id) +
         '">' +
-        escapeHtml(s.id) +
+        escapeHtml(sampleName(s)) +
         "</option>",
     )
     .join("");
   if (S.sample) $("samples").value = S.sample.id;
   selectionInfo();
+  updateLaunchUI();
 }
 async function selectSystem(sys, sampleId) {
   if (!sys) return;
+  showServedSystem();
+  track("system_selected");
   stopPlayback();
   clearTimeout(parametricDebounce);
   parametricController?.abort();
@@ -447,6 +468,7 @@ async function loadSample(sample) {
   const controller = (sampleAbortController = new AbortController());
   const version = ++S.loadVersion;
   S.sample = sample;
+  LAUNCH.selectedAt = performance.now();
   S.frames = null;
   S.pred = null;
   S.err = null;
@@ -460,10 +482,13 @@ async function loadSample(sample) {
   renderStage();
   renderTimeline();
   try {
-    const r = await request("/samples/" + encodeURIComponent(sample.id), {
-      signal: controller.signal,
-    });
-    const parsed = parseNpy(await r.arrayBuffer());
+    const url = "/samples/" + encodeURIComponent(sample.id);
+    const r = await displayRequest(
+      url + "/display.png",
+      url,
+      controller.signal,
+    );
+    const parsed = await decodeDisplay(r, controller.signal);
     if (version !== S.loadVersion) return;
     if (
       parsed.shape.length !== 4 ||
@@ -485,10 +510,12 @@ async function loadSample(sample) {
       syncControls();
       renderStage();
       renderTimeline();
+      if (S.frames) await runField();
     }
   }
 }
 function renderStage() {
+  updateLaunchUI();
   const has = !!S.frames;
   $("stage-empty").hidden = has;
   $("panels").hidden = !has;
@@ -569,7 +596,7 @@ function renderStage() {
       m = S.errScales[c];
     $("comparison").replaceChildren(
       makePanel(
-        "Predicted",
+        "Model prediction",
         "t4 · 256 × 256",
         256,
         256,
@@ -580,7 +607,7 @@ function renderStage() {
         size,
       ),
       makePanel(
-        "Ground truth",
+        "Recorded simulation",
         "t4 · native grid",
         nx,
         ny,
@@ -591,7 +618,7 @@ function renderStage() {
         size,
       ),
       makePanel(
-        "Signed difference",
+        "Where they differ",
         "prediction − truth",
         256,
         256,
@@ -633,9 +660,9 @@ function qualityHtml(quality, channels, selected = -1) {
         escapeHtml(pretty(name)) +
         '</div><div class="v mono">' +
         pct(q.rel_l2) +
-        ' <span class="s">rel. L2</span></div><div class="s mono">RMSE ' +
+        ' <span class="s">relative error</span></div><div class="s mono">Typical error (RMSE) ' +
         fmtSci(q.rmse) +
-        '</div><div class="s mono">SSIM ' +
+        '</div><div class="s mono">Structure match (SSIM) ' +
         (Number.isFinite(q.ssim) ? q.ssim.toFixed(3) : "—") +
         '</div><div class="target-result">' +
         qualityTarget(q) +
@@ -776,14 +803,14 @@ async function runField() {
     let result = cachedPrediction(key);
     let source = "Session-cached prediction";
     if (!result) {
-      const r = await request(
-        "/samples/" +
-          encodeURIComponent(sample.id) +
-          "/predict?revision=" +
-          encodeURIComponent(S.cacheRevision),
-        { signal: controller.signal },
+      const base = "/samples/" + encodeURIComponent(sample.id);
+      const suffix = "?revision=" + encodeURIComponent(S.cacheRevision);
+      const r = await displayRequest(
+        base + "/prediction.png" + suffix,
+        base + "/predict" + suffix,
+        controller.signal,
       );
-      const parsed = parseNpy(await r.arrayBuffer());
+      const parsed = await decodeDisplay(r, controller.signal);
       if (!isCurrent()) return;
       if (
         parsed.shape.join(",") !== "2,4,256,256" ||
@@ -818,7 +845,16 @@ async function runField() {
     S.resultSource = source;
     S.retrievalMs = performance.now() - started;
     S.running = false;
-    S.tIdx = 4;
+    S.tIdx = LAUNCH.restoreFrame ?? 4;
+    LAUNCH.restoreFrame = null;
+    if (LAUNCH.firstMs === null)
+      LAUNCH.firstMs = performance.now() - (LAUNCH.selectedAt || started);
+    if (source === "Session-cached prediction") LAUNCH.repeatMs = S.retrievalMs;
+    track("prediction_displayed");
+    if (LAUNCH.example && !LAUNCH.completed) {
+      LAUNCH.completed = true;
+      track("example_completed");
+    }
     renderTimeline();
     renderStage();
     saveRun({
@@ -836,7 +872,10 @@ async function runField() {
       preview: comparisonPreview(),
     });
   } catch (e) {
-    if (isCurrent() && e.name !== "AbortError") notice(friendlyError(e));
+    if (isCurrent() && e.name !== "AbortError") {
+      notice(friendlyError(e));
+      track("prediction_failed");
+    }
   } finally {
     if (isCurrent()) {
       S.running = false;
@@ -1277,6 +1316,14 @@ async function boot() {
         if (health.model_loaded) {
           S.epoch = health.checkpoint_epoch;
           S.cacheRevision = health.cache_revision;
+          LAUNCH.readyMs = performance.now() - LAUNCH.started;
+          $("server-startup").textContent = Number.isFinite(
+            health.startup_seconds,
+          )
+            ? "Current server startup: " +
+              health.startup_seconds.toFixed(1) +
+              " s, including artifact loading and precomputation. This is separate from the time your browser waits."
+            : "Startup measurement is unavailable for this server.";
           $("wake").hidden = true;
           $("dot").className = "dot on";
           $("status-text").textContent = "Online · " + health.device;
@@ -1315,6 +1362,9 @@ async function boot() {
       request("/samples?revision=" + encodeURIComponent(S.cacheRevision)),
     ]);
     S.systems = await sysResponse.json();
+    S.systems.forEach((sys) => {
+      sys.display_name = SYSTEM_NAMES[sys.system] || sys.display_name;
+    });
     S.samples = await sampleResponse.json();
     S.systems.forEach(
       (sys) =>
@@ -1322,31 +1372,37 @@ async function boot() {
           sys.dials.map((d) => [d, 0.5]),
         )),
     );
-    $("systems").innerHTML = S.systems
-      .map(
-        (sys) =>
-          '<option value="' +
-          escapeHtml(sys.system) +
-          '">' +
-          escapeHtml(sys.display_name) +
-          "</option>",
-      )
-      .join("");
+    $("systems").innerHTML =
+      S.systems
+        .map(
+          (sys) =>
+            '<option value="' +
+            escapeHtml(sys.system) +
+            '">' +
+            escapeHtml(sys.display_name) +
+            "</option>",
+        )
+        .join("") +
+      '<option value="euler_multi_quadrants_openBC">Euler shock interactions — research planned</option>';
     renderDatasets();
     loadEvidence();
-    await selectSystem(
-      S.systems.find((s) => s.system === (pendingSystem || "shear_flow")) ||
-        S.systems[0],
-    );
+    if (pendingSystem)
+      await selectSystem(S.systems.find((s) => s.system === pendingSystem));
+    else await applySelectionLink();
   } catch (e) {
     notice("The catalog could not load. Reload this page to reconnect.");
   }
 }
+initLaunch();
 setTheme(storageGet("deltav-theme", "dark") === "light" ? "light" : "dark");
 route();
 renderHistory();
 syncControls();
-window.addEventListener("hashchange", route);
+window.addEventListener("hashchange", () => {
+  route();
+  if (page === "simulator" && location.hash.includes("?") && S.systems.length)
+    applySelectionLink();
+});
 document.querySelector(".skip").onclick = (event) => {
   event.preventDefault();
   $("main-content").setAttribute("tabindex", "-1");
@@ -1355,11 +1411,14 @@ document.querySelector(".skip").onclick = (event) => {
 $("theme").onclick = toggleTheme;
 $("settings-theme").onclick = toggleTheme;
 $("systems").onchange = (e) =>
-  selectSystem(S.systems.find((s) => s.system === e.target.value));
+  e.target.value === EULER_SYSTEM
+    ? showResearch()
+    : selectSystem(S.systems.find((s) => s.system === e.target.value));
 $("samples").onchange = (e) =>
   loadSample(S.samples.find((s) => s.id === e.target.value));
 $("channels").onchange = (e) => {
   S.ch = Number(e.target.value);
+  track("field_selected");
   renderStage();
 };
 $("time-select").onchange = (e) => {
@@ -1411,6 +1470,7 @@ document.querySelectorAll("[data-anchor]").forEach(
     (a.onclick = (e) => {
       e.preventDefault();
       $(a.dataset.anchor).scrollIntoView({ block: "start" });
+      if (a.dataset.anchor === "limitations") track("limitations_opened");
     }),
 );
 document.querySelectorAll("[data-start]").forEach(

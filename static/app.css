@@ -1748,6 +1748,176 @@ dialog > p {
 .evidence-table .target-note {
   min-width: 120px;
 }
+.brand svg {
+  width: 42px;
+  height: 30px;
+}
+#menu-toggle {
+  display: none;
+}
+.selection-context {
+  margin: 12px 0 20px;
+  font-size: 14px;
+}
+.selection-context p {
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+#load-status {
+  color: var(--live);
+}
+#share-box {
+  margin-top: 12px;
+}
+#share-url {
+  width: 100%;
+  margin-top: 8px;
+}
+.launch-guide {
+  padding: 24px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.launch-guide h2 {
+  margin: 6px 0 12px;
+  font-size: 24px;
+}
+.launch-guide li {
+  margin-bottom: 8px;
+}
+.launch-explanation,
+.metric-help {
+  margin: 16px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.launch-explanation {
+  padding: 16px;
+  background: var(--surface-2);
+  border-left: 2px solid var(--accent);
+}
+.metric-help summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+.feedback-form {
+  padding: 24px;
+  display: grid;
+  gap: 22px;
+  max-width: 760px;
+}
+.feedback-form label {
+  display: grid;
+  gap: 8px;
+  font-size: 16px;
+}
+textarea,
+#share-url {
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+textarea {
+  resize: vertical;
+  min-height: 90px;
+  width: 100%;
+}
+#feedback-output {
+  min-height: 260px;
+}
+.feedback-form select {
+  padding: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.analytics-choice {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.technical-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.technical-page h1 {
+  font-size: 38px;
+  line-height: 1.2;
+}
+.technical-page h2 {
+  margin-top: 36px;
+  font-size: 24px;
+}
+.technical-page pre {
+  padding: 16px;
+  overflow: auto;
+  background: var(--surface-2);
+}
+@media (max-width: 600px) {
+  #menu-toggle {
+    display: inline-flex;
+  }
+  #workspace .sidebar {
+    display: none;
+    position: fixed;
+    top: 66px;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    height: auto;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    z-index: 40;
+  }
+  #workspace.menu-open .sidebar {
+    display: block;
+  }
+  #workspace .sidebar nav {
+    display: flex;
+    flex-direction: column;
+  }
+  #workspace .sidebar nav a {
+    font-size: 16px;
+    padding: 14px 10px;
+  }
+  #workspace .workspace-content {
+    padding-bottom: 105px;
+  }
+  #run {
+    position: fixed;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    width: calc(100% - 32px);
+    z-index: 30;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    font-size: 14px;
+  }
+  .launch-guide,
+  .feedback-form {
+    padding: 18px;
+  }
+  .selection-bar select {
+    font-size: 14px;
+  }
+  .parametric summary {
+    font-size: 14px;
+  }
+  .prose {
+    font-size: 16px;
+  }
+  html {
+    scroll-padding-top: 80px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1757,5 +1927,16 @@ dialog > p {
   *:after {
     transition: none !important;
     animation: none !important;
+  }
+}
+@media (max-width: 400px) {
+  .topbar .btn.primary {
+    display: none;
+  }
+  .selection-bar {
+    grid-template-columns: 1fr;
+  }
+  .selection-bar select {
+    width: 100%;
   }
 }

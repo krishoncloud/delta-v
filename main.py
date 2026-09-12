@@ -27,6 +27,7 @@ import tempfile
 import threading
 import time
 import uuid
+from collections import Counter
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -39,6 +40,7 @@ from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from skimage.metrics import structural_similarity
+from PIL import Image
 
 import deltav_core as core
 
@@ -110,6 +112,12 @@ STATE: dict = {
 }
 PREDICTION_LOCK = threading.Lock()
 PRIMARY_REL_L2_TARGET = 0.15  # Self-imposed v1 target; strict <, not <=.
+STARTED_AT = time.time()
+ANALYTICS = Counter()
+ANALYTICS_LOCK = threading.Lock()
+EVENTS = {"landing_viewed", "simulator_opened", "example_completed", "system_selected",
+          "field_selected", "prediction_displayed", "prediction_failed", "about_opened",
+          "limitations_opened", "feedback_opened"}
 
 
 def _pull_artifacts():
@@ -192,6 +200,7 @@ def _load_everything():
                 continue
             try:
                 STATE["prediction_cache"][sample_id] = _build_prediction(sample_id, model)
+                _sample_png(sample_id)
                 print(f"[startup] precomputed prediction for {sample_id}")
             except Exception as e:
                 # A failed window may be retried on demand; do not take other systems down.
@@ -199,6 +208,7 @@ def _load_everything():
 
         # Publish last: existing clients use model_loaded as their readiness gate.
         STATE["model"] = model
+        STATE["startup_seconds"] = round(time.time() - STARTED_AT, 3)
         STATE["phase"] = "ready"
     except Exception as e:  # surfaced via /health rather than killing the server
         STATE["phase"] = f"error: {type(e).__name__}: {e}"
@@ -291,6 +301,7 @@ def health():
         "prediction_cache_count": len(STATE["prediction_cache"]),
         "sample_count": len(STATE["samples"]),
         "cache_revision": STATE["cache_revision"],
+        "startup_seconds": STATE.get("startup_seconds"),
     }
 
 
@@ -428,7 +439,7 @@ def _build_prediction(sample_id: str, model) -> dict:
         "Cache-Control": "public, max-age=3600",
         "X-Cache-Revision": STATE["cache_revision"],
     })
-    return {"body": response.body, "headers": {
+    return {"body": response.body, "png": _png_bytes(np.stack([q_pred, q_err]).reshape(-1, 256)), "headers": {
         **dict(response.headers),
         "ETag": '"' + hashlib.sha256(response.body + json.dumps(quality).encode()).hexdigest() + '"',
     }, "quality": quality}
@@ -464,6 +475,66 @@ def predict_sample(sample_id: str, request: Request):
         headers.pop("content-length", None)
         return Response(status_code=304, headers=headers)
     return Response(content=cached["body"], media_type="application/octet-stream", headers=headers)
+
+
+def _png_bytes(plane):
+    buf = io.BytesIO()
+    Image.fromarray(plane).save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
+
+
+def _sample_png(sample_id):
+    cache = STATE.setdefault("sample_image_cache", {})
+    if sample_id not in cache:
+        response = get_sample(sample_id)
+        array = np.load(io.BytesIO(response.body), allow_pickle=False)
+        planar = array.transpose(0, 3, 1, 2)
+        cache[sample_id] = (_png_bytes(planar.reshape(-1, array.shape[2])), {
+            "X-Scales": response.headers["x-scales"], "X-Npy-Shape": json.dumps(list(array.shape)),
+            "X-Pixel-Layout": "TCHW", "Cache-Control": "public, max-age=86400",
+        })
+    return cache[sample_id]
+
+
+@app.get("/samples/{sample_id}/display.png")
+def sample_image(sample_id: str):
+    body, headers = _sample_png(sample_id)
+    return Response(body, media_type="image/png", headers=headers)
+
+
+@app.get("/samples/{sample_id}/prediction.png")
+def prediction_image(sample_id: str, request: Request):
+    response = predict_sample(sample_id, request)
+    if response.status_code == 304:
+        return response
+    cached = STATE["prediction_cache"][sample_id]
+    headers = {k: v for k, v in response.headers.items() if k not in {"content-type", "content-length", "etag"}}
+    headers["X-Npy-Shape"] = "[2,4,256,256]"
+    headers["X-Pixel-Layout"] = "NCHW"
+    return Response(cached["png"], media_type="image/png", headers=headers)
+
+
+class UsageEvent(BaseModel):
+    model_config = {"extra": "forbid"}
+    event: str = Field(max_length=40)
+
+
+@app.post("/events", status_code=204)
+def record_event(payload: UsageEvent):
+    if payload.event not in EVENTS:
+        raise HTTPException(422, "unsupported event")
+    with ANALYTICS_LOCK:
+        ANALYTICS[payload.event] += 1
+    return Response(status_code=204)
+
+
+@app.get("/analytics")
+def usage_counts():
+    # Aggregate totals only: no identifiers, IP addresses, URLs, arrays or free text.
+    with ANALYTICS_LOCK:
+        counts = dict(ANALYTICS)
+    return {"since_unix": STARTED_AT, "counts": counts,
+            "scope": "Anonymous event totals for this running server; reset on restart. Not unique people. Public counters can include automated traffic."}
 
 
 @app.get("/quality")

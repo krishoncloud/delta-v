@@ -113,8 +113,32 @@ def test_startup_precomputes_before_ready(client,monkeypatch,capsys):
         assert main.STATE["phase"] == "precomputing predictions"
         return {"body":b"", "headers":{}, "quality":{}}
     monkeypatch.setattr(main,"_build_prediction",build)
+    monkeypatch.setattr(main,"_sample_png",lambda _:None)
     main._load_everything()
     assert main.health()["model_loaded"] is True
     assert main.STATE["phase"] == "ready"
     assert len(main.STATE["prediction_cache"]) == 6
     assert capsys.readouterr().out.count("precomputed prediction for") == 6
+
+def test_lossless_display_transports(client):
+    from PIL import Image
+    reference=np.load(io.BytesIO(client.get("/samples/demo").content))
+    image=client.get("/samples/demo/display.png")
+    decoded=np.array(Image.open(io.BytesIO(image.content)))
+    restored=decoded.reshape(5,4,16,16).transpose(0,2,3,1)
+    np.testing.assert_array_equal(restored,reference)
+    pred=client.get("/samples/demo/predict")
+    png=client.get("/samples/demo/prediction.png?revision=test-revision")
+    restored=np.array(Image.open(io.BytesIO(png.content))).reshape(2,4,256,256)
+    np.testing.assert_array_equal(restored,np.load(io.BytesIO(pred.content)))
+    assert pred.headers["x-quality"] == png.headers["x-quality"]
+    assert client.get("/samples/demo/prediction.png?revision=old").status_code == 409
+
+def test_usage_events_are_fixed_aggregate_names(client):
+    before=client.get("/analytics").json()["counts"].get("landing_viewed",0)
+    assert client.post("/events",json={"event":"landing_viewed"}).status_code == 204
+    assert client.post("/events",json={"event":"landing_viewed","visitor":"x"}).status_code == 422
+    assert client.post("/events",json={"event":"arbitrary user content"}).status_code == 422
+    after=client.get("/analytics").json()
+    assert after["counts"]["landing_viewed"] == before+1
+    assert set(after) == {"since_unix","counts","scope"}
