@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Delta-V — Explore learned fluid dynamics</title>
+    <title>Delta-V — Learned physics surrogates, one domain lane at a time</title>
     <meta
       name="description"
-      content="Explore three fluid systems with fast parameter estimates and neural next-state predictions compared with real simulation data. An experimental Delta-V prototype."
+      content="Delta-V is a platform for learned engineering surrogates, built one physical domain at a time. Lane 1 is fluid dynamics: three systems, fast parameter estimates, neural next-state prediction and bounded rollout, every result compared against real simulation data."
     />
     <meta name="theme-color" content="#0B0A12" />
     <link rel="icon" href="logo.svg" />
@@ -66,13 +66,14 @@
         <section class="hero">
           <div class="hero-copy">
             <p class="eyebrow">
-              <span class="live-dot"></span> A FLUID DYNAMICS EXPLORER
+              <span class="live-dot"></span> LANE 1 · FLUID DYNAMICS
             </p>
             <h1>Complex physics.<br /><span>A faster first look.</span></h1>
             <p class="hero-description">
-              Explore how fluids behave with learned approximations. Adjust a
-              parameter, predict the next state, and see exactly where the model
-              agrees with simulation.
+              Delta-V is a platform for learned physics surrogates, built one
+              domain lane at a time. Fluids is the first lane: adjust a
+              parameter, predict the next state, roll the prediction forward,
+              and see exactly where the model agrees with simulation.
             </p>
             <div class="hero-actions">
               <a
@@ -82,7 +83,8 @@
               ><a class="text-link" href="#about">Understand Delta-V →</a>
             </div>
             <p class="hero-note">
-              Experimental · 2D fluid systems · Ground truth included
+              Experimental · Lane 1 of a multi-domain system · Ground truth
+              included
             </p>
           </div>
           <div class="hero-visual">
@@ -114,9 +116,9 @@
           </div>
         </section>
         <div class="fact-strip">
-          <div><strong>03</strong><span>fluid systems</span></div>
-          <div><strong>02</strong><span>ways to explore</span></div>
-          <div><strong>4 → 1</strong><span>frames in → next state</span></div>
+          <div><strong>01</strong><span>domain lane live · fluids</span></div>
+          <div><strong>03</strong><span>systems in this lane</span></div>
+          <div><strong>4 → 1 → 30</strong><span>frames in → next state → rollout</span></div>
           <div><strong>The Well</strong><span>open simulation data</span></div>
         </div>
         <section class="landing-section">
@@ -162,9 +164,11 @@
           </div>
           <div>
             <p>
-              Delta-V is an early prototype for exploring learned fluid
-              surrogates. Prediction quality varies by system and field; every
-              field prediction comes with its measured error. These
+              Delta-V is an early prototype of a system for learned engineering
+              surrogates. Fluid dynamics is the first domain lane; the tooling,
+              the maturity ladder and the honesty rules are meant to carry over
+              to the next lanes. Prediction quality varies by system and field;
+              every prediction comes with its measured error. These
               approximations complement high-fidelity solvers.
             </p>
             <a class="text-link" href="#about"
@@ -241,7 +245,7 @@
           <section id="page-simulator" class="page" hidden>
             <div class="page-heading">
               <div>
-                <p class="eyebrow">FLUID DYNAMICS / EXPERIMENTAL</p>
+                <p class="eyebrow">LANE 1 · FLUID DYNAMICS / EXPERIMENTAL</p>
                 <h1>Explore fluid predictions</h1>
                 <p>Can four recorded snapshots predict what happens next?</p>
               </div>
@@ -615,6 +619,18 @@
                 without a reference, but its true error cannot be measured
                 without ground truth; validation will still matter.
               </p>
+              <p>
+                <strong>Why this is the measuring stick.</strong> The served
+                checkpoint was trained at prototype scale on slices of The Well,
+                not on full trajectories, so training budget — not architecture
+                — is the main bottleneck today. As training improves, the
+                number of frames the model can generate from the same four
+                inputs before its error crosses the target should grow. That
+                horizon is how progress on this lane gets measured. We
+                deliberately do not inject true frames mid-rollout to “boost”
+                the output: it would hide exactly the drift this view exists to
+                show.
+              </p>
             </section>
           </section>
           <section id="page-history" class="page" hidden>
@@ -672,9 +688,17 @@
               </p>
               <p>
                 All fields are resampled to 256 × 256 for the model. The viewer
-                preserves the physical domain’s aspect ratio. Playback loops
-                recorded snapshots; longer trajectories and autoregressive
-                prediction are not available.
+                preserves the physical domain’s aspect ratio. The top timeline
+                loops the five recorded snapshots. Autoregressive rollout uses
+                three separate official-test clips (IDs begin
+                <code>rollout-test-</code>) with eleven recorded frames each:
+                f0–f3 seed the model and f4–f10 are the reference.
+              </p>
+              <p>
+                <strong>Training scale.</strong> The served checkpoint was
+                trained on bounded slices of The Well at prototype budget, not
+                on the full trajectory sets. This is the main reason accuracy
+                and rollout horizon are where they are; see the Model page.
               </p>
             </div>
           </section>
@@ -684,8 +708,8 @@
                 <p class="eyebrow">CURRENT IMPLEMENTATION</p>
                 <h1>The model behind the field.</h1>
                 <p>
-                  One served fluid checkpoint, shared across the three supported
-                  systems.
+                  One served checkpoint for the fluid lane, shared across the
+                  three supported systems. Each future domain lane gets its own.
                 </p>
               </div>
             </div>
@@ -713,9 +737,28 @@
                 </div>
                 <div>
                   <dt>Serving</dt>
-                  <dd>CPU · one step</dd>
+                  <dd>CPU · one step or bounded rollout (≤ 30 steps)</dd>
+                </div>
+                <div>
+                  <dt>Training data</dt>
+                  <dd>Prototype-scale slices of The Well, not full trajectories</dd>
+                </div>
+                <div>
+                  <dt>Pretraining mix</dt>
+                  <dd>
+                    Turbulent radiative layer (primary) + shear flow +
+                    Rayleigh–Bénard, jointly
+                  </dd>
                 </div>
               </dl>
+              <h3>Where the bottleneck is</h3>
+              <p>
+                The weights were trained at prototype budget on bounded slices
+                of the dataset. That, more than the FNO architecture, sets the
+                current accuracy and the rollout horizon. Growing the training
+                set and budget is the main lever for this lane; the rollout
+                view is where any improvement should show up first.
+              </p>
               <h3>Why FNO?</h3>
               <p>
                 Fourier layers learn spatial relationships in the frequency
@@ -911,11 +954,21 @@
               <span class="badge">STATIC RESULTS · NOT LIVE INFERENCE</span>
             </div>
             <div class="card prose launch-guide">
+              <h2>Setup</h2>
               <p>
-                Euler shock interactions were held out of joint pretraining
-                entirely. Both arms then learned from the same scarce Euler
-                data: one started from the SEM-pretrained joint checkpoint, the
-                other from random weights.
+                <code>euler_multi_quadrants_openBC</code> is a fourth fluid
+                system held out entirely from joint SEM pretraining. Pretraining
+                used <code>turbulent_radiative_layer_2D</code> as the primary
+                set with <code>shear_flow</code> and
+                <code>rayleigh_benard</code> as joint co-training sets. The
+                question: does that prior learning help scarce-data fine-tuning
+                on a fluid system the model never saw?
+              </p>
+              <p>
+                Both arms were fine-tuned on the same scarce Euler data. Arm A
+                started from the SEM-pretrained joint checkpoint. Arm B used the
+                same architecture with random initialization, trained from
+                scratch.
               </p>
               <div class="probe-arms">
                 <article>
@@ -955,13 +1008,90 @@
                 four intended. This narrows the evidence. The gamma-aware rerun
                 is pending; new results may differ.
               </p>
-              <p>
-                The earlier short-budget comparison was superseded because the
-                scratch arm had not converged. Fine-tuned checkpoints were not
-                saved, so neither arm can run live here. The source notebook
-                supplied earlier contained code, not saved outputs; the numbers
-                above are the owner's subsequently supplied record.
-              </p>
+              <h3>Run history</h3>
+              <div
+                class="evidence-scroll"
+                role="region"
+                aria-label="Euler probe run history"
+                tabindex="0"
+              >
+                <table class="evidence-table">
+                  <caption>
+                    Two runs were made. Only the second is reported.
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Run</th>
+                      <th scope="col">Fine-tune epochs</th>
+                      <th scope="col">Result</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>First</td>
+                      <td>15</td>
+                      <td>Pretrained arm ahead by 44.2%</td>
+                      <td>
+                        <strong>Superseded — not used.</strong> The from-scratch
+                        arm had not converged at 15 epochs, so the gap was
+                        inflated and the comparison was not fair.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Rerun</td>
+                      <td>30</td>
+                      <td>
+                        Pretrained final loss 0.0089 · from-scratch final loss
+                        0.0107
+                      </td>
+                      <td>
+                        <strong>Reported result.</strong> Both arms fully
+                        converged. Pretrained start is 16.3% lower error.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3>Artifact status</h3>
+              <ul>
+                <li>
+                  <strong>No fine-tuned checkpoint exists.</strong> Neither the
+                  pretrained-start arm nor the from-scratch arm was saved or
+                  pushed. Confirmed directly against the
+                  <code>checkpoints/</code> folder of the HF dataset repo. Only
+                  the losses above survive, which is why this page is static and
+                  Euler cannot run live.
+                </li>
+                <li>
+                  <strong>Normalization stats do exist</strong> on HF
+                  (<code>stats/euler_multi_quadrants_openBC.npz</code>), so that
+                  piece is not a blocker for wiring Euler live later.
+                </li>
+                <li>
+                  <strong>No parametric table</strong> for Euler exists, unlike
+                  the three live systems. Its single dial (<code>gamma</code>)
+                  is defined in code but was never built into a servable table.
+                </li>
+              </ul>
+              <h3>Euler in the shared representation</h3>
+              <ul>
+                <li>Native grid 512 × 512, resampled to 256 × 256 for the model.</li>
+                <li>
+                  Five raw fields; four map into the canonical
+                  <code>[scalar, pressure, velocity_x, velocity_y]</code>
+                  vocabulary and one raw field has no canonical slot and is
+                  dropped.
+                </li>
+                <li>
+                  Raw velocity channels store momentum-like quantities; they are
+                  divided by density on the way in to recover true velocity
+                  (<code>derive_velocity</code>). This transform is applied once
+                  to the seed frames only — predictions are never round-tripped
+                  through it.
+                </li>
+                <li>One dial: <code>gamma</code>.</li>
+              </ul>
               <h3>What this experiment does—and does not—test</h3>
               <p>
                 It compares two starting points for full-model training. It does
@@ -999,8 +1129,11 @@
               <p>
                 The Euler result is evidence
                 <strong>in the direction of</strong> the next rung, not a claim
-                that Delta-V has reached it. A solid-mechanics lane would have
-                its own separate climb.
+                that Delta-V has reached it. Every future domain lane — solid
+                mechanics, heat transfer, electromagnetics — is meant to repeat
+                this same climb with the same tooling, the same honesty rules
+                and its own measured evidence. Fluids is simply the lane we are
+                climbing first.
               </p>
               <p>
                 Next: fix gamma selection, rerun both arms, save checkpoints and
@@ -1035,23 +1168,29 @@
                 <section id="what">
                   <p class="eyebrow">01 / WHAT IS DELTA-V?</p>
                   <h2>
-                    A place to explore learned approximations of physical
-                    systems.
+                    A system for learned engineering surrogates, built one
+                    domain lane at a time.
                   </h2>
                   <p>
-                    Delta-V serves and visualizes surrogate models for fluid
-                    dynamics. It pairs quick, parameter-based outcome estimates
-                    with neural next-state prediction, then puts the field
-                    prediction beside the original simulation so you can inspect
-                    the agreement.
+                    Delta-V is not a fluids tool. It is the scaffolding for
+                    serving, measuring and honestly presenting learned
+                    approximations of physical systems — and fluid dynamics is
+                    the first domain lane we are running through that
+                    scaffolding. Each lane gets its own data, its own
+                    checkpoint, and its own climb up the same maturity ladder.
+                    What carries across lanes is the workflow: a fast
+                    parameter-based estimate, a neural next-state prediction,
+                    a bounded rollout, and a reference comparison beside every
+                    result so you can see exactly where the model agrees with
+                    simulation and where it does not.
                   </p>
                   <p>
                     The project began in a software engineering lab. This public
                     prototype is an invitation to test the interaction,
-                    understand its usefulness, and give feedback. It uses only
-                    2D data from The Well and complements high-fidelity
-                    simulation. Its output is not validated industrial
-                    simulation.
+                    understand its usefulness, and give feedback. The live lane
+                    uses only 2D data from The Well and complements
+                    high-fidelity simulation. Its output is not validated
+                    industrial simulation.
                   </p>
                 </section>
                 <section id="approach">
@@ -1072,22 +1211,35 @@
                     outcome dial does not generate a new field initial
                     condition: field prediction uses a selected recorded sample.
                   </p>
-                  <h3>Current stage</h3>
+                  <h3>Current stage: lane 1, SEM rung</h3>
                   <p>
                     An experimental multi-system fluid prototype: three served
                     systems, one shared field checkpoint, six training
-                    demonstration windows, three official-test rollout clips,
-                    and browser-local history. Our starting point was the
-                    single-system engineering model (SEM). This shared serving
-                    setup is an early step toward a broader fluid model, but a
-                    validated large engineering model (LEM) requires evidence of
-                    generalization that this prototype does not yet provide.
+                    demonstration windows, three official-test rollout clips
+                    with up to 30 generated steps, and browser-local history.
+                    Our starting point was the single-system engineering model
+                    (SEM). This shared serving setup is an early step toward a
+                    broader fluid model, but a validated large engineering model
+                    (LEM) requires evidence of generalization that this
+                    prototype does not yet provide.
+                  </p>
+                  <p>
+                    <strong>The bottleneck is training scale, not
+                    architecture.</strong> The served checkpoint was trained at
+                    prototype budget on bounded slices of The Well, not on the
+                    full trajectory sets. That is the honest reason for the
+                    current accuracy and for how quickly rollout error grows. The
+                    rollout horizon — how many frames the model can generate
+                    from four inputs before crossing the error target — is the
+                    number we expect to move as training scales, and it is how
+                    we intend to measure that.
                   </p>
                   <p>
                     The research path is to compare per-system baselines with
                     joint training, then evaluate generalization to unseen fluid
-                    systems. Those results are not established by this demo.
-                    Cross-domain or 3D generalization is not claimed.
+                    systems (the Euler probe is the first such measurement),
+                    then open the next domain lane and repeat. Cross-domain or
+                    3D generalization is not claimed.
                   </p>
                 </section>
                 <section id="limitations">
@@ -1109,9 +1261,17 @@
                       input snapshots and one reference next state.
                     </li>
                     <li>
-                      <strong>One step only.</strong> No autoregressive rollout.
-                      Playback shows recorded frames; it does not evolve the
-                      model.
+                      <strong>Prototype-scale training.</strong> The checkpoint
+                      was trained on bounded slices of The Well, not full
+                      trajectories. More training data and budget — not a new
+                      architecture — is the main lever left on this lane.
+                    </li>
+                    <li>
+                      <strong>Bounded rollout, short reference.</strong> Up to
+                      30 generated steps on three official-test clips, but
+                      measured error exists only through f10. Beyond that there
+                      is no ground truth and no error is reported. The top
+                      timeline still shows recorded frames only.
                     </li>
                     <li>
                       <strong>Fixed model grid.</strong> Fields are resampled to
@@ -1364,8 +1524,10 @@
                 <span class="eyebrow">AT A GLANCE</span>
                 <h3>Experimental prototype</h3>
                 <p>
-                  3 fluid systems<br />6 sample windows<br />4 input frames → 1
-                  prediction<br />2D only<br />Simulation code units
+                  Lane 1 of a multi-domain system: fluids<br />3 systems live ·
+                  1 held-out probe<br />6 sample windows + 3 rollout clips<br />4
+                  input frames → 1 prediction → ≤ 30-step rollout<br />2D only<br />Simulation
+                  code units
                 </p>
                 <a class="text-link" href="#datasets">Meet the datasets →</a>
               </aside>

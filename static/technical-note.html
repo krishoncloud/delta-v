@@ -13,9 +13,12 @@
       <p class="eyebrow">TECHNICAL NOTE · 11 SEPTEMBER 2026 · PROTOTYPE 3</p>
       <h1>What the current prototype tests</h1>
       <p>
-        Delta-V compares one neural next-step prediction with the recorded next
-        snapshot. It also offers a separate table-based estimator of overall
-        fluid outcomes. The six original examples show training-data behavior.
+        Delta-V is a system for learned engineering surrogates built one
+        physical-domain lane at a time; fluid dynamics is lane 1 and the only
+        lane served today. Within that lane it compares one neural next-step
+        prediction with the recorded next snapshot, and offers a separate
+        table-based estimator of overall fluid outcomes. The six original
+        examples show training-data behavior.
         Three additional official-test clips (rollout-test- IDs) provide f0–f10
         references for autoregressive playback. A separate six-window
         official-test check is reported below; broad generalization and a
@@ -29,8 +32,13 @@
           href="https://huggingface.co/datasets/KrishMalik/deltav-fluid/tree/7bf3f989dcfab6d0f43ea482ab8f26ddbdec3752"
           >artifact revision 7bf3f989dcfab6d0f43ea482ab8f26ddbdec3752</a
         >. The checkpoint was trained across turbulent radiative layer 2D,
-        Rayleigh–Bénard convection and shear flow. The FNO uses 32 × 32 spectral
-        modes and 128 hidden channels. The live epoch is exposed by
+        Rayleigh–Bénard convection and shear flow, with turbulent radiative
+        layer as the primary set and the other two as joint co-training sets.
+        Training used bounded slices of The Well at prototype budget, not the
+        full trajectory sets; this training scale, rather than the
+        architecture, is the main limit on current accuracy and rollout
+        horizon. The FNO uses 32 × 32 spectral modes and 128 hidden channels.
+        The live epoch is exposed by
         <a href="/health">/health</a>. Runtime artifact downloads follow the
         repository’s current revision, so reproduce this note by explicitly
         pinning the linked revision.

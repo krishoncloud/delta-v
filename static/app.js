@@ -184,7 +184,9 @@ function route() {
   });
   document.title =
     "Delta-V — " +
-    (page === "home" ? "Explore learned fluid dynamics" : pretty(page));
+    (page === "home"
+      ? "Learned physics surrogates, one domain lane at a time"
+      : pretty(page));
   if (page !== "simulator") {
     stopPlayback();
     stopRolloutPlayback();
