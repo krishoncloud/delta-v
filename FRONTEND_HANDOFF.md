@@ -1,5 +1,8 @@
 # Frontend release 4: scope and backend handoff
 
+Historical release-4 record: the backend-pending statements below are superseded
+by `CLAUDE_HANDOFF.md` and the rollout implementation added on September 12.
+
 Only frontend, tests and documentation changed. Keep the existing Space and
 production checkpoint. Do not execute the older checklist's backend steps
 blindly: this checkout already serves epoch 59 from `domain_fluid.pt`, and has

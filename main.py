@@ -27,6 +27,7 @@ import tempfile
 import threading
 import time
 import uuid
+from urllib.request import urlopen
 from collections import Counter
 from contextlib import asynccontextmanager
 from typing import Optional
@@ -38,6 +39,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from skimage.metrics import structural_similarity
 from PIL import Image
@@ -167,6 +169,25 @@ def _load_everything():
         STATE["phase"] = "downloading artifacts"
         _pull_artifacts()
 
+        # Three small, separately published official-test clips; never raw slices/.
+        reference_index = os.path.join(SAMPLES_DIR, "rollout-index.json")
+        if os.path.exists(reference_index):
+            with open(reference_index) as handle:
+                for entry in json.load(handle):
+                    try:
+                        directory = os.path.join(ARTIFACT_ROOT, "rollout_samples")
+                        os.makedirs(directory, exist_ok=True)
+                        url = "https://huggingface.co/datasets/KrishMalik/deltav-fluid/resolve/148fcb49964f35cfc6040ab80c373cc682ca5808/rollout_samples/" + entry["id"] + ".npy"
+                        with urlopen(url, timeout=60) as response:
+                            data = response.read(entry["bytes"] + 1)
+                        if len(data) != entry["bytes"] or hashlib.sha256(data).hexdigest() != entry["sha256"]:
+                            raise ValueError("Reference checksum or size mismatch")
+                        with open(os.path.join(directory, entry["id"] + ".npy"), "wb") as out:
+                            out.write(data)
+                        STATE["samples"][entry["id"]] = entry
+                    except Exception as exc:
+                        print(f"[startup] Reference clip unavailable: {entry['id']}: {type(exc).__name__}")
+
         # --- deep-dive tier: load the FNO once ---
         STATE["phase"] = "loading model"
         model = core.build_fno(device=DEVICE)
@@ -237,6 +258,34 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Delta-V Inference API", version="0.1.0", lifespan=lifespan)
 
+
+class BodyLimit:
+    """Bound even chunked bodies before multipart/JSON parsing allocates memory."""
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http" or scope.get("method") not in ("POST", "PUT", "PATCH"):
+            return await self.app(scope, receive, send)
+        limit = 64 * 1024 * 1024 if scope["path"] == "/predict/rollout" else 24 * 1024 * 1024 if scope["path"] == "/predict/field" else 16384
+        chunks, size = [], 0
+        while True:
+            message = await receive()
+            if message["type"] == "http.disconnect":
+                return
+            size += len(message.get("body", b""))
+            if size > limit:
+                return await Response("Request body exceeds size limit", status_code=413)(scope, receive, send)
+            chunks.append(message)
+            if not message.get("more_body", False):
+                break
+        async def bounded_receive():
+            return chunks.pop(0) if chunks else await receive()
+        await self.app(scope, bounded_receive, send)
+
+
+app.add_middleware(BodyLimit)
+
 app.add_middleware(GZipMiddleware, minimum_size=1024)
 app.add_middleware(
     CORSMiddleware,
@@ -244,7 +293,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["X-Scales", "X-Error-Scales", "X-Quality", "X-Inference-Seconds",
-                    "X-Checkpoint-Epoch", "X-Canonical-Fields", "X-System"],
+                    "X-Checkpoint-Epoch", "X-Canonical-Fields", "X-System", "X-Rollout-Meta"],
 )
 
 
@@ -263,6 +312,7 @@ class ParametricResponse(BaseModel):
 
 
 class SystemInfo(BaseModel):
+    rollout: dict = Field(default_factory=lambda: {"available": True, "contract": "deltav-rollout-v1", "max_steps": 30})
     system: str
     dials: list[str]
     dial_ranges: dict[str, list[float]]
@@ -277,6 +327,7 @@ class SystemInfo(BaseModel):
 
 
 class SampleInfo(BaseModel):
+    provenance: Optional[dict] = None
     id: str
     system: str
     dials: dict[str, float]
@@ -340,7 +391,8 @@ def list_samples(response: Response):
 def _load_sample(sample_id: str) -> np.ndarray:
     if sample_id not in STATE["samples"]:
         raise HTTPException(404, f"unknown sample '{sample_id}'")
-    return np.load(os.path.join(SAMPLES_DIR, f"{sample_id}.npy"), allow_pickle=False)
+    directory = os.path.join(ARTIFACT_ROOT, "rollout_samples") if sample_id.startswith("rollout-test-") else SAMPLES_DIR
+    return np.load(os.path.join(directory, f"{sample_id}.npy"), allow_pickle=False)
 
 
 # ---- display transport for the frontend ---------------------------------
@@ -610,25 +662,31 @@ async def predict_field(
             raise HTTPException(422, f"sample '{sample_id}' belongs to '{meta['system']}', not '{system}'")
         arr = _load_sample(sample_id)[: core.N_HISTORY]
     elif file is not None:
-        raw = await file.read()
+        raw = await file.read(24 * 1024 * 1024 + 1)
+        if len(raw) > 24 * 1024 * 1024:
+            raise HTTPException(413, "upload exceeds 24 MiB")
         try:
+            stream = io.BytesIO(raw)
+            version = np.lib.format.read_magic(stream)
+            if version not in ((1, 0), (2, 0)):
+                raise ValueError("Unsupported NPY version")
+            shape, _, dtype = (np.lib.format.read_array_header_1_0(stream) if version == (1, 0)
+                               else np.lib.format.read_array_header_2_0(stream))
+            expected = (core.N_HISTORY, *core.DATASETS[system]["grid"], core.DATASETS[system]["n_fields"])
+            if shape != expected or dtype.kind not in "fiu" or dtype.itemsize > 8:
+                raise ValueError("Unexpected history shape or dtype")
             arr = np.load(io.BytesIO(raw), allow_pickle=False)
         except Exception as e:
             raise HTTPException(422, f"invalid .npy payload: {e}")
     else:
         raise HTTPException(422, "provide either `file` (.npy upload) or `sample_id`")
 
-    if arr.ndim != 4 or arr.shape[0] != core.N_HISTORY:
-        raise HTTPException(
-            422,
-            f"expected shape ({core.N_HISTORY}, H, W, n_fields), got {arr.shape}",
-        )
+    _validate_history(arr, system)
 
     frames = [arr[i].astype(np.float32) for i in range(arr.shape[0])]
     try:
-        pred = core.run_fno_inference(
-            STATE["model"], frames, system, STATE["stats_by"][system], device=DEVICE
-        )
+        pred = await run_in_threadpool(_bounded_inference, core.run_fno_inference,
+            STATE["model"], frames, system, STATE["stats_by"][system], device=DEVICE)
     except ValueError as e:
         raise HTTPException(422, str(e))
 
@@ -643,6 +701,89 @@ async def predict_field(
             "X-Canonical-Fields": ",".join(core.CANONICAL),
         },
     )
+
+
+INFERENCE_SLOT = threading.Lock()
+
+
+def _bounded_inference(fn, *args, **kwargs):
+    if not INFERENCE_SLOT.acquire(blocking=False):
+        raise HTTPException(429, "Inference is busy; retry shortly", headers={"Retry-After": "10"})
+    try:
+        return fn(*args, **kwargs)
+    finally:
+        INFERENCE_SLOT.release()
+
+
+def _validate_history(arr, system):
+    expected = (core.N_HISTORY, *core.DATASETS[system]["grid"], core.DATASETS[system]["n_fields"])
+    if not isinstance(arr, np.ndarray) or arr.shape != expected or arr.dtype.kind not in "fiu" or not np.isfinite(arr).all():
+        raise HTTPException(422, f"Expected finite numeric raw history shaped {expected}")
+
+
+class RolloutRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    system: str = Field(max_length=80)
+    sample_id: Optional[str] = Field(default=None, max_length=100)
+    history_frames: Optional[list] = None
+    n_steps: int = Field(ge=1, le=30, strict=True)
+    revision: Optional[str] = Field(default=None, max_length=100)
+
+
+@app.post("/predict/rollout")
+async def predict_rollout(req: RolloutRequest):
+    if STATE["model"] is None:
+        raise HTTPException(503, "model not ready")
+    if req.system not in STATE["stats_by"]:
+        raise HTTPException(404, "No served checkpoint/statistics for this system")
+    if (req.sample_id is None) == (req.history_frames is None):
+        raise HTTPException(422, "Provide exactly one of sample_id or history_frames")
+    if req.revision is not None and req.revision != STATE["cache_revision"]:
+        raise HTTPException(409, "Server revision changed; reload the sample")
+    references = None
+    if req.sample_id is not None:
+        meta = STATE["samples"].get(req.sample_id)
+        if meta is None or meta["system"] != req.system:
+            raise HTTPException(422, "Sample does not belong to the selected system")
+        references = _load_sample(req.sample_id)
+        arr = references[:core.N_HISTORY]
+    else:
+        try:
+            arr = np.asarray(req.history_frames, dtype=np.float32)
+        except (ValueError, TypeError, OverflowError):
+            raise HTTPException(422, "Invalid numeric history array")
+    _validate_history(arr, req.system)
+    started = time.perf_counter()
+    try:
+        predicted = await run_in_threadpool(_bounded_inference, core.run_fno_rollout,
+            STATE["model"], list(arr.astype(np.float32)), req.system,
+            STATE["stats_by"][req.system], req.n_steps, device=DEVICE)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+    elapsed = time.perf_counter() - started
+    steps = []
+    for i, pred in enumerate(predicted):
+        frame = core.N_HISTORY + i
+        quality = None
+        if references is not None and frame < len(references):
+            canonical, _ = core.build_canonical(references[frame], req.system)
+            if core.DATASETS[req.system].get("derive_velocity"):
+                canonical = core.derive_velocity_inplace(canonical)
+            truth = core.resample(torch.tensor(canonical)).numpy()
+            quality = _quality_metrics(pred, truth)
+        steps.append({"frame": frame, "quality": quality})
+    metadata = {"contract": "deltav-rollout-v1", "system": req.system,
+        "sample_id": req.sample_id, "cache_revision": STATE["cache_revision"],
+        "first_frame": 4, "checkpoint_epoch": STATE["checkpoint_epoch"],
+        "inference_seconds": elapsed, "mean_step_seconds": elapsed / req.n_steps, "steps": steps}
+    if req.history_frames is not None:
+        return {"system": req.system, "checkpoint_epoch": STATE["checkpoint_epoch"],
+            "predicted_frames": predicted.tolist(), "canonical_fields": core.CANONICAL, "metadata": metadata}
+    buf = io.BytesIO()
+    np.save(buf, predicted, allow_pickle=False)
+    return Response(buf.getvalue(), media_type="application/octet-stream", headers={
+        "X-Rollout-Meta": json.dumps(metadata, separators=(",", ":")),
+        "X-Inference-Seconds": str(elapsed), "Cache-Control": "no-store"})
 
 
 # Frontend — served from the same container so there is one URL and no CORS

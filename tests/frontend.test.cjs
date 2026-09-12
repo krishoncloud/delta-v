@@ -126,6 +126,14 @@ test("sharing reads visible controls and separates tour from frame", () => {
   );
   assert.equal(h.run('sharedSelection("#simulator?example=1").frame'), null);
 });
+test("canonical URL uses browser history, not the saved-runs array named history",()=>{
+  const h=harness(); setupField(h); const links=[];
+  h.ctx.location={origin:"https://example.test",pathname:"/"};
+  h.ctx.window.history={replaceState:(_a,_b,url)=>links.push(url)};
+  h.run('page="simulator"; S.ch=1; S.tIdx=2; syncSelectionURL()');
+  assert.equal(links.length,1);
+  assert.match(links[0],/field=pressure&frame=2$/);
+});
 test("rollout range generates intermediate frames and capabilities fail closed", () => {
   const h = harness();
   assert.equal(h.run("rolloutRange(7,10,7).n_steps"), 7);

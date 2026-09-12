@@ -9,3 +9,5 @@ tests/
 .artifacts/
 design/
 .claude/
+.env
+.env.*

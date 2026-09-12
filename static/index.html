@@ -837,6 +837,31 @@
                   <option>I do not run simulations</option>
                 </select></label
               >
+              <label
+                >Current workplace (optional)<input
+                  name="Current workplace"
+                  maxlength="200"
+                  autocomplete="organization"
+              /></label>
+              <label
+                >LinkedIn URL (optional)<input
+                  id="feedback-linkedin"
+                  name="LinkedIn"
+                  type="text"
+                  inputmode="url"
+                  maxlength="500"
+                  placeholder="https://www.linkedin.com/in/your-profile"
+                  aria-describedby="linkedin-note"
+              /></label>
+              <p id="linkedin-note" class="small muted">
+                Optional professional profile link. Unusual URL formats are
+                allowed.
+              </p>
+              <p class="small muted">
+                Preparing feedback does not submit it. If you publish it as a
+                GitHub issue, all included text, workplace and profile
+                information will be public. Omit anything private.
+              </p>
               <button class="btn primary" type="submit">
                 Prepare my feedback →
               </button>
@@ -1050,13 +1075,13 @@
                   <h3>Current stage</h3>
                   <p>
                     An experimental multi-system fluid prototype: three served
-                    systems, one shared field checkpoint, six demonstration
-                    windows, and browser-local history. Our starting point was
-                    the single-system engineering model (SEM). This shared
-                    serving setup is an early step toward a broader fluid model,
-                    but a validated large engineering model (LEM) requires
-                    evidence of generalization that this prototype does not yet
-                    provide.
+                    systems, one shared field checkpoint, six training
+                    demonstration windows, three official-test rollout clips,
+                    and browser-local history. Our starting point was the
+                    single-system engineering model (SEM). This shared serving
+                    setup is an early step toward a broader fluid model, but a
+                    validated large engineering model (LEM) requires evidence of
+                    generalization that this prototype does not yet provide.
                   </p>
                   <p>
                     The research path is to compare per-system baselines with
@@ -1117,9 +1142,10 @@
                   >
                     <table class="evidence-table">
                       <caption>
-                        Measured on 6 bundled samples (2 per system), drawn from
-                        model training trajectories. Not a held-out benchmark.
-                        See the separate official-test check below.
+                        One-step measurements on the six training demonstrations
+                        and three official-test rollout clips (IDs begin
+                        rollout-test-). This small selection is not a
+                        comprehensive held-out benchmark.
                       </caption>
                       <thead>
                         <tr>
@@ -1268,9 +1294,9 @@
                       <strong>Run a prediction.</strong> Four history frames
                       predict the fifth. Compare prediction, reference, and
                       signed prediction-minus-truth. Timeline selection does not
-                      change this fixed target. The six fixed predictions are
-                      computed at startup and cached. Repeated requests reuse
-                      the result; they do not run the model again.
+                      change this fixed target. The fixed one-step predictions
+                      are computed at startup and cached. Repeated requests
+                      reuse the result; they do not run the model again.
                     </li>
                     <li>
                       <strong>Read the errors.</strong> Relative L2 compares

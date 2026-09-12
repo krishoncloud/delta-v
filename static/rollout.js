@@ -67,7 +67,7 @@ function updateRolloutControls() {
     : "Reference availability is checked from the loaded sample, not assumed from the requested range.";
   if (!ROLL.busy && !ROLL.result)
     $("rollout-status").textContent = capability
-      ? "Choose a range. Every intermediate prediction from f4 is generated; only the requested range is played."
+      ? "Choose a range. Every intermediate prediction from f4 is generated; only the requested range is played. The default is 7 steps. A 30-step CPU request measured about 85 seconds including transfer; slower requests may time out."
       : "Range setup is ready, but this system has no connected rollout backend. The existing one-step comparison above remains available. Euler also requires a saved fine-tuned checkpoint.";
 }
 function validateRollout(parsed, meta, expected) {
@@ -171,7 +171,9 @@ async function runRollout() {
       expected.first +
       "–f" +
       expected.last +
-      ". Playback speed is independent of model compute time.";
+      ". Model computation: " +
+      Number(meta.inference_seconds).toFixed(1) +
+      " s. Playback FPS is independent of inference speed.";
     renderRollout();
   } catch (e) {
     if (ROLL.controller === controller && e.name !== "AbortError")

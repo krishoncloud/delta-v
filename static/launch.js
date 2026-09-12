@@ -34,6 +34,8 @@ const LAUNCH = {
   started: performance.now(),
 };
 function sampleName(sample) {
+  if (sample?.provenance?.split === "official-test")
+    return "Official-test rollout · reference through f10";
   return (
     SAMPLE_NAMES[sample?.id || sample] ||
     sample?.id ||
@@ -128,8 +130,8 @@ function showResearch() {
     "Fourth system: recorded two-arm results, not live inference.";
   $("share-result").disabled = false;
   $("binary-result").hidden = true;
-  if (typeof history !== "undefined" && page === "simulator")
-    history.replaceState(null, "", shareLink());
+  if (window.history?.replaceState && page === "simulator")
+    window.history.replaceState(null, "", shareLink());
   track("system_selected");
 }
 function showServedSystem() {
@@ -177,7 +179,10 @@ function updateLaunchUI() {
         : q.passes === true
           ? "This field’s relative error is " +
             pct(q.rel_l2) +
-            ", below the self-imposed 15% release target on this training example. See About for the separate, small official-test check; this example does not measure generalization."
+            ", below the self-imposed 15% release target on this example. " +
+            (S.sample?.provenance?.split === "official-test"
+              ? "This is a small official-test clip, not a comprehensive generalization benchmark."
+              : "This training example does not measure generalization. See About for the separate official-test check.")
           : "This velocity field has " +
             pct(q.rel_l2) +
             " relative error. There is no quantitative acceptance target for velocity in this release; the score is provided for inspection.";
@@ -200,7 +205,7 @@ async function decodeDisplay(response, signal) {
   if (
     shape.length !== 4 ||
     !shape.every((n) => Number.isInteger(n) && n > 0) ||
-    size > 3_000_000
+    size > 6_000_000
   )
     throw new Error("Unsupported display dimensions");
   const blob = await response.blob();
@@ -263,7 +268,7 @@ function shareLink() {
 }
 function syncSelectionURL() {
   if (
-    typeof history === "undefined" ||
+    !window.history?.replaceState ||
     page !== "simulator" ||
     !S.sample ||
     S.loading ||
@@ -272,7 +277,7 @@ function syncSelectionURL() {
   )
     return;
   const link = shareLink();
-  history.replaceState(null, "", link);
+  window.history.replaceState(null, "", link);
   if (!$("share-box").hidden) {
     $("share-url").value = link;
     $("share-label").textContent =
@@ -289,7 +294,8 @@ function initLaunch() {
   $("share-result").onclick = async () => {
     if (!LAUNCH.research && (!S.frames || S.loading || S.running)) return;
     const link = shareLink();
-    if (typeof history !== "undefined") history.replaceState(null, "", link);
+    if (window.history?.replaceState)
+      window.history.replaceState(null, "", link);
     $("share-url").value = link;
     $("share-box").hidden = false;
     try {
@@ -309,6 +315,19 @@ function initLaunch() {
       a.removeAttribute("target");
       a.textContent = "Give feedback →";
     });
+  $("feedback-linkedin").oninput = (e) => {
+    const value = e.target.value.trim();
+    let looksLinkedIn = !value;
+    try {
+      const host = new URL(
+        value.includes("://") ? value : "https://" + value,
+      ).hostname.toLowerCase();
+      looksLinkedIn = host === "linkedin.com" || host.endsWith(".linkedin.com");
+    } catch {}
+    $("linkedin-note").textContent = looksLinkedIn
+      ? "Optional professional profile link. Unusual URL formats are allowed."
+      : "This does not look like a linkedin.com URL. Check it if needed; you can still prepare feedback.";
+  };
   $("feedback-form").onsubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);

@@ -498,7 +498,8 @@ async function loadSample(sample) {
     if (version !== S.loadVersion) return;
     if (
       parsed.shape.length !== 4 ||
-      parsed.shape[0] !== 5 ||
+      parsed.shape[0] < 5 ||
+      parsed.shape[0] > 11 ||
       parsed.shape[3] !== 4
     )
       throw new Error(
@@ -711,7 +712,7 @@ function renderTimeline() {
     $("time-select").innerHTML = "<option>—</option>";
     return;
   }
-  const times = S.sample.times;
+  const times = S.sample.times.slice(0, 5);
   $("time-select").innerHTML = times
     .map(
       (t, i) =>
@@ -1111,7 +1112,13 @@ function renderDatasets() {
             .join(" · ") +
           "</p><p>Source start index " +
           sample.t_index +
-          ' · 5 consecutive frames</p><p class="times">' +
+          " · " +
+          sample.times.length +
+          " consecutive frames · " +
+          (sample.provenance?.split === "official-test"
+            ? "Official test clip"
+            : "Training demonstration") +
+          '</p><p class="times">' +
           sample.times
             .map((t, i) => "t" + i + " = " + t.toFixed(6))
             .join("<br>") +
@@ -1340,7 +1347,7 @@ async function boot() {
         $("wake-phase").textContent = String(health.phase).startsWith("error")
           ? "Model unavailable"
           : health.phase === "precomputing predictions"
-            ? "Preparing six predictions"
+            ? "Preparing cached predictions"
             : "Loading model";
         $("wake-title").textContent = String(health.phase).startsWith("error")
           ? "The model could not start"

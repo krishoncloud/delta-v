@@ -198,19 +198,18 @@ def load_fno_checkpoint(model: "torch.nn.Module", ckpt_path: str, device: str = 
 # ---------------------------------------------------------------------------
 # Full-field (deep-dive) inference.
 # ---------------------------------------------------------------------------
-@torch.no_grad()
-def run_fno_inference(
+def _prepare_history(
     model: "torch.nn.Module",
     history_frames: list[np.ndarray],  # list of N_HISTORY raw (H, W, n_fields) arrays
     name: str,
     stats: dict,
     device: str = "cpu",
-) -> np.ndarray:
+) -> torch.Tensor:
     """
     history_frames: N_HISTORY consecutive raw frames for `name`'s native
-    field layout, oldest first. Returns the predicted next canonical frame
-    as a (C, H, W) array in ORIGINAL (denormalized) units, resampled to
-    TARGET_HW — matching what the model was trained to output.
+    field layout, oldest first. Returns normalized canonical model input
+    shaped (1, N_HISTORY*C, *TARGET_HW). This conversion runs only once
+    per rollout; predictions must never pass back through native conversion.
     """
     if len(history_frames) != N_HISTORY:
         raise ValueError(f"expected {N_HISTORY} history frames, got {len(history_frames)}")
@@ -226,6 +225,25 @@ def run_fno_inference(
         xs.append(t)
     x = torch.cat(xs, dim=0).unsqueeze(0).to(device)  # (1, N_HISTORY*C, H, W)
 
-    pred = model(x)[0]  # (C, H, W), normalized
-    pred = denormalize(pred, stats)
-    return pred.cpu().numpy()
+    return x
+
+
+@torch.no_grad()
+def run_fno_rollout(model, history_frames, name, stats, n_steps, device="cpu"):
+    """Feed back normalized canonical predictions, never native/raw frames."""
+    if isinstance(n_steps, bool) or not isinstance(n_steps, int) or not 1 <= n_steps <= 30:
+        raise ValueError("n_steps must be an integer between 1 and 30")
+    x = _prepare_history(model, history_frames, name, stats, device)
+    outputs = []
+    for _ in range(n_steps):
+        pred = model(x)
+        if pred.shape != (1, C, *TARGET_HW) or not torch.isfinite(pred).all():
+            raise ValueError("model returned an invalid prediction")
+        outputs.append(denormalize(pred[0].detach().cpu().clone(), stats).numpy())
+        x = torch.cat((x[:, C:], pred), dim=1)
+    return np.stack(outputs).astype(np.float32)
+
+
+@torch.no_grad()
+def run_fno_inference(model, history_frames, name, stats, device="cpu"):
+    return run_fno_rollout(model, history_frames, name, stats, 1, device)[0]
