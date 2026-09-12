@@ -147,8 +147,14 @@
         1%, 5%, 10%, 25%, 50%, 100%, identical splits and validation budgets,
         and report trainable parameters, wall time and per-channel errors. The
         supplied notebook excludes Euler from joint training, but includes a
-        scratch-versus-full-fine-tuning experiment on fresh models. Saved scores
-        were not supplied. The new learned-adapter arm has 292 trainable real
+        scratch-versus-full-fine-tuning experiment on fresh models. The owner
+        subsequently supplied the converged 30-epoch two-arm result: losses
+        0.0089 versus 0.0107, with a reported 16.3% lower error for the
+        pretrained start. These training measurements are not live API results.
+        Only one gamma value was represented instead of four intended, due to a
+        selection bug. No fine-tuned checkpoints were saved. See the
+        <a href="/#probe">Generalization probe</a> for provenance and
+        limitations. The new learned-adapter arm has 292 trainable real
         parameters; the three-arm runner is implemented but has not been run.
         Target normalization is fitted only on each training fraction,
         identically for all arms. Complete exposure records remain required for

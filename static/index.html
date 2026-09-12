@@ -16,7 +16,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="app.css?v=prototype-3" />
+    <link rel="stylesheet" href="app.css?v=prototype-4" />
   </head>
   <body>
     <a class="skip" href="#main-content">Skip to content</a>
@@ -77,7 +77,7 @@
             <div class="hero-actions">
               <a
                 class="btn primary"
-                href="#simulator?system=shear_flow&amp;sample=sf_Re1e5_Sc1&amp;field=pressure&amp;example=1"
+                href="#simulator?system=shear_flow&amp;sample=sf_Re1e5_Sc1&amp;field=pressure&amp;frame=4&amp;tour=1"
                 >Explore a 30-second example ↗</a
               ><a class="text-link" href="#about">Understand Delta-V →</a>
             </div>
@@ -204,6 +204,9 @@
             ><a href="#models" data-nav="models"><span>◇</span> Model</a
             ><a href="#settings" data-nav="settings"><span>⚙</span> Settings</a
             ><a href="#about" data-nav="about"><span>ⓘ</span> About Delta-V</a>
+            <a href="#probe" data-nav="probe"
+              ><span>↗</span> Generalization probe</a
+            >
             <a href="#feedback" data-nav="feedback"><span>✎</span> Feedback</a>
           </nav>
           <div class="sidebar-info">
@@ -332,45 +335,15 @@
               >
             </section>
             <section id="euler-research" class="card prose launch-guide" hidden>
-              <p class="eyebrow">FOURTH SYSTEM / RESEARCH PLANNED</p>
-              <h2>Euler shock interactions</h2>
+              <p class="eyebrow">FOURTH SYSTEM / STATIC RESULTS</p>
+              <h2>Euler generalization probe</h2>
               <p>
-                Compressible fluid regions meet and produce interacting waves.
-                This view tracks the next research question: can a model trained
-                on three other fluid systems learn this fourth system with less
-                new data?
+                Euler was held out of joint pretraining, then fine-tuned on
+                scarce data. The recorded two-arm comparison reports 16.3% lower
+                error for the pretrained start. This is not a live prediction.
               </p>
-              <p>
-                <strong>Current status:</strong> the training notebook includes
-                full fine-tuning versus training from scratch, plus a data
-                mapping and normalization artifact. Its exported code contains
-                no saved scores. The learned-adapter arm and a
-                trajectory-separated evaluation are new work; prediction
-                controls are unavailable here.
-              </p>
-              <h3>What the experiment will compare</h3>
-              <ul>
-                <li>
-                  <strong>Learn from scratch:</strong> train all model weights
-                  from a random start.
-                </li>
-                <li>
-                  <strong>Adapt all weights:</strong> start from the shared
-                  checkpoint and fine-tune the complete model.
-                </li>
-                <li>
-                  <strong>Train small adapters:</strong> freeze the shared model
-                  and learn small input/output mappings.
-                </li>
-              </ul>
-              <p>
-                Use the same held-out trajectories for all methods; compare 1%,
-                5%, 10%, 25%, 50% and 100% of training trajectories. Report
-                error by field, training time, and the number of trainable
-                parameters. Planned fractions are not completed experiments.
-              </p>
-              <a class="text-link" href="technical-note.html#evaluation"
-                >Read the evaluation protocol →</a
+              <a class="btn primary" href="#probe"
+                >See the two-arm experiment and its limitations →</a
               >
             </section>
             <details class="parametric card" id="parametric" open>
@@ -560,6 +533,89 @@
                 >
               </aside>
             </div>
+            <section id="rollout" class="card launch-guide">
+              <p class="eyebrow" id="rollout-capability">
+                AUTOREGRESSIVE PLAYBACK · BACKEND CONNECTION PENDING
+              </p>
+              <h2>How far can the prediction follow the flow?</h2>
+              <p>
+                Use f0–f3 to predict f4, then feed each prediction back into the
+                next four-frame input. This is a generated sequence—not
+                recorded-frame playback. FPS controls playback speed, not
+                inference speed.
+              </p>
+              <div class="rollout-controls">
+                <label
+                  >First predicted frame<input
+                    id="rollout-start"
+                    type="number"
+                    min="4"
+                    max="35"
+                    value="4"
+                    step="1"
+                /></label>
+                <label
+                  >Last predicted frame<input
+                    id="rollout-end"
+                    type="number"
+                    min="4"
+                    max="35"
+                    value="10"
+                    step="1"
+                /></label>
+                <button id="rollout-run" class="btn primary" disabled>
+                  Generate range
+                </button>
+              </div>
+              <p id="rollout-status" role="status">
+                Checking the selected system's rollout capability…
+              </p>
+              <p id="rollout-reference" class="small muted"></p>
+              <div id="rollout-playback" hidden>
+                <div class="rollout-controls">
+                  <button id="rollout-play" class="btn secondary">
+                    Play predictions</button
+                  ><label
+                    >Predicted frame<input
+                      id="rollout-scrubber"
+                      type="range"
+                      min="4"
+                      max="10"
+                      value="4"
+                      step="1" /></label
+                  ><label
+                    >Playback speed<select id="rollout-fps">
+                      <option value="1">1 fps</option>
+                      <option value="2">2 fps</option>
+                      <option value="5">5 fps</option>
+                      <option value="10">10 fps</option>
+                    </select></label
+                  >
+                </div>
+                <p id="rollout-frame-label"></p>
+                <div id="rollout-panels" class="rollout-panels"></div>
+              </div>
+              <h3>Error versus predicted step</h3>
+              <p id="rollout-chart-note">
+                No rollout results yet. No error curve is drawn without measured
+                data.
+              </p>
+              <svg
+                id="rollout-chart"
+                viewBox="0 0 640 210"
+                role="img"
+                aria-label="Error versus predicted frame; no results yet"
+              >
+                <path d="M55 15V175H625" fill="none" stroke="currentColor" />
+                <text x="260" y="205" fill="currentColor">Predicted frame</text>
+              </svg>
+              <p>
+                We show reference comparisons to expose where predictions drift.
+                Drift need not increase at every step. Later inference can run
+                without a reference, but its true error cannot be measured
+                without ground truth; validation will still matter.
+              </p>
+            </section>
           </section>
           <section id="page-history" class="page" hidden>
             <div class="page-heading">
@@ -820,6 +876,117 @@
               >
             </p>
           </section>
+          <section id="page-probe" class="page" hidden data-probe-mode="static">
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">LANE 1 · FLUID SYSTEMS</p>
+                <h1>Generalization probe</h1>
+                <p>Can prior fluid learning help on a fourth system?</p>
+              </div>
+              <span class="badge">STATIC RESULTS · NOT LIVE INFERENCE</span>
+            </div>
+            <div class="card prose launch-guide">
+              <p>
+                Euler shock interactions were held out of joint pretraining
+                entirely. Both arms then learned from the same scarce Euler
+                data: one started from the SEM-pretrained joint checkpoint, the
+                other from random weights.
+              </p>
+              <div class="probe-arms">
+                <article>
+                  <p class="eyebrow">ARM A · PRETRAINED START</p>
+                  <h2>0.0089</h2>
+                  <p>Final loss · 30 fine-tuning epochs</p>
+                  <p>
+                    Start with prior learning from the three fluid systems, then
+                    fine-tune the model weights on Euler.
+                  </p>
+                </article>
+                <article>
+                  <p class="eyebrow">ARM B · FROM SCRATCH</p>
+                  <h2>0.0107</h2>
+                  <p>Final loss · 30 training epochs</p>
+                  <p>
+                    Start with random weights and learn on the same scarce-data
+                    Euler setup, without that prior learning.
+                  </p>
+                </article>
+              </div>
+              <h2>16.3% lower error with the pretrained start</h2>
+              <p>
+                <strong
+                  >Measured during training; reported by the project
+                  owner.</strong
+                >
+                Both arms were reported fully converged in the 30-epoch rerun.
+                The percentage is the reported result, not recalculated from the
+                rounded losses above. These are aggregate losses, not the
+                simulator's per-field relative L2 scores or its 15% acceptance
+                target.
+              </p>
+              <p>
+                <strong>Important limitation:</strong> a file-selection bug
+                limited fine-tuning to one distinct gamma value instead of the
+                four intended. This narrows the evidence. The gamma-aware rerun
+                is pending; new results may differ.
+              </p>
+              <p>
+                The earlier short-budget comparison was superseded because the
+                scratch arm had not converged. Fine-tuned checkpoints were not
+                saved, so neither arm can run live here. The source notebook
+                supplied earlier contained code, not saved outputs; the numbers
+                above are the owner's subsequently supplied record.
+              </p>
+              <h3>What this experiment does—and does not—test</h3>
+              <p>
+                It compares two starting points for full-model training. It does
+                not test frozen-backbone learned adapters. It is evidence
+                <em>in the direction of</em> transfer to another fluid system,
+                not proof of generalization to arbitrary physics. A
+                trajectory-separated rerun and saved checkpoints are needed for
+                stronger claims.
+              </p>
+            </div>
+            <div class="card prose launch-guide">
+              <p class="eyebrow">MATURITY LADDER · PER DOMAIN LANE</p>
+              <h2>SEM → Multi-system SEM → Proto-LEM → LEM</h2>
+              <ol class="maturity-ladder">
+                <li>
+                  <strong>SEM:</strong> a single-system engineering-model
+                  experience. The three live systems are presented at this
+                  maturity level; their current implementation shares one
+                  jointly trained checkpoint.
+                </li>
+                <li>
+                  <strong>Multi-system SEM:</strong> demonstrate reliable shared
+                  learning across systems within this fluid lane. Sharing
+                  weights alone does not establish that milestone.
+                </li>
+                <li>
+                  <strong>Proto-LEM:</strong> demonstrate generalization to one
+                  unseen fluid system—not universal physics generalization.
+                </li>
+                <li>
+                  <strong>LEM:</strong> a broader, rigorously validated
+                  engineering model within the domain lane; not claimed here.
+                </li>
+              </ol>
+              <p>
+                The Euler result is evidence
+                <strong>in the direction of</strong> the next rung, not a claim
+                that Delta-V has reached it. A solid-mechanics lane would have
+                its own separate climb.
+              </p>
+              <p>
+                Next: fix gamma selection, rerun both arms, save checkpoints and
+                provenance, then connect a real side-by-side. A learned-adapter
+                arm remains a separate future experiment.
+              </p>
+              <a href="#simulator" class="text-link"
+                >Explore the three live systems →</a
+              >
+            </div>
+          </section>
           <section id="page-about" class="page about" hidden>
             <div class="page-heading">
               <div>
@@ -1057,11 +1224,16 @@
                     <code>euler_multi_quadrants_openBC</code> but excludes it
                     from the served fluid family. This was explored as a
                     generalization probe. The supplied notebook implements full
-                    fine-tuning versus training from scratch on Euler; saved
-                    results were not included. A frozen-backbone learned-adapter
-                    arm, a trajectory-separated evaluation and comparisons
-                    across data fractions are new work. No adaptation advantage
-                    is claimed.
+                    fine-tuning versus training from scratch on Euler. The owner
+                    subsequently supplied a 30-epoch result: 0.0089 versus
+                    0.0107 final loss, with a reported 16.3% lower error for the
+                    pretrained start. Only one gamma value was covered instead
+                    of four intended; checkpoints were not saved. See
+                    <a href="#probe">the two-arm probe and caveats</a>. A
+                    frozen-backbone learned-adapter arm, a trajectory-separated
+                    evaluation and comparisons across data fractions are new
+                    work. The two-arm result points in the direction of
+                    transfer; learned-adapter advantage is not established.
                   </p>
                   <h3>Next questions</h3>
                   <p>
@@ -1193,7 +1365,8 @@
       </p>
     </dialog>
     <script src="colormaps.js"></script>
-    <script src="launch.js?v=prototype-3"></script>
-    <script src="app.js?v=prototype-3"></script>
+    <script src="rollout.js?v=prototype-4"></script>
+    <script src="launch.js?v=prototype-4"></script>
+    <script src="app.js?v=prototype-4"></script>
   </body>
 </html>

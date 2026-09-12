@@ -71,6 +71,7 @@ function harness() {
     },
   });
   const run = (code) => vm.runInContext(code, ctx);
+  run(fs.readFileSync(path.join(__dirname, "../static/rollout.js"), "utf8"));
   run(fs.readFileSync(path.join(__dirname, "../static/launch.js"), "utf8"));
   run(source);
   run(
@@ -102,6 +103,68 @@ test("shared links encode identifiers, field and frame without arrays", () => {
     h.run("shareLink()"),
     "https://example.test/#simulator?system=euler_multi_quadrants_openBC",
   );
+});
+test("sharing reads visible controls and separates tour from frame", () => {
+  const h = harness();
+  setupField(h);
+  h.ctx.location = {
+    origin: "https://example.test",
+    pathname: "/",
+    hash: "#simulator?system=stale&example=1",
+  };
+  h.run(
+    '$("systems").value="rayleigh_benard"; $("samples").value="rb_Ra1e8_Pr1"; $("channels").value="1"; $("time-select").value="2"; LAUNCH.example=true;',
+  );
+  assert.equal(
+    h.run("shareLink()"),
+    "https://example.test/#simulator?system=rayleigh_benard&sample=rb_Ra1e8_Pr1&field=pressure&frame=2&tour=1",
+  );
+  assert.equal(h.run('sharedSelection("#simulator?frame=2&tour=1").frame'), 2);
+  assert.equal(
+    h.run('sharedSelection("#simulator?frame=2&tour=1").example'),
+    true,
+  );
+  assert.equal(h.run('sharedSelection("#simulator?example=1").frame'), null);
+});
+test("rollout range generates intermediate frames and capabilities fail closed", () => {
+  const h = harness();
+  assert.equal(h.run("rolloutRange(7,10,7).n_steps"), 7);
+  assert.throws(() => h.run("rolloutRange(3,10,7)"));
+  assert.throws(() => h.run("rolloutRange(10,7,7)"));
+  assert.throws(() => h.run("rolloutRange(4,11,7)"));
+  assert.equal(h.run("rolloutCapability({})"), null);
+  assert.equal(
+    h.run(
+      'rolloutCapability({rollout:{available:true,contract:"unknown",max_steps:7}})',
+    ),
+    null,
+  );
+});
+test("rollout validates identity, revision, shape and missing scores stay gaps", () => {
+  const h = harness();
+  h.run(
+    'var expected={n_steps:2,first:4,last:5,system:"shear_flow",sample:"s",revision:"rev"}; var parsed={shape:[2,4,256,256],data:new Float32Array(2*4*256*256)}; var meta={contract:"deltav-rollout-v1",system:"shear_flow",sample_id:"s",cache_revision:"rev",first_frame:4,steps:[{frame:4,quality:{scalar:{rel_l2:.1}}},{frame:5,quality:null}]};',
+  );
+  assert.equal(
+    h.run(
+      'rolloutScores(validateRollout(parsed,meta,expected),"scalar")[1].value',
+    ),
+    null,
+  );
+  assert.equal(
+    h.run(
+      "chartMarkup([{frame:4,value:.1},{frame:5,value:null},{frame:6,value:.2}],4).match(/<circle/g).length",
+    ),
+    2,
+  );
+  assert.throws(() =>
+    h.run('validateRollout(parsed,{...meta,sample_id:"other"},expected)'),
+  );
+  assert.throws(() =>
+    h.run('validateRollout(parsed,{...meta,cache_revision:"stale"},expected)'),
+  );
+  h.run("parsed.data[0]=NaN");
+  assert.throws(() => h.run("validateRollout(parsed,meta,expected)"));
 });
 test("anonymous tracking respects privacy signals and sends only an event name", async () => {
   const h = harness();

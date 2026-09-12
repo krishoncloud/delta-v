@@ -63,14 +63,17 @@ function sharedSelection(hash = location.hash) {
     sample: q.get("sample"),
     field: q.get("field"),
     frame: q.has("frame") ? Number(q.get("frame")) : null,
-    example: q.get("example") === "1",
+    example: q.get("tour") === "1" || q.get("example") === "1",
   };
 }
 async function applySelectionLink() {
   const link = sharedSelection();
   LAUNCH.example = link.example;
   LAUNCH.completed = false;
-  if (link.system === EULER_SYSTEM) {
+  if (
+    link.system === EULER_SYSTEM &&
+    !S.systems.some((s) => s.system === EULER_SYSTEM)
+  ) {
     showResearch();
     return;
   }
@@ -89,6 +92,7 @@ async function applySelectionLink() {
   await selectSystem(sys, sample?.id);
 }
 function showResearch() {
+  resetRollout();
   fieldAbortController?.abort();
   sampleAbortController?.abort();
   parametricController?.abort();
@@ -104,6 +108,7 @@ function showResearch() {
   S.running = false;
   $("systems").value = EULER_SYSTEM;
   $("euler-research").hidden = false;
+  $("rollout").hidden = true;
   $("parametric").hidden = true;
   $("field-workspace").hidden = true;
   $("example-guide").hidden = true;
@@ -116,22 +121,27 @@ function showResearch() {
   $("sample-description").textContent =
     "Euler shock interactions · research plan, not a served prediction";
   $("share-box").hidden = true;
-  $("run").textContent = "Experiment planned";
+  $("run").textContent = "Static probe results";
   $("selection-info").textContent =
-    "Euler shock interactions · research plan · no evaluated model available";
+    "Euler shock interactions · static probe results · no saved checkpoint";
   $("load-status").textContent =
-    "Fourth system: experiment design available below.";
+    "Fourth system: recorded two-arm results, not live inference.";
   $("share-result").disabled = false;
   $("binary-result").hidden = true;
+  if (typeof history !== "undefined" && page === "simulator")
+    history.replaceState(null, "", shareLink());
   track("system_selected");
 }
 function showServedSystem() {
   LAUNCH.research = false;
   $("euler-research").hidden = true;
+  $("rollout").hidden = false;
   $("parametric").hidden = false;
   $("field-workspace").hidden = false;
 }
 function updateLaunchUI() {
+  syncSelectionURL();
+  updateRolloutControls();
   if (!S.active || LAUNCH.research) return;
   $("load-status").textContent = S.loading
     ? "Loading recorded simulation frames…"
@@ -140,7 +150,7 @@ function updateLaunchUI() {
       : S.pred
         ? "Comparison ready. All four fields have measured errors below."
         : "Select an example to load its comparison.";
-  $("share-result").disabled = !S.sample;
+  $("share-result").disabled = !S.sample || !S.frames || S.loading || S.running;
   $("example-guide").hidden =
     !LAUNCH.example || S.sample?.id !== "sf_Re1e5_Sc1";
   $("example-complete").hidden = !LAUNCH.completed;
@@ -229,26 +239,57 @@ async function displayRequest(url, fallback, signal) {
   }
 }
 function shareLink() {
+  // The controls are the displayed selection. Never reuse the incoming hash.
+  const uiSystem = $("systems").value || S.active?.system;
+  const uiSample = $("samples").value || S.sample?.id;
+  const uiChannel =
+    $("channels").value === undefined ? S.ch : Number($("channels").value);
+  const uiFrame =
+    $("time-select").value === undefined
+      ? S.tIdx
+      : Number($("time-select").value);
   const q = new URLSearchParams(
     LAUNCH.research
       ? { system: EULER_SYSTEM }
       : {
-          system: S.active.system,
-          sample: S.sample.id,
-          field: CH_CANON[S.ch],
-          frame: String(S.tIdx),
+          system: uiSystem,
+          sample: uiSample,
+          field: CH_CANON[uiChannel] || CH_CANON[S.ch],
+          frame: String(Number.isInteger(uiFrame) ? uiFrame : S.tIdx),
         },
   );
+  if (LAUNCH.example && !LAUNCH.research) q.set("tour", "1");
   return location.origin + location.pathname + "#simulator?" + q;
 }
+function syncSelectionURL() {
+  if (
+    typeof history === "undefined" ||
+    page !== "simulator" ||
+    !S.sample ||
+    S.loading ||
+    S.running ||
+    LAUNCH.research
+  )
+    return;
+  const link = shareLink();
+  history.replaceState(null, "", link);
+  if (!$("share-box").hidden) {
+    $("share-url").value = link;
+    $("share-label").textContent =
+      "Current selection link — copy again after changing a control.";
+  }
+}
 function initLaunch() {
+  initRollout();
   loadHeldOut();
   $("menu-toggle").onclick = () => {
     const open = $("workspace").classList.toggle("menu-open");
     $("menu-toggle").setAttribute("aria-expanded", String(open));
   };
   $("share-result").onclick = async () => {
+    if (!LAUNCH.research && (!S.frames || S.loading || S.running)) return;
     const link = shareLink();
+    if (typeof history !== "undefined") history.replaceState(null, "", link);
     $("share-url").value = link;
     $("share-box").hidden = false;
     try {

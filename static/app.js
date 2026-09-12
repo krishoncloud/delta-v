@@ -168,6 +168,7 @@ function route() {
     "settings",
     "about",
     "feedback",
+    "probe",
   ].includes(hash)
     ? hash
     : "home";
@@ -184,7 +185,10 @@ function route() {
   document.title =
     "Delta-V — " +
     (page === "home" ? "Explore learned fluid dynamics" : pretty(page));
-  if (page !== "simulator") stopPlayback();
+  if (page !== "simulator") {
+    stopPlayback();
+    stopRolloutPlayback();
+  }
   if (page === "simulator" && S.frames) requestAnimationFrame(renderStage);
   window.scrollTo(0, 0);
   $("workspace").classList.remove("menu-open");
@@ -430,6 +434,7 @@ function syncControls() {
 }
 async function selectSystem(sys, sampleId) {
   if (!sys) return;
+  resetRollout();
   showServedSystem();
   track("system_selected");
   stopPlayback();
@@ -462,6 +467,7 @@ async function selectSystem(sys, sampleId) {
 }
 async function loadSample(sample) {
   if (!sample) return;
+  resetRollout();
   stopPlayback();
   fieldAbortController?.abort();
   sampleAbortController?.abort();
@@ -516,6 +522,7 @@ async function loadSample(sample) {
 }
 function renderStage() {
   updateLaunchUI();
+  renderRollout();
   const has = !!S.frames;
   $("stage-empty").hidden = has;
   $("panels").hidden = !has;
@@ -1383,7 +1390,9 @@ async function boot() {
             "</option>",
         )
         .join("") +
-      '<option value="euler_multi_quadrants_openBC">Euler shock interactions — research planned</option>';
+      (S.systems.some((s) => s.system === EULER_SYSTEM)
+        ? ""
+        : '<option value="euler_multi_quadrants_openBC">Euler shock interactions — static probe</option>');
     renderDatasets();
     loadEvidence();
     if (pendingSystem)
@@ -1411,7 +1420,8 @@ document.querySelector(".skip").onclick = (event) => {
 $("theme").onclick = toggleTheme;
 $("settings-theme").onclick = toggleTheme;
 $("systems").onchange = (e) =>
-  e.target.value === EULER_SYSTEM
+  e.target.value === EULER_SYSTEM &&
+  !S.systems.some((s) => s.system === EULER_SYSTEM)
     ? showResearch()
     : selectSystem(S.systems.find((s) => s.system === e.target.value));
 $("samples").onchange = (e) =>
