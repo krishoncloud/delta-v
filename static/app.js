@@ -167,7 +167,6 @@ function route() {
     "models",
     "settings",
     "about",
-    "feedback",
     "probe",
   ].includes(hash)
     ? hash
@@ -200,7 +199,6 @@ function route() {
       home: "landing_viewed",
       simulator: "simulator_opened",
       about: "about_opened",
-      feedback: "feedback_opened",
     }[page] || "",
   );
 }
@@ -1254,8 +1252,8 @@ const TOUR = [
   ],
   [
     "recent-runs",
-    "Revisit and give feedback",
-    "Run history saves metrics and previews in this browser. Datasets explains every window; About explains the research and limitations. Share observations using Give feedback.",
+    "Revisit previous comparisons",
+    "Run history saves metrics and previews in this browser. Datasets explains every window; About explains the research and limitations.",
   ],
 ];
 function showTour(step) {

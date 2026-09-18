@@ -1864,35 +1864,9 @@ dialog > p {
   cursor: pointer;
   color: var(--accent);
 }
-.feedback-form {
-  padding: 24px;
-  display: grid;
-  gap: 22px;
-  max-width: 760px;
-}
-.feedback-form label {
-  display: grid;
-  gap: 8px;
-  font-size: 16px;
-}
-textarea,
 #share-url {
   border: 1px solid var(--line-strong);
   border-radius: 6px;
-  padding: 12px;
-  background: var(--surface);
-  color: var(--text);
-  font: inherit;
-}
-textarea {
-  resize: vertical;
-  min-height: 90px;
-  width: 100%;
-}
-#feedback-output {
-  min-height: 260px;
-}
-.feedback-form select {
   padding: 12px;
   background: var(--surface);
   color: var(--text);
@@ -1964,8 +1938,7 @@ textarea {
     box-shadow: var(--shadow);
     font-size: 14px;
   }
-  .launch-guide,
-  .feedback-form {
+  .launch-guide {
     padding: 18px;
   }
   .selection-bar select {

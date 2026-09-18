@@ -128,7 +128,7 @@ ANALYTICS = Counter()
 ANALYTICS_LOCK = threading.Lock()
 EVENTS = {"landing_viewed", "simulator_opened", "example_completed", "system_selected",
           "field_selected", "prediction_displayed", "prediction_failed", "about_opened",
-          "limitations_opened", "feedback_opened"}
+          "limitations_opened"}
 
 
 def _pull_artifacts():

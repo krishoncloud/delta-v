@@ -186,9 +186,6 @@ measured evidence.
   arrays are what get scored.
 - Startup precomputation of the fixed windows, with a wake-up screen that
   reports loading phase while the 858 MB checkpoint loads.
-- In-app feedback form. Feedback is **public**: the form prepares text in the
-  browser and hands it to a GitHub issue that you publish yourself. There is no
-  private inbox. Delivery was verified end-to-end ([#1](https://github.com/krishoncloud/delta-v/issues/1)).
 - A [five-minute usability test kit](static/usability-test.html) for 5–10
   participants.
 - Scoped security review in [`SECURITY_REVIEW.md`](SECURITY_REVIEW.md):
@@ -258,10 +255,10 @@ epoch-3 weights due to a save-if-better bug and is not automatically better.
 2. **Train at scale.** Full-trajectory, trajectory-separated training on lane
    1 and re-measure the rollout horizon. This is the main lever.
 3. **Evaluate the parametric tier** on its own terms.
-4. **Real user sessions** with the usability kit; feedback drives the next
+4. **Real user sessions** with the usability kit; observations drive the next
    iteration.
-5. **Infra follow-ups:** rate limiting, CORS allowlist, private feedback
-   channel, deployment lockfile/SBOM.
+5. **Infra follow-ups:** rate limiting, CORS allowlist and deployment
+   lockfile/SBOM.
 6. **Open lane 2.**
 
 ---
@@ -269,5 +266,4 @@ epoch-3 weights due to a save-if-better bug and is not automatically better.
 ## Credits
 
 Built by Krish Malik and Adya Anwesha on Polymathic AI's The Well. Source:
-https://github.com/krishoncloud/delta-v · Feedback (public, GitHub sign-in
-required): https://github.com/krishoncloud/delta-v/issues
+https://github.com/krishoncloud/delta-v

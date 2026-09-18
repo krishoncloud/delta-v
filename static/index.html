@@ -188,13 +188,7 @@
               />
             </svg>
             DELTA-V</span
-          ><span>Built with The Well · Krish Malik &amp; Adya Anwesha</span
-          ><a
-            href="https://github.com/krishoncloud/delta-v/issues"
-            target="_blank"
-            rel="noopener"
-            >Share feedback ↗</a
-          >
+          ><span>Built with The Well · Krish Malik &amp; Adya Anwesha</span>
         </footer>
       </div>
       <div id="workspace" hidden>
@@ -211,7 +205,6 @@
             <a href="#probe" data-nav="probe"
               ><span>↗</span> Generalization probe</a
             >
-            <a href="#feedback" data-nav="feedback"><span>✎</span> Feedback</a>
           </nav>
           <div class="sidebar-info">
             <span class="eyebrow">CURRENT SELECTION</span>
@@ -222,12 +215,6 @@
               <span id="dot" class="dot"></span
               ><span id="status-text">Connecting to model</span>
             </div>
-            <a
-              href="https://github.com/krishoncloud/delta-v/issues"
-              target="_blank"
-              rel="noopener"
-              >Give feedback ↗</a
-            >
           </div>
         </aside>
         <div class="workspace-content">
@@ -332,10 +319,10 @@
               </p>
               <a
                 id="example-complete"
-                href="#feedback"
+                href="#about"
                 class="btn primary small"
                 hidden
-                >Was this comparison useful? →</a
+                >Understand this comparison →</a
               >
             </section>
             <section id="euler-research" class="card prose launch-guide" hidden>
@@ -801,11 +788,11 @@
               >
               <p>
                 Only fixed event names are sent to this app: page views,
-                selections, completed examples, prediction success/failure and
-                feedback visits. No visitor IDs, field arrays or feedback text
-                are included. Do Not Track and Global Privacy Control are
-                respected. Counts reset when the server restarts; hosting
-                providers may keep their own request logs.
+                selections, completed examples and prediction success/failure.
+                No visitor IDs or field arrays are included. Do Not Track and
+                Global Privacy Control are respected. Counts reset when the
+                server restarts; hosting providers may keep their own request
+                logs.
               </p>
               <a
                 class="text-link"
@@ -828,121 +815,6 @@
               </p>
               <a class="text-link" href="#history">Manage run history →</a>
             </div>
-          </section>
-          <section id="page-feedback" class="page" hidden>
-            <div class="page-heading">
-              <div>
-                <p class="eyebrow">HELP SHAPE DELTA-V</p>
-                <h1>What did you discover?</h1>
-                <p>
-                  Your response stays in this page until you choose how to send
-                  it. No sign-in is needed to prepare or download it.
-                </p>
-              </div>
-            </div>
-            <form id="feedback-form" class="card feedback-form">
-              <label
-                >What were you trying to understand?<textarea
-                  name="Goal"
-                  maxlength="1000"
-                  required
-                ></textarea>
-              </label>
-              <label
-                >Was the comparison clear?<select name="Clarity" required>
-                  <option value="">Choose one</option>
-                  <option>Yes</option>
-                  <option>Partly</option>
-                  <option>No</option>
-                </select></label
-              >
-              <label
-                >Which system or feature would make this useful?<textarea
-                  name="Useful next step"
-                  maxlength="1000"
-                ></textarea>
-              </label>
-              <label
-                >What confused you?<textarea
-                  name="Confusion"
-                  maxlength="1000"
-                ></textarea>
-              </label>
-              <label
-                >Would you use this before running a full simulation?<select
-                  name="Would use before simulation"
-                  required
-                >
-                  <option value="">Choose one</option>
-                  <option>Yes</option>
-                  <option>Maybe</option>
-                  <option>No</option>
-                  <option>I do not run simulations</option>
-                </select></label
-              >
-              <label
-                >Current workplace (optional)<input
-                  name="Current workplace"
-                  maxlength="200"
-                  autocomplete="organization"
-              /></label>
-              <label
-                >LinkedIn URL (optional)<input
-                  id="feedback-linkedin"
-                  name="LinkedIn"
-                  type="text"
-                  inputmode="url"
-                  maxlength="500"
-                  placeholder="https://www.linkedin.com/in/your-profile"
-                  aria-describedby="linkedin-note"
-              /></label>
-              <p id="linkedin-note" class="small muted">
-                Optional professional profile link. Unusual URL formats are
-                allowed.
-              </p>
-              <p class="small muted">
-                Preparing feedback does not submit it. If you publish it as a
-                GitHub issue, all included text, workplace and profile
-                information will be public. Omit anything private.
-              </p>
-              <button class="btn primary" type="submit">
-                Prepare my feedback →
-              </button>
-            </form>
-            <section id="feedback-options" class="card launch-guide" hidden>
-              <h2>Your feedback is ready to send</h2>
-              <p>
-                Copy or download it to send directly to the project creator.
-                GitHub submission requires an account and creates a public
-                issue. Nothing has been submitted yet.
-              </p>
-              <textarea
-                id="feedback-output"
-                readonly
-                aria-label="Prepared feedback"
-              ></textarea>
-              <div class="hero-actions">
-                <button id="feedback-copy" class="btn secondary">
-                  Copy response</button
-                ><a
-                  id="feedback-download"
-                  class="btn secondary"
-                  download="delta-v-feedback.txt"
-                  >Download response</a
-                ><a
-                  id="feedback-github"
-                  class="text-link"
-                  target="_blank"
-                  rel="noopener"
-                  >Submit on GitHub ↗</a
-                >
-              </div>
-            </section>
-            <p>
-              <a href="usability-test.html"
-                >Try the five-minute usability test →</a
-              >
-            </p>
           </section>
           <section id="page-probe" class="page" hidden data-probe-mode="static">
             <div class="page-heading">
@@ -1186,11 +1058,10 @@
                   </p>
                   <p>
                     The project began in a software engineering lab. This public
-                    prototype is an invitation to test the interaction,
-                    understand its usefulness, and give feedback. The live lane
-                    uses only 2D data from The Well and complements
-                    high-fidelity simulation. Its output is not validated
-                    industrial simulation.
+                    prototype is an invitation to test the interaction and
+                    understand its usefulness. The live lane uses only 2D data
+                    from The Well and complements high-fidelity simulation. Its
+                    output is not validated industrial simulation.
                   </p>
                 </section>
                 <section id="approach">
@@ -1425,8 +1296,8 @@
                   <p>
                     Which comparisons help people judge a prediction? Where do
                     errors concentrate? Are more sample windows or longer
-                    rollouts useful? Feedback will guide the next iteration,
-                    alongside broader evaluation and clearer data provenance.
+                    rollouts useful? Broader evaluation and clearer data
+                    provenance will guide the next iteration.
                   </p>
                 </section>
                 <section id="walkthrough">
@@ -1476,7 +1347,7 @@
                       <strong>Explore the rest.</strong> Datasets explains
                       domains, parameters, windows, source indices, and times.
                       Model describes the architecture. Settings controls
-                      appearance. Feedback links open GitHub issues.
+                      appearance.
                     </li>
                   </ol>
                   <button id="about-tour" class="btn secondary">
@@ -1508,16 +1379,7 @@
                       >Model and dataset artifacts ↗</a
                     >
                   </p>
-                  <p>
-                    Created by Krish Malik and Adya Anwesha.
-                    <a
-                      href="https://github.com/krishoncloud/delta-v/issues"
-                      target="_blank"
-                      rel="noopener"
-                      >Share feedback on GitHub ↗</a
-                    >
-                    (GitHub sign-in required).
-                  </p>
+                  <p>Created by Krish Malik and Adya Anwesha.</p>
                 </section>
               </article>
               <aside class="about-aside">

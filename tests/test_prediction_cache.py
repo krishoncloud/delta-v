@@ -137,6 +137,7 @@ def test_lossless_display_transports(client):
 def test_usage_events_are_fixed_aggregate_names(client):
     before=client.get("/analytics").json()["counts"].get("landing_viewed",0)
     assert client.post("/events",json={"event":"landing_viewed"}).status_code == 204
+    assert client.post("/events",json={"event":"feedback_opened"}).status_code == 422
     assert client.post("/events",json={"event":"landing_viewed","visitor":"x"}).status_code == 422
     assert client.post("/events",json={"event":"arbitrary user content"}).status_code == 422
     after=client.get("/analytics").json()

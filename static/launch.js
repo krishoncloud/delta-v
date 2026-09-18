@@ -306,58 +306,6 @@ function initLaunch() {
       $("share-label").textContent = "Copy this link to share the selection.";
     }
   };
-  document
-    .querySelectorAll(
-      'a[href="https://github.com/krishoncloud/delta-v/issues"]',
-    )
-    .forEach((a) => {
-      a.href = "#feedback";
-      a.removeAttribute("target");
-      a.textContent = "Give feedback →";
-    });
-  $("feedback-linkedin").oninput = (e) => {
-    const value = e.target.value.trim();
-    let looksLinkedIn = !value;
-    try {
-      const host = new URL(
-        value.includes("://") ? value : "https://" + value,
-      ).hostname.toLowerCase();
-      looksLinkedIn = host === "linkedin.com" || host.endsWith(".linkedin.com");
-    } catch {}
-    $("linkedin-note").textContent = looksLinkedIn
-      ? "Optional professional profile link. Unusual URL formats are allowed."
-      : "This does not look like a linkedin.com URL. Check it if needed; you can still prepare feedback.";
-  };
-  $("feedback-form").onsubmit = async (e) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const body = [
-      "Delta-V prototype feedback",
-      ...Array.from(form, ([k, v]) => k + ": " + v),
-    ].join("\n\n");
-    $("feedback-output").value = body;
-    $("feedback-options").hidden = false;
-    $("feedback-github").href =
-      "https://github.com/krishoncloud/delta-v/issues/new?title=" +
-      encodeURIComponent("Prototype feedback") +
-      "&body=" +
-      encodeURIComponent(body);
-    const blob = new Blob([body], { type: "text/plain" });
-    if ($("feedback-download").dataset.blob)
-      URL.revokeObjectURL($("feedback-download").dataset.blob);
-    const url = URL.createObjectURL(blob);
-    $("feedback-download").href = url;
-    $("feedback-download").dataset.blob = url;
-  };
-  $("feedback-copy").onclick = async () => {
-    try {
-      await navigator.clipboard.writeText($("feedback-output").value);
-      $("feedback-copy").textContent = "Copied";
-    } catch {
-      $("feedback-output").focus();
-      $("feedback-output").select();
-    }
-  };
   $("analytics-toggle").checked =
     storageGet("deltav-analytics", true) !== false;
   $("analytics-toggle").onchange = (e) => {
