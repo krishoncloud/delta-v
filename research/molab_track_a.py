@@ -18,7 +18,7 @@ def _(mo):
 
     ### Track A — Euler transfer
 
-    This notebook prepares four Euler gamma settings, then compares **scratch FNO**,
+    This notebook reuses four Euler gamma settings saved under v2, then compares **scratch FNO**,
     **full fine-tuning of epoch 59**, and **a frozen FNO with learned adapters**.
     The nested training budgets are 1, 2, 4, 8, 16, and 32 trajectories.
     Pilot runs use validation data. Final runs use three seeds and a held-out
@@ -26,17 +26,18 @@ def _(mo):
 
     Before starting: attach MoLab's GPU using notebook specs and add `HF_TOKEN`
     in the Secrets panel. It must have read/write access to
-    `KrishMalik/deltav-fluid`. Install missing packages through MoLab's package
-    panel: `torch`, `neuraloperator`, `h5py`, `httpx`, `huggingface_hub`,
+    `KrishMalik/deltav-fluid`. In MoLab's package panel, pin
+    `torch==2.11.0`, `neuraloperator==2.0.0`, `tensorly-torch==0.5.0`,
+    `tensorly==0.10.0`; also install `h5py`, `httpx`, `huggingface_hub`,
     `numpy`, `scipy`, `scikit-image`, and `matplotlib`.
 
     Every expensive action below has its own button. The original training
     notebook is **not executed**. The 92 GB `slices/` directory and complete
-    21 GB Euler source files are **never downloaded**. Each completed gamma and
-    training job is saved to a new research path in your HF dataset. MoLab's
+    21 GB Euler source files are **never downloaded**. Existing gamma windows
+    are read from v2; new training jobs are saved under v3. MoLab's
     local files are temporary; the HF copies are the durable record.
     The four existing Euler artifacts that all contain gamma 1.13 are left
-    untouched; Track A creates four new, independently verified gamma groups.
+    untouched; Track A reuses the verified v2 gamma groups.
     """)
     return
 
@@ -52,6 +53,7 @@ def _():
     import subprocess
     import sys
     import time
+    from importlib.metadata import version as package_version
     from pathlib import Path
 
     import marimo as mo
@@ -68,6 +70,7 @@ def _():
         json,
         mo,
         os,
+        package_version,
         snapshot_download,
         statistics,
         subprocess,
@@ -83,21 +86,23 @@ def _(Path):
     GITHUB = "https://github.com/krishoncloud/delta-v.git"
     BRANCH = "research/euler-transfer"
     TRACK_B_CODE_SHA = "9682e94100deb294f4bc2a66a2cef12acce3639e"
-    PREFIX = "research/euler-track-a/v2"
+    PREFIX = "research/euler-track-a/v3"
+    DATA_PREFIX = "research/euler-track-a/v2"
     SOURCE_REVISION = "84e3eb65faf286533714295515caf9b99b4717a7"
     NOTEBOOK_SHA256 = "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf"
     GAMMAS = ("1.13", "1.22", "1.33", "1.365")
     BUDGETS = (1, 2, 4, 8, 16, 32)
     SEEDS = (42, 123, 2026)
     METHODS = ("scratch", "full_finetune", "adapter_only")
-    ROOT = Path("/tmp/deltav-track-a-v2")
+    ROOT = Path("/tmp/deltav-track-a-v3")
     CODE = ROOT / "code"
-    DATA = ROOT / PREFIX / "data"
+    DATA = ROOT / DATA_PREFIX / "data"
     return (
         BRANCH,
         BUDGETS,
         CODE,
         DATA,
+        DATA_PREFIX,
         DATASET,
         GAMMAS,
         GITHUB,
@@ -163,6 +168,7 @@ def _(
     json_bytes,
     mo,
     os,
+    package_version,
     setup_button,
     subprocess,
     torch,
@@ -173,6 +179,10 @@ def _(
         raise RuntimeError("Set HF_TOKEN in MoLab Secrets, then rerun this cell")
     if not torch.cuda.is_available():
         raise RuntimeError("Attach the GPU from MoLab notebook specs first")
+    for _package, _expected in (("torch", "2.11.0"), ("neuraloperator", "2.0.0"),
+                                ("tensorly-torch", "0.5.0"), ("tensorly", "0.10.0")):
+        if package_version(_package).split("+")[0] != _expected:
+            raise RuntimeError(f"Install {_package}=={_expected} in MoLab's package panel")
     api = HfApi(token=token)
     if not CODE.exists():
         CODE.parent.mkdir(parents=True, exist_ok=True)
@@ -226,72 +236,45 @@ def _(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 2. Prepare all four Euler gamma settings
+    ## 2. Verify the four Euler gamma settings already saved under v2
 
-    Click once to prepare all remaining gammas in order. Each gamma produces 16 trajectories:
-    8 train, 4 validation, 4 test. Four five-frame windows are taken from each
-    trajectory. Each gamma is uploaded to HF as soon as it finishes. If MoLab
-    interrupts the run, click again in the next session: saved gammas are
-    verified and skipped, and a partial local gamma resumes if still present.
-    Expect roughly 1.6 GB per gamma and 6.4 GB total. Preparation reads exact
-    HTTP ranges from the pinned official Well source.
+    This checks the v2 manifests and remote window inventory without reading
+    The Well or downloading any source HDF5. Each gamma has 16 trajectories:
+    8 train, 4 validation and 4 test, with four five-frame windows per trajectory.
+    If a gamma is missing, stop and finish v2 preparation before using v3.
     """)
     return
 
 
 @app.cell
 def _(mo):
-    prepare_button = mo.ui.run_button(label="2 · Prepare and save all remaining gammas")
+    prepare_button = mo.ui.run_button(label="2 · Verify saved v2 gamma windows")
     prepare_button
     return (prepare_button,)
 
 
 @app.cell
 def _(
-    CODE,
-    DATA,
+    DATA_PREFIX,
     DATASET,
     GAMMAS,
-    NOTEBOOK_SHA256,
-    PREFIX,
     Path,
     SOURCE_REVISION,
     api,
-    checkpoint,
     hf_hub_download,
     json,
     mo,
     prepare_button,
     protocol,
-    subprocess,
-    sys,
     token,
 ):
-    mo.stop(not prepare_button.value, mo.md("Click **Prepare** to process all remaining gamma values."))
+    mo.stop(not prepare_button.value, mo.md("Click **Verify** to check the saved v2 gamma windows."))
     _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
     for gamma in GAMMAS:
-        _gamma_prefix = f"{PREFIX}/data/gamma-{gamma}"
+        _gamma_prefix = f"{DATA_PREFIX}/data/gamma-{gamma}"
         _gamma_manifest = f"{_gamma_prefix}/manifest.json"
         if _gamma_manifest not in _remote_files:
-            destination = DATA / f"gamma-{gamma}"
-            print("PREPARING", gamma, flush=True)
-            subprocess.run([
-                sys.executable, "research/prepare_euler.py",
-                "--output-dir", str(destination),
-                "--checkpoint", checkpoint,
-                "--notebook-sha256", NOTEBOOK_SHA256,
-                "--source-revision", SOURCE_REVISION,
-                "--gammas", gamma,
-            ], cwd=CODE, check=True)
-            part = json.loads((destination / "manifest.json").read_text())
-            if part["selection"]["gammas"] != [gamma] or len(part["windows"]) != 64:
-                raise ValueError(f"Gamma {gamma} preparation is incomplete; refusing upload")
-            api.upload_folder(folder_path=str(destination), path_in_repo=_gamma_prefix,
-                              repo_id=DATASET, repo_type="dataset",
-                              commit_message=f"Save Euler gamma {gamma} Track A windows")
-            _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
-        else:
-            print("ALREADY SAVED", gamma, flush=True)
+            raise ValueError(f"Gamma {gamma} is missing from v2; finish v2 preparation first")
         remote = hf_hub_download(DATASET, _gamma_manifest, repo_type="dataset", token=token)
         part = json.loads(Path(remote).read_text())
         expected = {f"{_gamma_prefix}/{r['path']}" for r in part["windows"]}
@@ -303,18 +286,18 @@ def _(
                 or not expected.issubset(_remote_files)):
             raise ValueError(f"Gamma {gamma} remote manifest/windows are incomplete; stop and inspect HF")
         print("VERIFIED", gamma, "64 windows", flush=True)
-    print("All four gamma groups are saved and verified. Continue to step 3.")
+    print("All four v2 gamma groups are saved and verified. Continue to step 3.")
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 3. Assemble and restore the full dataset
+    ## 3. Restore the verified v2 dataset
 
-    Press after all four gammas are saved. This downloads **only** Track A
-    windows from your HF repo into the current MoLab session, combines their
-    manifests, and verifies the fixed 32/16/16 trajectory split. Repeat this
+    Press after all four gammas are verified. This downloads **only** the v2
+    prepared windows from your HF repo into the fresh v3 MoLab scratch directory,
+    checks their hashes, and verifies the fixed 32/16/16 trajectory split. Repeat this
     restore step in every new MoLab session before training.
     """)
     return
@@ -322,7 +305,7 @@ def _(mo):
 
 @app.cell
 def _(mo):
-    restore_button = mo.ui.run_button(label="3 · Restore four gammas and assemble manifest")
+    restore_button = mo.ui.run_button(label="3 · Restore verified v2 windows")
     restore_button
     return (restore_button,)
 
@@ -331,16 +314,15 @@ def _(mo):
 def _(
     CODE,
     DATA,
+    DATA_PREFIX,
     DATASET,
     GAMMAS,
-    PREFIX,
     Path,
     ROOT,
     api,
     checkpoint,
     file_sha256,
     hf_hub_download,
-    io,
     json,
     json_bytes,
     mo,
@@ -351,15 +333,16 @@ def _(
     sys,
     token,
 ):
-    mo.stop(not restore_button.value, mo.md("Click **Restore** after preparing all four gammas."))
+    mo.stop(not restore_button.value, mo.md("Click **Restore** after verifying all four v2 gammas."))
     _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
-    required = {f"{PREFIX}/data/gamma-{g}/manifest.json" for g in GAMMAS}
+    required = {f"{DATA_PREFIX}/data/gamma-{g}/manifest.json" for g in GAMMAS}
     if not required.issubset(_remote_files):
         raise ValueError(f"Prepare these gammas first: {sorted(required - _remote_files)}")
     snapshot_download(repo_id=DATASET, repo_type="dataset", token=token,
                       local_dir=str(ROOT),
-                      allow_patterns=[f"{PREFIX}/data/gamma-*/manifest.json",
-                                      f"{PREFIX}/data/gamma-*/windows/*.npy"])
+                      allow_patterns=[f"{DATA_PREFIX}/data/manifest.json",
+                                      f"{DATA_PREFIX}/data/gamma-*/manifest.json",
+                                      f"{DATA_PREFIX}/data/gamma-*/windows/*.npy"])
     parts = [json.loads((DATA / f"gamma-{g}" / "manifest.json").read_text()) for g in GAMMAS]
     if any(p["source_revision"] != protocol["source_revision"] or
            p["checkpoint"]["sha256"] != protocol["checkpoint_sha256"] for p in parts):
@@ -375,18 +358,8 @@ def _(
         raise ValueError(f"Unexpected Euler selection: {counts}, {len(combined['windows'])} windows")
     manifest_path = DATA / "manifest.json"
     payload = json_bytes(combined)
-    if manifest_path.exists() and manifest_path.read_bytes() != payload:
-        raise ValueError("Existing combined manifest differs from selected gamma files")
-    manifest_path.write_bytes(payload)
-    _remote_manifest = f"{PREFIX}/data/manifest.json"
-    if _remote_manifest in _remote_files:
-        _remote = hf_hub_download(DATASET, _remote_manifest, repo_type="dataset", token=token)
-        if json.loads(Path(_remote).read_text()) != combined:
-            raise ValueError("Saved combined manifest differs from the gamma files")
-    else:
-        api.upload_file(path_or_fileobj=io.BytesIO(payload), path_in_repo=_remote_manifest,
-                        repo_id=DATASET, repo_type="dataset",
-                        commit_message="Record fixed Euler Track A trajectory split")
+    if not manifest_path.exists() or manifest_path.read_bytes() != payload:
+        raise ValueError("Saved v2 combined manifest differs from the gamma files")
     subprocess.run([sys.executable, "-c",
                     "import sys; sys.path.insert(0, 'research'); from common import read_manifest, core; read_manifest(sys.argv[1], sys.argv[2], required_checkpoint_exclusion=core.EULER, require_statistics=False)",
                     str(manifest_path), checkpoint], cwd=CODE, check=True)

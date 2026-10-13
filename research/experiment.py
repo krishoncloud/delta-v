@@ -102,7 +102,7 @@ def main():
                     validation_trace.append({"step":step,"mse":score})
                     print(f"{method} budget={budget} seed={seed} step={step} validation_mse={score:.6g}", flush=True)
                     if score < best:
-                        best=score; best_step=step; best_state={k:v.detach().cpu().clone() for k,v in model.state_dict().items()}
+                        best=score; best_step=step; best_state={k:v.detach().cpu().clone() for k,v in model.state_dict().items() if torch.is_tensor(v)}
                 if args.device.startswith("cuda"): torch.cuda.synchronize()
                 elapsed=time.perf_counter()-started
                 if best_state is None: raise ValueError("No finite validation checkpoint")

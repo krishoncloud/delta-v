@@ -16,7 +16,7 @@ COPY requirements.txt .
 
 # CPU-only torch wheel first (avoids pulling the multi-GB CUDA build);
 # neuralop's own torch dependency is then already satisfied.
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+RUN pip install --no-cache-dir torch==2.11.0 --index-url https://download.pytorch.org/whl/cpu \
     && pip install --no-cache-dir -r requirements.txt
 
 COPY --chown=app:app main.py deltav_core.py ./
