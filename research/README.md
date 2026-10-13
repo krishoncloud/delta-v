@@ -77,17 +77,35 @@ systems, and reports each window plus means with equal trajectory weighting.
 
 ## Three-arm Euler experiment
 
+Prepare the four-gamma dataset with bounded HTTP ranges:
+
+`python research/prepare_euler.py --output-dir NEW_DATA_DIRECTORY
+--notebook DeltaV_FluidDomain_molab_v2.py --checkpoint domain_fluid.pt`
+
+The default selects 16 trajectories from each of gamma 1.13, 1.22, 1.33 and
+1.365, then assigns fixed 8/4/4 train/validation/test trajectories per gamma.
+It stores four five-frame windows per trajectory (starts 0, 32, 64 and 96),
+giving exactly 32 training trajectories and coverage for every requested
+budget. Each source is read through exact ranges with a 160 MiB cap per
+trajectory. No 21 GB source file and never the 92 GB `slices/` tree is
+downloaded. Expect about 6.4 GB of range traffic and local raw windows.
+
 `python research/experiment.py --manifest manifest.json --checkpoint model.pt
---output-dir NEW_DIRECTORY --device cuda` compares scratch, full fine-tuning,
+--output-dir NEW_DIRECTORY --device cuda --trajectory-budgets 1 2 4 8 16 32
+--seeds 42 --steps 1000 --validation-interval 100` compares scratch, full fine-tuning,
 and a frozen FNO with identity-initialized learned 1×1 input/output projections
 (292 trainable real parameters). The production architecture is untouched.
 
-Fractions are nested, selected by stable trajectory hashes with one seed.
-The same validation data and epoch budget are used for all arms; the best
-validation checkpoint is selected before test evaluation. The script reports
-actual trajectory counts, requested fraction, seed, best epoch, trainable and
+Trajectory budgets are nested and selected by stable trajectory hashes. They
+remain identical across random seeds, so seed variance is not confounded with
+different training data. Use one seed for the pilot, then `--seeds 42 123 2026`.
+The same validation data and optimization-step budget are used for all arms;
+the best validation checkpoint is selected. Pilot runs report validation metrics
+by default. After fixing the protocol, use `--evaluate-split test` once per final
+arm, budget, and seed. The script reports actual and requested trajectory counts,
+seed, best step, trainable and
 total real parameter counts (complex parameters count twice), wall time and
-per-channel metrics. Target normalization is fitted separately on each fraction's
+per-channel metrics. Target normalization is fitted separately on each budget's
 training windows only and saved with a hash; all three arms use those same
 statistics. Validation and test windows never contribute. Default settings are a baseline protocol, not an optimized
 or completed experiment. Repeat across seeds before making a transfer claim.

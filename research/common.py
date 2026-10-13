@@ -19,7 +19,16 @@ def sha256(path):
 def trajectory_key(record):
     return json.dumps([record[k] for k in ("system", "source_revision", "source_file", "trajectory")], separators=(",", ":"))
 
-def read_manifest(path, checkpoint=None):
+def euler_trajectory_plan(source_file, count):
+    ordered = sorted(range(40), key=lambda i: hashlib.sha256(f"{source_file}:{i}".encode()).hexdigest())[:count]
+    n_test = max(1, count // 4)
+    n_validation = max(1, count // 4)
+    n_train = count - n_validation - n_test
+    if n_train < 1:
+        raise ValueError("Need at least four trajectories per gamma")
+    return [(trajectory, "train" if i < n_train else "validation" if i < n_train + n_validation else "test") for i, trajectory in enumerate(ordered)]
+
+def read_manifest(path, checkpoint=None, required_checkpoint_exclusion=None, require_statistics=True):
     path = Path(path).resolve()
     manifest = json.loads(path.read_text())
     records = manifest["windows"]
@@ -44,15 +53,20 @@ def read_manifest(path, checkpoint=None):
         if sha256(r["local_path"]) != r["sha256"]:
             raise ValueError("Prepared window hash mismatch")
     ck = manifest.get("checkpoint", {})
-    if not ck.get("exposure_complete") or not ck.get("provenance_note"):
-        raise ValueError("Recover complete training/validation/normalization exposure records and cite the training notebook before evaluation")
+    if not ck.get("provenance_note"):
+        raise ValueError("Checkpoint provenance must cite the training record")
+    if required_checkpoint_exclusion:
+        if required_checkpoint_exclusion not in ck.get("excluded_systems", []):
+            raise ValueError("Checkpoint provenance does not establish exclusion of " + required_checkpoint_exclusion)
+    elif not ck.get("exposure_complete"):
+        raise ValueError("Recover complete training/validation/normalization exposure records before evaluation")
     exposed = set(ck["exposed_trajectories"])
     test_keys = {k for k, split in groups.items() if split == "test"}
     if test_keys & exposed:
         raise ValueError("Test trajectories were exposed to the checkpoint")
     if checkpoint and sha256(checkpoint) != ck["sha256"]:
         raise ValueError("Checkpoint hash does not match the provenance manifest")
-    for system in {r["system"] for r in records}:
+    for system in ({r["system"] for r in records} if require_statistics else set()):
         spec = manifest["statistics"][system]
         if not spec.get("provenance_verified"):
             raise ValueError("Statistics provenance must be verified for " + system)
