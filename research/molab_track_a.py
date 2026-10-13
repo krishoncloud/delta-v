@@ -177,6 +177,12 @@ def _(
     if not CODE.exists():
         CODE.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run(["git", "clone", "--branch", BRANCH, GITHUB, str(CODE)], check=True)
+    else:
+        _checkout_status = subprocess.check_output(
+            ["git", "-C", str(CODE), "status", "--porcelain"], text=True).strip()
+        if _checkout_status:
+            raise ValueError("MoLab research-code checkout has local edits; inspect before continuing")
+        subprocess.run(["git", "-C", str(CODE), "fetch", "origin", BRANCH], check=True)
     protocol_path = f"{PREFIX}/protocol.json"
     remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
     if protocol_path in remote_files:
@@ -188,6 +194,7 @@ def _(
     else:
         if any(path.startswith(f"{PREFIX}/") for path in remote_files):
             raise ValueError("Research files already exist without protocol.json; choose another prefix")
+        subprocess.run(["git", "-C", str(CODE), "checkout", "--detach", "origin/" + BRANCH], check=True)
         code_sha = subprocess.check_output(["git", "-C", str(CODE), "rev-parse", "HEAD"], text=True).strip()
         checkpoint_revision = api.dataset_info(DATASET).sha
         protocol = {"kind": "Delta-V Euler Track A", "code_sha": code_sha,
@@ -219,12 +226,13 @@ def _(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 2. Prepare Euler, one gamma at a time
+    ## 2. Prepare all four Euler gamma settings
 
-    Select each gamma and press the button. Each gamma produces 16 trajectories:
+    Click once to prepare all remaining gammas in order. Each gamma produces 16 trajectories:
     8 train, 4 validation, 4 test. Four five-frame windows are taken from each
-    trajectory. A gamma is uploaded to HF as soon as it finishes; rerunning the
-    same gamma will skip a completed remote copy. A partial local run resumes.
+    trajectory. Each gamma is uploaded to HF as soon as it finishes. If MoLab
+    interrupts the run, click again in the next session: saved gammas are
+    verified and skipped, and a partial local gamma resumes if still present.
     Expect roughly 1.6 GB per gamma and 6.4 GB total. Preparation reads exact
     HTTP ranges from the pinned official Well source.
     """)
@@ -232,11 +240,10 @@ def _(mo):
 
 
 @app.cell
-def _(GAMMAS, mo):
-    gamma_choice = mo.ui.dropdown(options=list(GAMMAS), value=GAMMAS[0], label="Euler gamma")
-    prepare_button = mo.ui.run_button(label="2 · Prepare and save selected gamma")
-    mo.vstack([gamma_choice, prepare_button])
-    return gamma_choice, prepare_button
+def _(mo):
+    prepare_button = mo.ui.run_button(label="2 · Prepare and save all remaining gammas")
+    prepare_button
+    return (prepare_button,)
 
 
 @app.cell
@@ -251,45 +258,52 @@ def _(
     SOURCE_REVISION,
     api,
     checkpoint,
-    gamma_choice,
     hf_hub_download,
     json,
     mo,
     prepare_button,
+    protocol,
     subprocess,
     sys,
     token,
 ):
-    mo.stop(not prepare_button.value, mo.md("Prepare all four gamma values using the controls above."))
-    gamma = gamma_choice.value
-    remote_manifest = f"{PREFIX}/data/gamma-{gamma}/manifest.json"
+    mo.stop(not prepare_button.value, mo.md("Click **Prepare** to process all remaining gamma values."))
     _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
-    if remote_manifest in _remote_files:
-        print("Already saved to HF:", remote_manifest)
-    else:
-        destination = DATA / f"gamma-{gamma}"
-        subprocess.run([
-            sys.executable, "research/prepare_euler.py",
-            "--output-dir", str(destination),
-            "--checkpoint", checkpoint,
-            "--notebook-sha256", NOTEBOOK_SHA256,
-            "--source-revision", SOURCE_REVISION,
-            "--gammas", gamma,
-        ], cwd=CODE, check=True)
-        part = json.loads((destination / "manifest.json").read_text())
-        assert part["selection"]["gammas"] == [gamma] and len(part["windows"]) == 64
-        api.upload_folder(folder_path=str(destination),
-                          path_in_repo=f"{PREFIX}/data/gamma-{gamma}",
-                          repo_id=DATASET, repo_type="dataset",
-                          commit_message=f"Save Euler gamma {gamma} Track A windows")
-        remote = hf_hub_download(DATASET, remote_manifest, repo_type="dataset", token=token)
-        assert json.loads(Path(remote).read_text())["windows"] == part["windows"]
-        saved_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
-        assert sum(path.startswith(f"{PREFIX}/data/gamma-{gamma}/windows/") for path in saved_files) == 64
-        print("Saved gamma", gamma, "to HF")
-    remaining = [g for g in GAMMAS if f"{PREFIX}/data/gamma-{g}/manifest.json"
-                 not in set(api.list_repo_files(DATASET, repo_type="dataset"))]
-    print("Still to prepare:", remaining or "none")
+    for gamma in GAMMAS:
+        _gamma_prefix = f"{PREFIX}/data/gamma-{gamma}"
+        _gamma_manifest = f"{_gamma_prefix}/manifest.json"
+        if _gamma_manifest not in _remote_files:
+            destination = DATA / f"gamma-{gamma}"
+            print("PREPARING", gamma, flush=True)
+            subprocess.run([
+                sys.executable, "research/prepare_euler.py",
+                "--output-dir", str(destination),
+                "--checkpoint", checkpoint,
+                "--notebook-sha256", NOTEBOOK_SHA256,
+                "--source-revision", SOURCE_REVISION,
+                "--gammas", gamma,
+            ], cwd=CODE, check=True)
+            part = json.loads((destination / "manifest.json").read_text())
+            if part["selection"]["gammas"] != [gamma] or len(part["windows"]) != 64:
+                raise ValueError(f"Gamma {gamma} preparation is incomplete; refusing upload")
+            api.upload_folder(folder_path=str(destination), path_in_repo=_gamma_prefix,
+                              repo_id=DATASET, repo_type="dataset",
+                              commit_message=f"Save Euler gamma {gamma} Track A windows")
+            _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
+        else:
+            print("ALREADY SAVED", gamma, flush=True)
+        remote = hf_hub_download(DATASET, _gamma_manifest, repo_type="dataset", token=token)
+        part = json.loads(Path(remote).read_text())
+        expected = {f"{_gamma_prefix}/{r['path']}" for r in part["windows"]}
+        if (part["selection"]["gammas"] != [gamma]
+                or part["source_revision"] != SOURCE_REVISION
+                or part["checkpoint"]["sha256"] != protocol["checkpoint_sha256"]
+                or any(r["gamma"] != float(gamma) for r in part["windows"])
+                or len(expected) != 64
+                or not expected.issubset(_remote_files)):
+            raise ValueError(f"Gamma {gamma} remote manifest/windows are incomplete; stop and inspect HF")
+        print("VERIFIED", gamma, "64 windows", flush=True)
+    print("All four gamma groups are saved and verified. Continue to step 3.")
     return
 
 
@@ -494,6 +508,8 @@ def _(
     mo.stop(not lock_button.value, mo.md("Inspect the pilot first, then lock the final settings."))
     if not manifest_path.is_file():
         raise RuntimeError("Restore the Euler dataset before locking the protocol")
+    if f"{PREFIX}/runs/pilot-100-steps-seed-42/results.json" not in set(api.list_repo_files(DATASET, repo_type="dataset")):
+        raise RuntimeError("Complete and save the validation pilot in step 4 before locking final settings")
     final_protocol = {"kind": "Delta-V Euler Track A final evaluation",
                       "code_sha": protocol["code_sha"],
                       "checkpoint_sha256": protocol["checkpoint_sha256"],
@@ -574,6 +590,9 @@ def _(
     settings = json.loads(Path(hf_hub_download(DATASET, _protocol_path, repo_type="dataset", token=token)).read_text())
     if not manifest_path.is_file() or file_sha256(manifest_path) != settings["manifest_sha256"]:
         raise RuntimeError("Restore the pinned Euler data in step 3 first")
+    _actual_code_sha = subprocess.check_output(["git", "-C", str(CODE), "rev-parse", "HEAD"], text=True).strip()
+    if _actual_code_sha != settings["code_sha"]:
+        raise RuntimeError("MoLab code checkout differs from the locked final protocol; rerun step 1")
     _existing = set(api.list_repo_files(DATASET, repo_type="dataset"))
     jobs = [(budget, seed, method) for budget in BUDGETS for seed in SEEDS for method in METHODS]
     pending = [(budget, seed, method) for budget, seed, method in jobs
