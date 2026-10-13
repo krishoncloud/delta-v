@@ -83,14 +83,14 @@ def _(Path):
     GITHUB = "https://github.com/krishoncloud/delta-v.git"
     BRANCH = "research/euler-transfer"
     TRACK_B_CODE_SHA = "9682e94100deb294f4bc2a66a2cef12acce3639e"
-    PREFIX = "research/euler-track-a/v1"
+    PREFIX = "research/euler-track-a/v2"
     SOURCE_REVISION = "84e3eb65faf286533714295515caf9b99b4717a7"
     NOTEBOOK_SHA256 = "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf"
     GAMMAS = ("1.13", "1.22", "1.33", "1.365")
     BUDGETS = (1, 2, 4, 8, 16, 32)
     SEEDS = (42, 123, 2026)
     METHODS = ("scratch", "full_finetune", "adapter_only")
-    ROOT = Path("/tmp/deltav-track-a")
+    ROOT = Path("/tmp/deltav-track-a-v2")
     CODE = ROOT / "code"
     DATA = ROOT / PREFIX / "data"
     return (

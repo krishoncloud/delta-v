@@ -18,9 +18,9 @@ REPO = "polymathic-ai/euler_multi_quadrants_openBC"
 SOURCE_REVISION = "84e3eb65faf286533714295515caf9b99b4717a7"
 SOURCES = [
     ("1.13", "data/train/euler_multi_quadrants_openBC_gamma_1.13_C3H8_16_chunk_0.hdf5"),
-    ("1.22", "data/train/euler_multi_quadrants_openBC_gamma_1.22_C3H8_16_chunk_0.hdf5"),
-    ("1.33", "data/train/euler_multi_quadrants_openBC_gamma_1.33_C3H8_16_chunk_0.hdf5"),
-    ("1.365", "data/train/euler_multi_quadrants_openBC_gamma_1.365_C3H8_16_chunk_0.hdf5"),
+    ("1.22", "data/train/euler_multi_quadrants_openBC_gamma_1.22_C2H6_15_chunk_0.hdf5"),
+    ("1.33", "data/train/euler_multi_quadrants_openBC_gamma_1.33_H2O_20_chunk_0.hdf5"),
+    ("1.365", "data/train/euler_multi_quadrants_openBC_gamma_1.365_Dry_air_1000_chunk_0.hdf5"),
 ]
 
 
@@ -58,6 +58,9 @@ def main():
     api = HfApi()
     revision = args.source_revision
     source_info = {item.rfilename: item for item in api.get_paths_info(REPO, [path for _, path in selected_sources], repo_type="dataset", revision=revision)}
+    missing = {path for _, path in selected_sources} - source_info.keys()
+    if missing:
+        raise FileNotFoundError(f"Pinned Well source files do not exist at {revision}: {sorted(missing)}")
     manifest = {
         "kind": "Euler transfer dataset with fixed trajectory splits",
         "source_repo": REPO,

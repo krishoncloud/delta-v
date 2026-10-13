@@ -8,6 +8,13 @@ import common
 from split import split_records
 from common import euler_trajectory_plan, trajectory_key
 from experiment import AdaptedFNO, count_parameters, nested_trajectory_subsets
+from prepare_euler import SOURCES
+
+
+def test_euler_sources_use_the_pinned_well_gas_tags():
+    assert [path.split("_gamma_")[1].split("_chunk_")[0] for _, path in SOURCES] == [
+        "1.13_C3H8_16", "1.22_C2H6_15", "1.33_H2O_20", "1.365_Dry_air_1000"
+    ]
 
 def test_split_keeps_every_window_of_a_trajectory_together():
     records=[dict(system="shear_flow",source_revision="fixed",source_file="train.h5",trajectory=i,start_index=t) for i in range(20) for t in (0,1,2)]
