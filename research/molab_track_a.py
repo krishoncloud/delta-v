@@ -1,0 +1,716 @@
+"""Delta-V Track A: reproducible Euler transfer experiment on MoLab."""
+
+import marimo
+
+__generated_with = "0.25.1"
+app = marimo.App(width="medium")
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Delta-V · Track A · Does fluid pretraining transfer to Euler?
+
+    This notebook prepares four Euler gamma settings, then compares **scratch FNO**,
+    **full fine-tuning of epoch 59**, and **a frozen FNO with learned adapters**.
+    The nested training budgets are 1, 2, 4, 8, 16, and 32 trajectories.
+    Pilot runs use validation data. Final runs use three seeds and a held-out
+    trajectory test set after the training protocol is locked.
+
+    Before starting: attach MoLab's GPU using notebook specs and add `HF_TOKEN`
+    in the Secrets panel. It must have read/write access to
+    `KrishMalik/deltav-fluid`. Install missing packages through MoLab's package
+    panel: `torch`, `neuraloperator`, `h5py`, `httpx`, `huggingface_hub`,
+    `numpy`, `scipy`, `scikit-image`, and `matplotlib`.
+
+    Every expensive action below has its own button. The original training
+    notebook is **not executed**. The 92 GB `slices/` directory and complete
+    21 GB Euler source files are **never downloaded**. Each completed gamma and
+    training job is saved to a new research path in your HF dataset. MoLab's
+    local files are temporary; the HF copies are the durable record.
+    """)
+    return
+
+
+@app.cell
+def _():
+    import csv
+    import hashlib
+    import io
+    import json
+    import os
+    import statistics
+    import subprocess
+    import sys
+    import time
+    from pathlib import Path
+
+    import marimo as mo
+    import torch
+    from huggingface_hub import HfApi, hf_hub_download, snapshot_download
+
+    return (
+        HfApi,
+        Path,
+        csv,
+        hashlib,
+        hf_hub_download,
+        io,
+        json,
+        mo,
+        os,
+        snapshot_download,
+        statistics,
+        subprocess,
+        sys,
+        time,
+        torch,
+    )
+
+
+@app.cell
+def _(Path):
+    DATASET = "KrishMalik/deltav-fluid"
+    GITHUB = "https://github.com/krishoncloud/delta-v.git"
+    BRANCH = "research/euler-transfer"
+    PREFIX = "research/euler-track-a/v1"
+    SOURCE_REVISION = "84e3eb65faf286533714295515caf9b99b4717a7"
+    NOTEBOOK_SHA256 = "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf"
+    GAMMAS = ("1.13", "1.22", "1.33", "1.365")
+    BUDGETS = (1, 2, 4, 8, 16, 32)
+    SEEDS = (42, 123, 2026)
+    METHODS = ("scratch", "full_finetune", "adapter_only")
+    ROOT = Path("/tmp/deltav-track-a")
+    CODE = ROOT / "code"
+    DATA = ROOT / PREFIX / "data"
+    return (
+        BRANCH,
+        BUDGETS,
+        CODE,
+        DATA,
+        DATASET,
+        GAMMAS,
+        GITHUB,
+        METHODS,
+        NOTEBOOK_SHA256,
+        PREFIX,
+        ROOT,
+        SEEDS,
+        SOURCE_REVISION,
+    )
+
+
+@app.cell
+def _(Path, hashlib, json):
+    def file_sha256(path):
+        digest = hashlib.sha256()
+        with Path(path).open("rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        return digest.hexdigest()
+
+    def json_bytes(value):
+        return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+
+    return file_sha256, json_bytes
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 1. Set up the pinned code and checkpoint
+
+    This clones the research branch, pins its commit in a protocol file on HF,
+    and downloads only the epoch-59 checkpoint. Later sessions reuse that
+    commit and checkpoint revision even if GitHub or HF changes.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    setup_button = mo.ui.run_button(label="1 · Set up code, GPU and checkpoint")
+    setup_button
+    return (setup_button,)
+
+
+@app.cell
+def _(
+    BRANCH,
+    CODE,
+    DATASET,
+    GITHUB,
+    HfApi,
+    NOTEBOOK_SHA256,
+    PREFIX,
+    Path,
+    SOURCE_REVISION,
+    file_sha256,
+    hf_hub_download,
+    io,
+    json,
+    json_bytes,
+    mo,
+    os,
+    setup_button,
+    subprocess,
+    torch,
+):
+    mo.stop(not setup_button.value, mo.md("Click **Set up** after attaching the GPU and setting `HF_TOKEN`."))
+    token = os.environ.get("HF_TOKEN")
+    if not token:
+        raise RuntimeError("Set HF_TOKEN in MoLab Secrets, then rerun this cell")
+    if not torch.cuda.is_available():
+        raise RuntimeError("Attach the GPU from MoLab notebook specs first")
+    api = HfApi(token=token)
+    if not CODE.exists():
+        CODE.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["git", "clone", "--branch", BRANCH, GITHUB, str(CODE)], check=True)
+    protocol_path = f"{PREFIX}/protocol.json"
+    remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
+    if protocol_path in remote_files:
+        saved_path = hf_hub_download(DATASET, protocol_path, repo_type="dataset", token=token)
+        protocol = json.loads(Path(saved_path).read_text())
+        if protocol["source_revision"] != SOURCE_REVISION or protocol["notebook_sha256"] != NOTEBOOK_SHA256:
+            raise ValueError("Saved Track A protocol differs from this notebook; do not mix runs")
+        subprocess.run(["git", "-C", str(CODE), "checkout", protocol["code_sha"]], check=True)
+    else:
+        if any(path.startswith(f"{PREFIX}/") for path in remote_files):
+            raise ValueError("Research files already exist without protocol.json; choose another prefix")
+        code_sha = subprocess.check_output(["git", "-C", str(CODE), "rev-parse", "HEAD"], text=True).strip()
+        checkpoint_revision = api.dataset_info(DATASET).sha
+        protocol = {"kind": "Delta-V Euler Track A", "code_sha": code_sha,
+                    "checkpoint_revision": checkpoint_revision,
+                    "source_revision": SOURCE_REVISION,
+                    "notebook_sha256": NOTEBOOK_SHA256,
+                    "budgets": [1, 2, 4, 8, 16, 32],
+                    "seeds": [42, 123, 2026],
+                    "arms": ["scratch", "full_finetune", "adapter_only"]}
+    checkpoint = hf_hub_download(
+        repo_id=DATASET, repo_type="dataset", filename="checkpoints/domain_fluid.pt",
+        revision=protocol["checkpoint_revision"], token=token,
+    )
+    checkpoint_hash = file_sha256(checkpoint)
+    if "checkpoint_sha256" in protocol and checkpoint_hash != protocol["checkpoint_sha256"]:
+        raise ValueError("Epoch-59 checkpoint hash changed from the saved protocol")
+    if "checkpoint_sha256" not in protocol:
+        protocol["checkpoint_sha256"] = checkpoint_hash
+        api.upload_file(path_or_fileobj=io.BytesIO(json_bytes(protocol)),
+                        path_in_repo=protocol_path, repo_id=DATASET,
+                        repo_type="dataset", commit_message="Record Euler Track A protocol")
+    print("GPU:", torch.cuda.get_device_name(0))
+    print("Code:", protocol["code_sha"])
+    print("Checkpoint SHA-256:", checkpoint_hash)
+    print("Research path:", PREFIX)
+    return api, checkpoint, protocol, token
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 2. Prepare Euler, one gamma at a time
+
+    Select each gamma and press the button. Each gamma produces 16 trajectories:
+    8 train, 4 validation, 4 test. Four five-frame windows are taken from each
+    trajectory. A gamma is uploaded to HF as soon as it finishes; rerunning the
+    same gamma will skip a completed remote copy. A partial local run resumes.
+    Expect roughly 1.6 GB per gamma and 6.4 GB total. Preparation reads exact
+    HTTP ranges from the pinned official Well source.
+    """)
+    return
+
+
+@app.cell
+def _(GAMMAS, mo):
+    gamma_choice = mo.ui.dropdown(options=list(GAMMAS), value=GAMMAS[0], label="Euler gamma")
+    prepare_button = mo.ui.run_button(label="2 · Prepare and save selected gamma")
+    mo.vstack([gamma_choice, prepare_button])
+    return gamma_choice, prepare_button
+
+
+@app.cell
+def _(
+    CODE,
+    DATA,
+    DATASET,
+    GAMMAS,
+    NOTEBOOK_SHA256,
+    PREFIX,
+    Path,
+    SOURCE_REVISION,
+    api,
+    checkpoint,
+    gamma_choice,
+    hf_hub_download,
+    json,
+    mo,
+    prepare_button,
+    subprocess,
+    sys,
+    token,
+):
+    mo.stop(not prepare_button.value, mo.md("Prepare all four gamma values using the controls above."))
+    gamma = gamma_choice.value
+    remote_manifest = f"{PREFIX}/data/gamma-{gamma}/manifest.json"
+    _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
+    if remote_manifest in _remote_files:
+        print("Already saved to HF:", remote_manifest)
+    else:
+        destination = DATA / f"gamma-{gamma}"
+        subprocess.run([
+            sys.executable, "research/prepare_euler.py",
+            "--output-dir", str(destination),
+            "--checkpoint", checkpoint,
+            "--notebook-sha256", NOTEBOOK_SHA256,
+            "--source-revision", SOURCE_REVISION,
+            "--gammas", gamma,
+        ], cwd=CODE, check=True)
+        part = json.loads((destination / "manifest.json").read_text())
+        assert part["selection"]["gammas"] == [gamma] and len(part["windows"]) == 64
+        api.upload_folder(folder_path=str(destination),
+                          path_in_repo=f"{PREFIX}/data/gamma-{gamma}",
+                          repo_id=DATASET, repo_type="dataset",
+                          commit_message=f"Save Euler gamma {gamma} Track A windows")
+        remote = hf_hub_download(DATASET, remote_manifest, repo_type="dataset", token=token)
+        assert json.loads(Path(remote).read_text())["windows"] == part["windows"]
+        saved_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
+        assert sum(path.startswith(f"{PREFIX}/data/gamma-{gamma}/windows/") for path in saved_files) == 64
+        print("Saved gamma", gamma, "to HF")
+    remaining = [g for g in GAMMAS if f"{PREFIX}/data/gamma-{g}/manifest.json"
+                 not in set(api.list_repo_files(DATASET, repo_type="dataset"))]
+    print("Still to prepare:", remaining or "none")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 3. Assemble and restore the full dataset
+
+    Press after all four gammas are saved. This downloads **only** Track A
+    windows from your HF repo into the current MoLab session, combines their
+    manifests, and verifies the fixed 32/16/16 trajectory split. Repeat this
+    restore step in every new MoLab session before training.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    restore_button = mo.ui.run_button(label="3 · Restore four gammas and assemble manifest")
+    restore_button
+    return (restore_button,)
+
+
+@app.cell
+def _(
+    CODE,
+    DATA,
+    DATASET,
+    GAMMAS,
+    PREFIX,
+    Path,
+    ROOT,
+    api,
+    checkpoint,
+    file_sha256,
+    hf_hub_download,
+    io,
+    json,
+    json_bytes,
+    mo,
+    protocol,
+    restore_button,
+    snapshot_download,
+    subprocess,
+    sys,
+    token,
+):
+    mo.stop(not restore_button.value, mo.md("Click **Restore** after preparing all four gammas."))
+    _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
+    required = {f"{PREFIX}/data/gamma-{g}/manifest.json" for g in GAMMAS}
+    if not required.issubset(_remote_files):
+        raise ValueError(f"Prepare these gammas first: {sorted(required - _remote_files)}")
+    snapshot_download(repo_id=DATASET, repo_type="dataset", token=token,
+                      local_dir=str(ROOT),
+                      allow_patterns=[f"{PREFIX}/data/gamma-*/manifest.json",
+                                      f"{PREFIX}/data/gamma-*/windows/*.npy"])
+    parts = [json.loads((DATA / f"gamma-{g}" / "manifest.json").read_text()) for g in GAMMAS]
+    if any(p["source_revision"] != protocol["source_revision"] or
+           p["checkpoint"]["sha256"] != protocol["checkpoint_sha256"] for p in parts):
+        raise ValueError("Gamma manifests disagree about source or checkpoint")
+    combined = {key: parts[0][key] for key in ("kind", "source_repo", "source_revision", "checkpoint")}
+    combined["selection"] = {**parts[0]["selection"], "gammas": list(GAMMAS)}
+    combined["windows"] = [{**r, "path": f"gamma-{g}/{r['path']}"}
+                           for g, p in zip(GAMMAS, parts) for r in p["windows"]]
+    counts = {split: len({(r["source_file"], r["trajectory"])
+                          for r in combined["windows"] if r["split"] == split})
+              for split in ("train", "validation", "test")}
+    if counts != {"train": 32, "validation": 16, "test": 16} or len(combined["windows"]) != 256:
+        raise ValueError(f"Unexpected Euler selection: {counts}, {len(combined['windows'])} windows")
+    manifest_path = DATA / "manifest.json"
+    payload = json_bytes(combined)
+    if manifest_path.exists() and manifest_path.read_bytes() != payload:
+        raise ValueError("Existing combined manifest differs from selected gamma files")
+    manifest_path.write_bytes(payload)
+    _remote_manifest = f"{PREFIX}/data/manifest.json"
+    if _remote_manifest in _remote_files:
+        _remote = hf_hub_download(DATASET, _remote_manifest, repo_type="dataset", token=token)
+        if json.loads(Path(_remote).read_text()) != combined:
+            raise ValueError("Saved combined manifest differs from the gamma files")
+    else:
+        api.upload_file(path_or_fileobj=io.BytesIO(payload), path_in_repo=_remote_manifest,
+                        repo_id=DATASET, repo_type="dataset",
+                        commit_message="Record fixed Euler Track A trajectory split")
+    subprocess.run([sys.executable, "-c",
+                    "import sys; sys.path.insert(0, 'research'); from common import read_manifest, core; read_manifest(sys.argv[1], sys.argv[2], required_checkpoint_exclusion=core.EULER, require_statistics=False)",
+                    str(manifest_path), checkpoint], cwd=CODE, check=True)
+    print("Ready:", manifest_path, counts, "manifest SHA-256:", file_sha256(manifest_path))
+    return (manifest_path,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 4. Pilot on validation trajectories
+
+    The pilot runs all three arms at budgets 1 and 4 with seed 42. It checks
+    runtime, finite loss, checkpoint saving and whether the validation curve
+    is still improving at the last step. Pilot results are **not** the held-out
+    test claim. The preset is 100 updates; you can use the observed timing to
+    choose a longer fixed update budget for the final protocol.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    pilot_button = mo.ui.run_button(label="4 · Run validation-only pilot")
+    pilot_button
+    return (pilot_button,)
+
+
+@app.cell
+def _(
+    CODE,
+    DATASET,
+    PREFIX,
+    ROOT,
+    api,
+    checkpoint,
+    hf_hub_download,
+    json,
+    manifest_path,
+    mo,
+    pilot_button,
+    subprocess,
+    sys,
+    time,
+    token,
+):
+    mo.stop(not pilot_button.value, mo.md("Click **Run pilot** after restoring the data."))
+    if not manifest_path.is_file():
+        raise RuntimeError("Run step 3 first in this MoLab session")
+    remote_prefix = f"{PREFIX}/runs/pilot-100-steps-seed-42"
+    remote_result = f"{remote_prefix}/results.json"
+    if remote_result in set(api.list_repo_files(DATASET, repo_type="dataset")):
+        result_path = hf_hub_download(DATASET, remote_result, repo_type="dataset", token=token)
+        print("Pilot already saved:", result_path)
+    else:
+        output = ROOT / "local-runs" / f"pilot-{time.time_ns()}"
+        subprocess.run([sys.executable, "research/experiment.py",
+                        "--manifest", str(manifest_path), "--checkpoint", checkpoint,
+                        "--output-dir", str(output), "--device", "cuda",
+                        "--trajectory-budgets", "1", "4", "--seeds", "42",
+                        "--steps", "100", "--validation-interval", "20",
+                        "--evaluate-split", "validation"], cwd=CODE, check=True)
+        report = json.loads((output / "results.json").read_text())
+        assert len(report["results"]) == 6
+        api.upload_folder(folder_path=str(output), path_in_repo=remote_prefix,
+                          repo_id=DATASET, repo_type="dataset",
+                          commit_message="Save Euler Track A validation pilot")
+        print("Saved pilot. Seconds per arm:",
+              [(r["method"], r["requested_trajectories"], round(r["training_seconds"]))
+               for r in report["results"]])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 5. Lock the final protocol
+
+    Decide the number of optimizer updates and the validation-check interval
+    using the pilot's timing and validation traces. Use the **same settings for
+    every arm, budget and seed**. Once saved, the settings cannot be changed
+    under this research path. Choose a new path/version for a different study.
+    The test set has not been used by the pilot.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    final_steps = mo.ui.number(value=1000, start=1, label="Optimizer updates per job")
+    check_every = mo.ui.number(value=100, start=1, label="Validation check every N updates")
+    lock_button = mo.ui.run_button(label="5 · Lock final protocol")
+    mo.vstack([final_steps, check_every, lock_button])
+    return check_every, final_steps, lock_button
+
+
+@app.cell
+def _(
+    BUDGETS,
+    DATASET,
+    METHODS,
+    PREFIX,
+    Path,
+    SEEDS,
+    api,
+    check_every,
+    file_sha256,
+    final_steps,
+    hf_hub_download,
+    io,
+    json,
+    json_bytes,
+    lock_button,
+    manifest_path,
+    mo,
+    protocol,
+    token,
+):
+    mo.stop(not lock_button.value, mo.md("Inspect the pilot first, then lock the final settings."))
+    if not manifest_path.is_file():
+        raise RuntimeError("Restore the Euler dataset before locking the protocol")
+    final_protocol = {"kind": "Delta-V Euler Track A final evaluation",
+                      "code_sha": protocol["code_sha"],
+                      "checkpoint_sha256": protocol["checkpoint_sha256"],
+                      "manifest_sha256": file_sha256(manifest_path),
+                      "training_steps": int(final_steps.value),
+                      "validation_interval": int(check_every.value),
+                      "learning_rate": 1e-4,
+                      "budgets": list(BUDGETS), "seeds": list(SEEDS),
+                      "methods": list(METHODS),
+                      "selection": "best validation MSE; test evaluated once per completed job"}
+    if final_protocol["validation_interval"] > final_protocol["training_steps"]:
+        raise ValueError("Validation interval cannot exceed training steps")
+    path = f"{PREFIX}/final_protocol.json"
+    if path in set(api.list_repo_files(DATASET, repo_type="dataset")):
+        saved = json.loads(Path(hf_hub_download(DATASET, path, repo_type="dataset", token=token)).read_text())
+        if saved != final_protocol:
+            raise ValueError("A different final protocol is already locked under this research path")
+        print("Final protocol already locked:", saved)
+    else:
+        api.upload_file(path_or_fileobj=io.BytesIO(json_bytes(final_protocol)),
+                        path_in_repo=path, repo_id=DATASET, repo_type="dataset",
+                        commit_message="Lock Euler Track A final evaluation protocol")
+        print("Locked final protocol:", final_protocol)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 6. Run the final experiment, with session-safe checkpoints
+
+    There are 54 jobs: six budgets × three seeds × three arms. The button runs
+    the next unfinished jobs, uploads each job's checkpoint, statistics and
+    result to HF, and skips completed jobs on future sessions. Start with one
+    job to measure runtime. Choose a larger batch only if it fits within the
+    remaining MoLab session. Repeat steps 1 and 3 when you open a new session.
+    Each final job uses the same fixed settings and evaluates the test set once.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    batch_size = mo.ui.number(value=1, start=1, stop=54, label="Jobs to run this click")
+    final_button = mo.ui.run_button(label="6 · Run next unfinished final jobs")
+    mo.vstack([batch_size, final_button])
+    return batch_size, final_button
+
+
+@app.cell
+def _(
+    BUDGETS,
+    CODE,
+    DATASET,
+    METHODS,
+    PREFIX,
+    Path,
+    ROOT,
+    SEEDS,
+    api,
+    batch_size,
+    checkpoint,
+    file_sha256,
+    final_button,
+    hf_hub_download,
+    json,
+    manifest_path,
+    mo,
+    subprocess,
+    sys,
+    time,
+    token,
+):
+    mo.stop(not final_button.value, mo.md("Click **Run next jobs** after locking the final protocol."))
+    _protocol_path = f"{PREFIX}/final_protocol.json"
+    if _protocol_path not in set(api.list_repo_files(DATASET, repo_type="dataset")):
+        raise RuntimeError("Lock the final protocol in step 5 first")
+    settings = json.loads(Path(hf_hub_download(DATASET, _protocol_path, repo_type="dataset", token=token)).read_text())
+    if not manifest_path.is_file() or file_sha256(manifest_path) != settings["manifest_sha256"]:
+        raise RuntimeError("Restore the pinned Euler data in step 3 first")
+    _existing = set(api.list_repo_files(DATASET, repo_type="dataset"))
+    jobs = [(budget, seed, method) for budget in BUDGETS for seed in SEEDS for method in METHODS]
+    pending = [(budget, seed, method) for budget, seed, method in jobs
+               if f"{PREFIX}/runs/final/budget-{budget}/seed-{seed}/{method}/results.json" not in _existing]
+    print(f"Completed: {len(jobs) - len(pending)}/54. Running: {min(int(batch_size.value), len(pending))}")
+    for _budget, _seed, _method in pending[:int(batch_size.value)]:
+        _remote_prefix = f"{PREFIX}/runs/final/budget-{_budget}/seed-{_seed}/{_method}"
+        _output = ROOT / "local-runs" / f"{_method}-{_budget}-{_seed}-{time.time_ns()}"
+        print("START", _budget, _seed, _method, flush=True)
+        subprocess.run([sys.executable, "research/experiment.py",
+                        "--manifest", str(manifest_path), "--checkpoint", checkpoint,
+                        "--output-dir", str(_output), "--device", "cuda",
+                        "--trajectory-budgets", str(_budget), "--seeds", str(_seed),
+                        "--methods", _method,
+                        "--steps", str(settings["training_steps"]),
+                        "--validation-interval", str(settings["validation_interval"]),
+                        "--learning-rate", str(settings["learning_rate"]),
+                        "--evaluate-split", "test"], cwd=CODE, check=True)
+        _report = json.loads((_output / "results.json").read_text())
+        if len(_report["results"]) != 1 or _report["results"][0]["evaluation_split"] != "test":
+            raise ValueError("Final job did not produce one held-out result")
+        api.upload_folder(folder_path=str(_output), path_in_repo=_remote_prefix,
+                          repo_id=DATASET, repo_type="dataset",
+                          commit_message=f"Euler Track A {_method} budget {_budget} seed {_seed}")
+        _remote = hf_hub_download(DATASET, f"{_remote_prefix}/results.json",
+                                 repo_type="dataset", token=token)
+        if json.loads(Path(_remote).read_text()) != _report:
+            raise ValueError("Uploaded job report did not match local output")
+        print("SAVED", _budget, _seed, _method, "seconds", round(_report["results"][0]["training_seconds"]), flush=True)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 7. Summarize and save the evidence
+
+    Once 54 jobs are saved, press the button. It computes three-seed mean and
+    sample standard deviation for Rel. L2, RMSE and SSIM, by field, budget and
+    arm. The output is a CSV, a JSON record and a four-panel Rel. L2 chart in
+    the private HF research path. It reports measured performance; it does not
+    infer a transfer win when the numbers do not support one.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    summary_button = mo.ui.run_button(label="7 · Build and save final summary")
+    summary_button
+    return (summary_button,)
+
+
+@app.cell
+def _(
+    BUDGETS,
+    DATASET,
+    METHODS,
+    PREFIX,
+    Path,
+    ROOT,
+    SEEDS,
+    api,
+    csv,
+    file_sha256,
+    hf_hub_download,
+    json,
+    mo,
+    statistics,
+    summary_button,
+    token,
+):
+    mo.stop(not summary_button.value, mo.md("Summarize after all 54 final jobs are complete."))
+    paths = [(budget, seed, method,
+              f"{PREFIX}/runs/final/budget-{budget}/seed-{seed}/{method}/results.json")
+             for budget in BUDGETS for seed in SEEDS for method in METHODS]
+    _remote_files = set(api.list_repo_files(DATASET, repo_type="dataset"))
+    missing = [(b, s, m) for b, s, m, path in paths if path not in _remote_files]
+    if missing:
+        raise ValueError(f"{len(missing)} final jobs remain. First missing: {missing[:5]}")
+    rows = []
+    for budget, seed, method, _path in paths:
+        _report = json.loads(Path(hf_hub_download(DATASET, _path, repo_type="dataset", token=token)).read_text())
+        item = _report["results"][0]
+        if (item["requested_trajectories"], item["seed"], item["method"], item["evaluation_split"]) != (budget, seed, method, "test"):
+            raise ValueError(f"Wrong result identity at {_path}")
+        fields = item["metrics"]["equal_trajectory_mean_by_system"]["euler_multi_quadrants_openBC"]
+        for field, metrics in fields.items():
+            rows.append({"budget": budget, "seed": seed, "method": method,
+                         "field": field, "rel_l2": metrics["rel_l2"],
+                         "rmse": metrics["rmse"], "ssim": metrics["ssim"],
+                         "training_seconds": item["training_seconds"],
+                         "trainable_real_parameters": item["trainable_real_parameters"]})
+    summary = []
+    for budget in BUDGETS:
+        for method in METHODS:
+            for field in ("scalar", "pressure", "velocity_x", "velocity_y"):
+                selected = [r for r in rows if r["budget"] == budget and r["method"] == method and r["field"] == field]
+                if len(selected) != 3:
+                    raise ValueError("Missing seed in summary")
+                entry = {"budget": budget, "method": method, "field": field}
+                for metric in ("rel_l2", "rmse", "ssim"):
+                    values = [r[metric] for r in selected if r[metric] is not None]
+                    entry[f"{metric}_mean"] = statistics.mean(values) if values else None
+                    entry[f"{metric}_sd"] = statistics.stdev(values) if len(values) > 1 else None
+                entry["training_seconds_mean"] = statistics.mean(r["training_seconds"] for r in selected)
+                entry["trainable_real_parameters"] = selected[0]["trainable_real_parameters"]
+                summary.append(entry)
+    _output = ROOT / "summary"
+    _output.mkdir(parents=True, exist_ok=True)
+    (_output / "all_seed_results.json").write_text(json.dumps(rows, indent=2))
+    (_output / "summary.json").write_text(json.dumps(summary, indent=2))
+    with (_output / "summary.csv").open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(summary[0]))
+        writer.writeheader()
+        writer.writerows(summary)
+    import matplotlib.pyplot as plt
+    figure, axes = plt.subplots(2, 2, figsize=(12, 8), sharex=True)
+    for axis, field in zip(axes.flat, ("scalar", "pressure", "velocity_x", "velocity_y")):
+        for method in METHODS:
+            selected = [r for r in summary if r["method"] == method and r["field"] == field]
+            axis.errorbar([r["budget"] for r in selected], [r["rel_l2_mean"] for r in selected],
+                          yerr=[r["rel_l2_sd"] or 0 for r in selected], marker="o", label=method)
+        axis.set_xscale("log", base=2)
+        axis.set_title(field)
+        axis.set_ylabel("Held-out relative L2")
+        axis.set_xticks(BUDGETS, labels=[str(b) for b in BUDGETS])
+        axis.grid(alpha=0.25)
+    axes[0, 0].legend()
+    figure.supxlabel("Euler training trajectories")
+    figure.suptitle("Delta-V Euler transfer · three seeds · trajectory-held-out test")
+    figure.tight_layout()
+    figure.savefig(_output / "rel_l2_by_budget.png", dpi=180)
+    plt.close(figure)
+    _remote_prefix = f"{PREFIX}/summary"
+    if f"{_remote_prefix}/summary.json" in _remote_files:
+        _existing = hf_hub_download(DATASET, f"{_remote_prefix}/summary.json", repo_type="dataset", token=token)
+        if file_sha256(_existing) != file_sha256(_output / "summary.json"):
+            raise ValueError("A different summary already exists remotely")
+        print("Summary already saved:", _remote_prefix)
+    else:
+        api.upload_folder(folder_path=str(_output), path_in_repo=_remote_prefix,
+                          repo_id=DATASET, repo_type="dataset",
+                          commit_message="Publish Euler Track A held-out summary")
+        print("Saved summary:", _remote_prefix)
+    mo.vstack([mo.md(f"**54 final jobs complete.** Results: `{_remote_prefix}`"), figure])
+    return
+
+
+if __name__ == "__main__":
+    app.run()

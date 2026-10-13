@@ -52,11 +52,12 @@ def main():
     p.add_argument("--validation-interval", type=int, default=100)
     p.add_argument("--evaluate-split", choices=("validation", "test"), default="validation")
     p.add_argument("--seeds", type=int, nargs="+", default=[42])
+    p.add_argument("--methods", nargs="+", choices=("scratch", "full_finetune", "adapter_only"), default=["scratch", "full_finetune", "adapter_only"])
     p.add_argument("--learning-rate", type=float, default=1e-4)
     p.add_argument("--trajectory-budgets", type=int, nargs="+", default=[1,2,4,8,16,32])
     args = p.parse_args()
-    if args.steps < 1 or args.validation_interval < 1 or args.learning_rate <= 0 or len(set(args.seeds)) != len(args.seeds):
-        p.error("Use positive steps, validation interval and learning rate, plus unique seeds")
+    if args.steps < 1 or args.validation_interval < 1 or args.learning_rate <= 0 or len(set(args.seeds)) != len(args.seeds) or len(set(args.methods)) != len(args.methods):
+        p.error("Use positive steps, validation interval and learning rate, plus unique seeds and methods")
     manifest = read_manifest(args.manifest, args.checkpoint, required_checkpoint_exclusion=core.EULER, require_statistics=False)
     if any(json.loads(k)[0] == core.EULER for k in manifest["checkpoint"]["exposed_trajectories"]):
         raise ValueError("The backbone has seen Euler; cannot label this an unseen-system experiment")
@@ -72,8 +73,10 @@ def main():
         stats = fit_training_stats(training)
         stats_path = root / f"statistics-{budget}-trajectories.npz"
         np.savez(stats_path, **stats)
+        training_data = [tuple(t.to(args.device) for t in tensors(r, stats)) for r in training]
+        validation_data = [tuple(t.to(args.device) for t in tensors(r, stats)) for r in splits["validation"]]
         for seed in args.seeds:
-            for method in ("scratch","full_finetune","adapter_only"):
+            for method in args.methods:
                 torch.manual_seed(seed); random.seed(seed); np.random.seed(seed)
                 model = core.build_fno(args.device)
                 if method != "scratch":
@@ -81,30 +84,30 @@ def main():
                 if method == "adapter_only":
                     model = AdaptedFNO(model).to(args.device)
                 optimizer = torch.optim.Adam((p for p in model.parameters() if p.requires_grad), lr=args.learning_rate)
-                best = float("inf"); best_state = None; best_step = None
+                best = float("inf"); best_state = None; best_step = None; validation_trace = []
                 started = time.perf_counter()
-                order = list(training); random.shuffle(order)
+                order = list(training_data); random.shuffle(order)
                 for step in range(1, args.steps + 1):
                     model.train()
-                    record = order[(step - 1) % len(order)]
-                    x,y = tensors(record, stats); optimizer.zero_grad()
-                    loss = torch.nn.functional.mse_loss(model(x.unsqueeze(0).to(args.device))[0],y.to(args.device))
+                    x,y = order[(step - 1) % len(order)]; optimizer.zero_grad()
+                    loss = torch.nn.functional.mse_loss(model(x.unsqueeze(0))[0],y)
                     loss.backward(); optimizer.step()
                     if step % len(order) == 0: random.shuffle(order)
                     if step % args.validation_interval and step != args.steps: continue
                     model.eval(); validation = []
                     with torch.no_grad():
-                        for record in splits["validation"]:
-                            x,y=tensors(record,stats)
-                            validation.append(float(torch.nn.functional.mse_loss(model(x.unsqueeze(0).to(args.device))[0],y.to(args.device))))
+                        for x,y in validation_data:
+                            validation.append(float(torch.nn.functional.mse_loss(model(x.unsqueeze(0))[0],y)))
                     score=float(np.mean(validation))
+                    validation_trace.append({"step":step,"mse":score})
+                    print(f"{method} budget={budget} seed={seed} step={step} validation_mse={score:.6g}", flush=True)
                     if score < best:
                         best=score; best_step=step; best_state={k:v.detach().cpu().clone() for k,v in model.state_dict().items()}
                 if args.device.startswith("cuda"): torch.cuda.synchronize()
                 elapsed=time.perf_counter()-started
                 if best_state is None: raise ValueError("No finite validation checkpoint")
                 model.load_state_dict(best_state)
-                result={"method":method,"requested_trajectories":budget,"actual_trajectories":len(selected),"total_training_trajectories":len(keys),"selected_trajectories":sorted(selected),"statistics_sha256":sha256(stats_path),"normalization":"fitted on this budget's training windows only; identical across arms and seeds","seed":seed,"training_steps":args.steps,"best_validation_step":best_step,"best_validation_mse":best,"evaluation_split":args.evaluate_split,"learning_rate":args.learning_rate,"training_seconds":elapsed,"trainable_real_parameters":count_parameters(model,True),"total_real_parameters":count_parameters(model),"metrics":evaluate(model,splits[args.evaluate_split],manifest,args.device,stats)}
+                result={"method":method,"requested_trajectories":budget,"actual_trajectories":len(selected),"total_training_trajectories":len(keys),"selected_trajectories":sorted(selected),"statistics_sha256":sha256(stats_path),"normalization":"fitted on this budget's training windows only; identical across arms and seeds","seed":seed,"training_steps":args.steps,"best_validation_step":best_step,"best_validation_mse":best,"validation_trace":validation_trace,"evaluation_split":args.evaluate_split,"learning_rate":args.learning_rate,"training_seconds":elapsed,"trainable_real_parameters":count_parameters(model,True),"total_real_parameters":count_parameters(model),"metrics":evaluate(model,splits[args.evaluate_split],manifest,args.device,stats)}
                 report.append(result)
                 torch.save({"model":best_state,"method":method,"step":best_step,"seed":seed,"training_trajectories":sorted(selected)},root/f"{method}-{budget}-trajectories-seed-{seed}.pt")
                 (root/"results.json").write_text(json.dumps({"checkpoint_sha256":sha256(args.checkpoint),"manifest_sha256":sha256(args.manifest),"results":report},indent=2,allow_nan=False))
