@@ -28,8 +28,11 @@ def _(mo):
     in the Secrets panel. It must have read/write access to
     `KrishMalik/deltav-fluid`. In MoLab's package panel, pin
     `torch==2.11.0`, `neuraloperator==2.0.0`, `tensorly-torch==0.5.0`,
-    `tensorly==0.10.0`; also install `h5py`, `httpx`, `huggingface_hub`,
-    `numpy`, `scipy`, `scikit-image`, and `matplotlib`.
+    `tensorly==0.10.0`, `fastapi==0.141.1`, and
+    `python-multipart==0.0.32`; also install `h5py`, `httpx`,
+    `huggingface_hub`, `numpy`, `scipy`, `scikit-image`, `pillow`, and
+    `matplotlib`. The research evaluator currently imports the API's metric
+    function, so FastAPI and its form parser are required even for the pilot.
 
     Every expensive action below has its own button. The original training
     notebook is **not executed**. The 92 GB `slices/` directory and complete
@@ -180,7 +183,8 @@ def _(
     if not torch.cuda.is_available():
         raise RuntimeError("Attach the GPU from MoLab notebook specs first")
     for _package, _expected in (("torch", "2.11.0"), ("neuraloperator", "2.0.0"),
-                                ("tensorly-torch", "0.5.0"), ("tensorly", "0.10.0")):
+                                ("tensorly-torch", "0.5.0"), ("tensorly", "0.10.0"),
+                                ("fastapi", "0.141.1"), ("python-multipart", "0.0.32")):
         if package_version(_package).split("+")[0] != _expected:
             raise RuntimeError(f"Install {_package}=={_expected} in MoLab's package panel")
     api = HfApi(token=token)
@@ -419,6 +423,8 @@ def _(
         output = ROOT / "local-runs" / f"pilot-{time.time_ns()}"
         _pilot_env = os.environ.copy()
         _pilot_env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(CODE / "research"), str(CODE), _pilot_env.get("PYTHONPATH"))))
+        subprocess.run([sys.executable, "-c", "from main import _quality_metrics"],
+                       cwd=CODE, env=_pilot_env, check=True)
         subprocess.run([sys.executable, "research/experiment.py",
                         "--manifest", str(manifest_path), "--checkpoint", checkpoint,
                         "--output-dir", str(output), "--device", "cuda",
