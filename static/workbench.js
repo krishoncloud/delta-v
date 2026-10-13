@@ -142,6 +142,8 @@
 
   /* ---------- shared pieces ---------- */
   const panelWidth = () => Math.max(300, (($("wb-panel") && $("wb-panel").clientWidth) || 760) - 40);
+  // Mirrors the .wb-split container query in flow.css: beside a 300px control column when the panel is wide.
+  const chartWidth = () => (W.step === 3 && panelWidth() >= 860 ? panelWidth() - 300 - 28 : panelWidth());
   function chartHtml(showNext) {
     const c = predictCurve();
     const names = W.ds.paramNames;
@@ -149,7 +151,7 @@
     const obsTip = (x, i) =>
       "Run " + (i + 1) + ": " + names.map((n, j) => n + " " + F.fmt(x[j])).join(", ") + " gives " + F.fmt(W.ds.y[i]);
     const svg = F.outcomeChartSvg({
-      width: panelWidth(),
+      width: chartWidth(),
       xs: c.xs,
       mean: c.mean,
       std: c.std,
@@ -160,8 +162,8 @@
             tip: "Suggested run N" + (i + 1) + ": " + names.map((n, j) => n + " " + F.fmt(p[j])).join(", ") + ". Predicted " + F.fmt(nx.mean[i]) + " (spread " + F.fmt(2 * nx.std[i]) + ").",
           }))
         : [],
-      xLabel: names[W.xIndex],
-      yLabel: W.ds.outcomeName,
+      xLabel: F.axisName(names[W.xIndex]),
+      yLabel: F.axisName(W.ds.outcomeName),
       watermark: "MOCK DATA",
       aria: "Mock predicted " + W.ds.outcomeName + " against " + names[W.xIndex] + " with an approximate uncertainty band and your " + W.ds.n + " runs.",
     });
@@ -204,8 +206,9 @@
   function viewUpload() {
     return (
       '<div class="wb-grid"><div class="card"><div class="card-head"><h2 tabindex="-1">2. Upload your runs</h2><span class="tag">CSV</span></div><div class="pad">' +
-      '<div class="dropzone" id="wb-drop"><strong>Drop a CSV here</strong><span>or choose a file</span>' +
-      '<input id="wb-file" type="file" accept=".csv,text/csv,text/plain" aria-label="Choose a CSV file of runs" />' +
+      '<div class="dropzone" id="wb-drop"><strong>Drop a CSV here</strong><span>or</span>' +
+      '<input id="wb-file" class="visually-hidden" type="file" accept=".csv,text/csv,text/plain" />' +
+      '<label class="btn small" for="wb-file">Choose a file</label>' +
       (F.FLOW_MODE === "mock" ? '<span class="flow-note">The file is read in this browser. It is not uploaded anywhere.</span>' : "") +
       "</div>" +
       '<details style="margin-top:12px"><summary>Or paste CSV text</summary><div class="field" style="margin-top:10px"><textarea id="wb-paste" class="paste" rows="6" spellcheck="false" aria-label="Paste CSV text"></textarea></div>' +
@@ -235,9 +238,9 @@
           "<tr><td>" + esc(c.name) + '</td><td><select data-role="' + esc(c.name) + '" aria-label="Role of ' + esc(c.name) + '">' +
           [["param", "Design parameter"], ["outcome", "Outcome"], ["ignore", "Ignore"]].map(([v, l]) => '<option value="' + v + '"' + (role === v ? " selected" : "") + ">" + l + "</option>").join("") +
           '</select></td><td class="num">' + F.fmt(c.min) + '</td><td class="num">' + F.fmt(c.max) + '</td><td class="num">' +
-          (isP ? '<input type="number" step="any" data-lo="' + esc(c.name) + '" value="' + lo + '" aria-label="Design range minimum of ' + esc(c.name) + '" style="width:90px" />' : "") +
+          (isP ? '<input type="number" step="any" data-lo="' + esc(c.name) + '" value="' + lo + '" aria-label="Design range minimum of ' + esc(c.name) + '" />' : "") +
           '</td><td class="num">' +
-          (isP ? '<input type="number" step="any" data-hi="' + esc(c.name) + '" value="' + hi + '" aria-label="Design range maximum of ' + esc(c.name) + '" style="width:90px" />' : "") +
+          (isP ? '<input type="number" step="any" data-hi="' + esc(c.name) + '" value="' + hi + '" aria-label="Design range maximum of ' + esc(c.name) + '" />' : "") +
           "</td></tr>"
         );
       })
@@ -287,11 +290,13 @@
     return (
       '<div class="card"><div class="card-head"><h2 tabindex="-1">4. Predict across your design range ' + tag + "</h2></div><div class=\"pad\">" +
       (d.paramNames.length > 1
-        ? '<div class="form-grid"><label class="field">Parameter on the horizontal axis<select id="wb-xsel">' +
+        ? '<div class="form-grid single"><label class="field">Parameter on the horizontal axis<select id="wb-xsel">' +
           d.paramNames.map((n, j) => '<option value="' + j + '"' + (j === W.xIndex ? " selected" : "") + ">" + esc(n) + "</option>").join("") +
           "</select></label></div>"
         : "") +
-      '<div id="wb-chart">' + ch.html + "</div>" +
+      '<div class="wb-split"><div class="wb-split-main"><div id="wb-chart">' + ch.html + "</div>" +
+      '<p class="flow-note" id="wb-chart-note">' + ch.note + " " + ch.least + " " + BAND_NOTE + "</p></div>" +
+      '<div class="wb-split-side">' +
       (others.length
         ? '<div class="sliders" id="wb-sliders">' +
           others
@@ -302,11 +307,10 @@
             )
             .join("") + "</div>"
         : "") +
-      '<p class="flow-note" id="wb-chart-note">' + ch.note + " " + ch.least + " " + BAND_NOTE + "</p>" +
       "<h3>Predict at one design point</h3>" +
-      '<div class="form-grid">' +
+      '<div class="form-grid stacked">' +
       d.paramNames.map((n, j) => '<label class="field">' + esc(n) + '<input type="number" step="any" data-pt="' + j + '" value="' + F.fmt(F.midpoints(d.ranges)[j], 4) + '" /></label>').join("") +
-      '</div><p id="wb-point-out" aria-live="polite" class="flow-note"></p>' +
+      '</div><p id="wb-point-out" aria-live="polite" class="point-out"></p></div></div>' +
       '<div class="actions"><button class="btn primary" id="wb-go-next" type="button">Suggest the next runs</button></div></div></div>'
     );
   }
@@ -325,7 +329,7 @@
       return;
     }
     const r = F.predict(W.model, [vals]);
-    out.innerHTML = "Predicted " + esc(W.ds.outcomeName) + ": <strong>" + F.fmt(r.mean[0]) + "</strong> with an approximate ±2σ of " + F.fmt(2 * r.std[0]) + " (mock stand-in).";
+    out.innerHTML = "<strong>" + F.fmt(r.mean[0]) + " ± " + F.fmt(2 * r.std[0]) + "</strong>Predicted " + esc(W.ds.outcomeName) + ", with an approximate 2σ spread from the mock stand-in.";
   }
 
   function viewNext() {
@@ -343,7 +347,7 @@
     return (
       '<div class="card"><div class="card-head"><h2 tabindex="-1">5. Run these next ' + tag + "</h2></div><div class=\"pad\">" +
       '<p>Simulate these design points in your own solver. They are where the model is least sure, one after another, assuming each earlier suggestion has been run.</p>' +
-      '<div class="form-grid"><label class="field">How many suggestions<select id="wb-k">' +
+      '<div class="form-grid single"><label class="field">How many suggestions<select id="wb-k">' +
       [2, 3, 4, 5, 6, 8].map((k) => '<option value="' + k + '"' + (k === W.nextK ? " selected" : "") + ">" + k + "</option>").join("") +
       "</select></label></div>" +
       '<div class="table-scroll"><table class="flow-table"><thead><tr><th>Run</th>' +

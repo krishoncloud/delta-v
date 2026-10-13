@@ -54,8 +54,8 @@
           tip: "Run " + (i + 1) + ": " + s.ds.paramNames.map((n, j) => n + " " + F.fmt(x[j])).join(", ") + " gives " + F.fmt(s.ds.y[i]),
         })),
         next: nx.points.map((p, i) => ({ x: p[0], tip: "Suggested run N" + (i + 1) + ": " + p.map((v) => F.fmt(v)).join(", ") })),
-        xLabel: s.ds.paramNames[0],
-        yLabel: s.ds.outcomeName,
+        xLabel: F.axisName(s.ds.paramNames[0]),
+        yLabel: F.axisName(s.ds.outcomeName),
         watermark: "MOCK DATA",
         aria: "Mock pipe-bend example: predicted pressure drop against inlet velocity with an uncertainty band, eight runs and four suggested next runs.",
       });
@@ -108,7 +108,6 @@
         xLabel: "Training trajectories (k)",
         yLabel: "Relative L2 error",
         yFmt: (v) => F.pct(v),
-        yMax: 0.8,
         hLine: { y: ev.target_rel_l2, label: F.pct(ev.target_rel_l2) + " target" },
         watermark: ev.status === "mock" ? "MOCK DATA" : "",
         aria: "Relative error against number of training trajectories for pretrained start, training from scratch and a Gaussian process, with the error target marked.",

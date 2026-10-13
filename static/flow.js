@@ -469,7 +469,16 @@
     if (a >= 10000 || a < 0.01) return v.toExponential(d - 1);
     return Number(v.toPrecision(d)).toString();
   }
-  const pct = (v) => (Number.isFinite(v) ? (v * 100).toFixed(1) + "%" : "n/a");
+  const pct = (v) => (Number.isFinite(v) ? (v * 100).toFixed(1).replace(/\.0$/, "") + "%" : "n/a");
+  // Axis titles only: "inlet_velocity_m_s" reads as "inlet velocity (m/s)". Tables and files keep the raw column name.
+  const UNIT_SUFFIX = [["m_s", "m/s"], ["kg_s", "kg/s"], ["m3_s", "m³/s"], ["kPa", "kPa"], ["Pa", "Pa"], ["mm", "mm"], ["cm", "cm"], ["m", "m"], ["K", "K"], ["degC", "°C"], ["Hz", "Hz"], ["W", "W"], ["N", "N"], ["s", "s"]];
+  function axisName(name) {
+    const raw = String(name).trim();
+    for (const [suf, unit] of UNIT_SUFFIX) {
+      if (raw.length > suf.length + 1 && raw.endsWith("_" + suf)) return raw.slice(0, -suf.length - 1).replace(/_+/g, " ") + " (" + unit + ")";
+    }
+    return raw.replace(/_+/g, " ");
+  }
   const esc = (s) =>
     String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
@@ -496,9 +505,9 @@
   let H = 340;
   let M = { l: 58, r: 118, t: 18, b: 46 };
   function setLayout(width) {
-    W = Math.max(300, Math.min(860, Math.round(width || 720)));
+    W = Math.max(300, Math.min(1120, Math.round(width || 720)));
     const narrow = W < 520;
-    H = narrow ? 300 : 340;
+    H = narrow ? 300 : Math.max(320, Math.min(400, Math.round(W * 0.42)));
     M = narrow ? { l: 50, r: 16, t: 18, b: 44 } : { l: 58, r: 118, t: 18, b: 46 };
     return narrow;
   }
@@ -523,7 +532,7 @@
     });
     s += '<line class="axis" x1="' + M.l + '" x2="' + (W - M.r) + '" y1="' + (H - M.b) + '" y2="' + (H - M.b) + '"/>';
     s += '<text class="axis-label" x="' + (M.l + f.iw / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + esc(xLabel) + "</text>";
-    s += '<text class="axis-label" transform="translate(14 ' + (M.t + f.ih / 2) + ') rotate(-90)" text-anchor="middle">' + esc(yLabel) + "</text>";
+    s += '<text class="axis-label" transform="translate(12 ' + (M.t + f.ih / 2) + ') rotate(-90)" text-anchor="middle">' + esc(yLabel) + "</text>";
     return s;
   }
   const watermark = (txt) =>
@@ -558,10 +567,14 @@
       const ends = cfg.series
         .map((se, i) => ({ i, y: f.ys(se.points.filter((p) => Number.isFinite(p.y)).slice(-1)[0].y) + 4 }))
         .sort((a, b) => a.y - b.y);
+      const before = ends.reduce((a, e) => a + e.y, 0) / ends.length;
       ends.forEach((e, k) => {
         if (k > 0 && e.y - ends[k - 1].y < 16) e.y = ends[k - 1].y + 16;
-        labelY[e.i] = e.y;
       });
+      // Re-centre the pushed-apart stack on the line ends, keeping it inside the plot.
+      const after = ends.reduce((a, e) => a + e.y, 0) / ends.length;
+      const shift = Math.max(M.t + 10 - ends[0].y, Math.min(H - M.b - 2 - ends[ends.length - 1].y, before - after));
+      ends.forEach((e) => (labelY[e.i] = e.y + shift));
     }
     cfg.series.forEach((se, si) => {
       const pts = se.points.filter((p) => Number.isFinite(p.y));
@@ -588,6 +601,19 @@
    * Outcome-vs-parameter chart with a +/-2 sigma band.
    * cfg: {xs, mean, std, observed:[{x,y,tip}], next:[{x,tip}], xLabel, yLabel, watermark, aria}
    */
+  function labelRows(cfg, xDom) {
+    const iw = W - M.l - M.r;
+    const ends = [];
+    cfg.next
+      .map((n) => Math.min(W - M.r - 8, Math.max(M.l + 8, M.l + ((n.x - xDom[0]) / (xDom[1] - xDom[0] || 1)) * iw)))
+      .sort((a, b) => a - b)
+      .forEach((px) => {
+        let row = ends.findIndex((end) => px - end >= 24);
+        if (row < 0) row = ends.length;
+        ends[row] = px;
+      });
+    return ends.length;
+  }
   function outcomeChartSvg(cfg) {
     const narrow = setLayout(cfg.width);
     const lo = cfg.mean.map((m, i) => m - 2 * cfg.std[i]);
@@ -598,6 +624,13 @@
     const pad = (yMax - yMin) * 0.06 || 1;
     const yDom = [yMin - pad, yMax + pad];
     const xDom = [cfg.xs[0], cfg.xs[cfg.xs.length - 1]];
+    // Reserve a strip above the plot for suggested-run labels (up to three rows).
+    const labelTop = M.t - 10;
+    if (cfg.next.length) {
+      const strip = 10 + 15 * Math.min(3, labelRows(cfg, xDom));
+      M = Object.assign({}, M, { t: M.t + strip });
+      H += strip; // the plot keeps its height; the strip is added on top
+    }
     const f = frame(xDom, yDom, false);
     const yFmt = (v) => fmt(v, 3);
     let s = '<svg class="flow-chart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(cfg.aria || "Predicted outcome") + '">';
@@ -607,21 +640,28 @@
     const dn = cfg.xs.map((x, i) => f.xs(x).toFixed(1) + "," + f.ys(lo[i]).toFixed(1)).reverse();
     s += '<polygon class="band s-pre" points="' + up.concat(dn).join(" ") + '"/>';
     s += '<polyline class="line s-pre" points="' + cfg.xs.map((x, i) => f.xs(x).toFixed(1) + "," + f.ys(cfg.mean[i]).toFixed(1)).join(" ") + '"/>';
-    // Stagger labels vertically when two suggestions sit close together on the x axis.
+    // Suggested-run labels sit in a strip above the plot, never on top of the curve.
+    // Labels that would touch are moved to another row of the strip.
     const rows = {};
-    let prev = { x: -1e9, row: 0 };
+    const rowEnds = [];
+    const clampX = (px) => Math.min(W - M.r - 8, Math.max(M.l + 8, px));
     cfg.next
-      .map((n, i) => ({ px: f.xs(n.x), i }))
+      .map((n, i) => ({ px: clampX(f.xs(n.x)), i }))
       .sort((a, b) => a.px - b.px)
       .forEach((n) => {
-        const row = n.px - prev.x < 26 ? (prev.row + 1) % 3 : 0;
-        rows[n.i] = row;
-        prev = { x: n.px, row };
+        let row = rowEnds.findIndex((end) => n.px - end >= 24);
+        if (row < 0) row = rowEnds.length;
+        rowEnds[row] = n.px;
+        rows[n.i] = { row, px: n.px };
       });
+    const top = M.t;
     cfg.next.forEach((n, i) => {
-      s += '<line class="nextline" x1="' + f.xs(n.x).toFixed(1) + '" x2="' + f.xs(n.x).toFixed(1) + '" y1="' + M.t + '" y2="' + (H - M.b) + '"/>';
-      s += '<text class="next-label" x="' + f.xs(n.x).toFixed(1) + '" y="' + (M.t + 11 + rows[i] * 13) + '" text-anchor="middle">N' + (i + 1) + "</text>";
-      s += '<circle class="hit" data-tip="' + esc(n.tip) + '" cx="' + f.xs(n.x).toFixed(1) + '" cy="' + (M.t + 8) + '" r="13"><title>' + esc(n.tip) + "</title></circle>";
+      const x = f.xs(n.x).toFixed(1);
+      const ly = labelTop + 11 + rows[i].row * 15;
+      s += '<line class="nextline" x1="' + x + '" x2="' + x + '" y1="' + top + '" y2="' + (H - M.b) + '"/>';
+      s += '<line class="nextline" x1="' + x + '" x2="' + rows[i].px.toFixed(1) + '" y1="' + top + '" y2="' + (ly + 3) + '"/>';
+      s += '<text class="next-label" x="' + rows[i].px.toFixed(1) + '" y="' + ly + '" text-anchor="middle">N' + (i + 1) + "</text>";
+      s += '<circle class="hit" data-tip="' + esc(n.tip) + '" cx="' + rows[i].px.toFixed(1) + '" cy="' + (ly - 4) + '" r="12"><title>' + esc(n.tip) + "</title></circle>";
     });
     cfg.observed.forEach((o) => {
       s += '<circle class="obs" cx="' + f.xs(o.x).toFixed(1) + '" cy="' + f.ys(o.y).toFixed(1) + '" r="5"/>';
@@ -696,7 +736,7 @@
   const api = {
     FLOW_MODE, LIMITS, parseCsv, parseRuns, defaultMapping, buildDataset, hasError,
     fit, predict, suggestNext, truths, runsToTarget, normalizeEvidence, evidenceSummary, claimText,
-    fmt, pct, esc, toCsv, niceTicks, sliceGrid, midpoints, sessionFromCsv, seriesChartSvg, outcomeChartSvg, legendHtml, attachTips,
+    fmt, pct, axisName, esc, toCsv, niceTicks, sliceGrid, midpoints, sessionFromCsv, seriesChartSvg, outcomeChartSvg, legendHtml, attachTips,
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.DeltaFlow = api;

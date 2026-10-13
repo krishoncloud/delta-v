@@ -198,3 +198,30 @@ test("mock labelling is present on every mock surface", () => {
   assert.equal(evidence.status, "mock");
   assert.equal(F.FLOW_MODE, "mock");
 });
+
+test("axis titles read as words with units; percentages drop a trailing .0", () => {
+  assert.equal(F.axisName("inlet_velocity_m_s"), "inlet velocity (m/s)");
+  assert.equal(F.axisName("pressure_drop_Pa"), "pressure drop (Pa)");
+  assert.equal(F.axisName("bend_radius_cm"), "bend radius (cm)");
+  assert.equal(F.axisName("Reynolds"), "Reynolds");
+  assert.equal(F.pct(0.15), "15%");
+  assert.equal(F.pct(0.082), "8.2%");
+});
+
+test("suggested-run labels close together are placed on separate rows", () => {
+  const s = F.sessionFromCsv(example.runs_csv, example.design_ranges);
+  const g = F.sliceGrid(s.ds.ranges, 0, F.midpoints(s.ds.ranges), 30);
+  const pr = F.predict(s.model, g.points);
+  const svg = F.outcomeChartSvg({
+    width: 700, xs: g.xs, mean: pr.mean, std: pr.std, observed: [],
+    next: [{ x: 3.86, tip: "a" }, { x: 3.92, tip: "b" }, { x: 1, tip: "c" }], xLabel: "x", yLabel: "y",
+  });
+  const labels = [...svg.matchAll(/class="next-label" x="([\d.]+)" y="([\d.]+)"/g)].map((m) => ({ x: +m[1], y: +m[2] }));
+  assert.equal(labels.length, 3);
+  for (let i = 0; i < labels.length; i++)
+    for (let j = i + 1; j < labels.length; j++)
+      assert.ok(Math.abs(labels[i].x - labels[j].x) >= 24 || labels[i].y !== labels[j].y, "labels overlap");
+  // the plot starts below the label strip
+  const firstGrid = +svg.match(/class="grid"[^>]*y1="([\d.]+)"/)[1];
+  assert.ok(Math.max(...labels.map((l) => l.y)) < firstGrid);
+});

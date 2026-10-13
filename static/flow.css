@@ -66,7 +66,6 @@ body[data-page="evidence"] .sidebar-info {
 .flow-chart {
   display: block;
   width: 100%;
-  max-width: 860px;
   height: auto;
   overflow: visible;
 }
@@ -230,11 +229,26 @@ body[data-page="evidence"] .sidebar-info {
   text-align: left;
   border-bottom: 1px solid var(--line);
 }
+/* Headers carry the user's own column names, so they are shown exactly as written, never re-cased. */
 .flow-table th {
-  font: 400 10px "Geist Mono", monospace;
-  letter-spacing: 0.08em;
+  font: 500 11px "Geist Mono", monospace;
   color: var(--text-3);
-  text-transform: uppercase;
+  white-space: nowrap;
+}
+.flow-table input,
+.flow-table select {
+  padding: 6px 8px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  font: inherit;
+}
+.flow-table input {
+  width: 96px;
+  text-align: right;
+  font-family: "Geist Mono", monospace;
+  font-variant-numeric: tabular-nums;
 }
 .flow-table td.num,
 .flow-table th.num {
@@ -269,6 +283,14 @@ body[data-page="evidence"] .sidebar-info {
 }
 .stat .mock-tag {
   margin-left: 6px;
+}
+.flow-note,
+.limits-list {
+  max-width: 78ch;
+}
+#ev-root > .card + .card,
+#ev-root > .stat-row + .card {
+  margin-top: 16px;
 }
 .flow-note {
   font-size: 12px;
@@ -338,6 +360,51 @@ body[data-page="evidence"] .sidebar-info {
   gap: 16px;
   margin: 4px 0 18px;
 }
+.form-grid.single {
+  max-width: 320px;
+}
+.form-grid.stacked {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+/* Predict step: chart beside its controls when the panel is wide enough (see chartWidth in workbench.js). */
+#wb-panel {
+  container-type: inline-size;
+}
+.wb-split-side h3 {
+  font-size: 14px;
+  margin: 22px 0 10px;
+}
+@container (min-width: 900px) {
+  .wb-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 28px;
+    align-items: start;
+  }
+  .wb-split-side {
+    padding-left: 24px;
+    border-left: 1px solid var(--line);
+  }
+  .wb-split-side .sliders {
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+  .wb-split-side h3:first-child {
+    margin-top: 0;
+  }
+}
+.point-out {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+.point-out strong {
+  display: block;
+  font: 500 22px "Geist Mono", monospace;
+  color: var(--text);
+}
 .field {
   display: grid;
   gap: 6px;
@@ -381,8 +448,27 @@ body[data-page="evidence"] .sidebar-info {
   border-color: var(--accent);
   color: var(--text);
 }
-.dropzone input {
-  max-width: 100%;
+.dropzone:focus-within label.btn {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.dropzone label.btn {
+  cursor: pointer;
+}
+.dropzone .btn,
+.side-card .btn {
+  border: 1px solid var(--line-strong);
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 .issues {
   list-style: none;
