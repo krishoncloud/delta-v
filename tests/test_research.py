@@ -1,3 +1,5 @@
+import os
+import subprocess
 import sys
 from pathlib import Path
 import pytest
@@ -9,6 +11,15 @@ from split import split_records
 from common import euler_trajectory_plan, trajectory_key
 from experiment import AdaptedFNO, count_parameters, nested_trajectory_subsets
 from prepare_euler import SOURCES
+
+
+def test_experiment_cli_imports_under_python_safe_path():
+    repo = Path(__file__).resolve().parents[1]
+    env = os.environ.copy()
+    env["PYTHONSAFEPATH"] = "1"
+    env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(repo / "research"), str(repo), env.get("PYTHONPATH"))))
+    subprocess.run([sys.executable, "research/experiment.py", "--help"],
+                   cwd=repo, env=env, check=True, capture_output=True)
 
 
 def test_euler_sources_use_the_pinned_well_gas_tags():

@@ -400,6 +400,7 @@ def _(
     json,
     manifest_path,
     mo,
+    os,
     pilot_button,
     subprocess,
     sys,
@@ -416,12 +417,14 @@ def _(
         print("Pilot already saved:", result_path)
     else:
         output = ROOT / "local-runs" / f"pilot-{time.time_ns()}"
+        _pilot_env = os.environ.copy()
+        _pilot_env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(CODE / "research"), str(CODE), _pilot_env.get("PYTHONPATH"))))
         subprocess.run([sys.executable, "research/experiment.py",
                         "--manifest", str(manifest_path), "--checkpoint", checkpoint,
                         "--output-dir", str(output), "--device", "cuda",
                         "--trajectory-budgets", "1", "4", "--seeds", "42",
                         "--steps", "100", "--validation-interval", "20",
-                        "--evaluate-split", "validation"], cwd=CODE, check=True)
+                        "--evaluate-split", "validation"], cwd=CODE, env=_pilot_env, check=True)
         report = json.loads((output / "results.json").read_text())
         assert len(report["results"]) == 6
         api.upload_folder(folder_path=str(output), path_in_repo=remote_prefix,
@@ -551,6 +554,7 @@ def _(
     json,
     manifest_path,
     mo,
+    os,
     subprocess,
     sys,
     time,
@@ -575,6 +579,8 @@ def _(
         _remote_prefix = f"{PREFIX}/runs/final/budget-{_budget}/seed-{_seed}/{_method}"
         _output = ROOT / "local-runs" / f"{_method}-{_budget}-{_seed}-{time.time_ns()}"
         print("START", _budget, _seed, _method, flush=True)
+        _final_env = os.environ.copy()
+        _final_env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(CODE / "research"), str(CODE), _final_env.get("PYTHONPATH"))))
         subprocess.run([sys.executable, "research/experiment.py",
                         "--manifest", str(manifest_path), "--checkpoint", checkpoint,
                         "--output-dir", str(_output), "--device", "cuda",
@@ -583,7 +589,7 @@ def _(
                         "--steps", str(settings["training_steps"]),
                         "--validation-interval", str(settings["validation_interval"]),
                         "--learning-rate", str(settings["learning_rate"]),
-                        "--evaluate-split", "test"], cwd=CODE, check=True)
+                        "--evaluate-split", "test"], cwd=CODE, env=_final_env, check=True)
         _report = json.loads((_output / "results.json").read_text())
         if len(_report["results"]) != 1 or _report["results"][0]["evaluation_split"] != "test":
             raise ValueError("Final job did not produce one held-out result")
