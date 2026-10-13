@@ -1,4 +1,4 @@
-"""Delta-V Track A: reproducible Euler transfer experiment on MoLab."""
+"""Delta-V Task 1: Euler transfer and design-run reduction on MoLab."""
 
 import marimo
 
@@ -9,7 +9,14 @@ app = marimo.App(width="medium")
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Delta-V · Track A · Does fluid pretraining transfer to Euler?
+    # Delta-V · Task 1 · Transfer and design-run evidence
+
+    This is one notebook with two independent studies. **Track A** asks whether
+    pretraining transfers to Euler fields. **Track B** asks whether a model can
+    predict engineering outcomes with fewer measured cooling-time settings.
+    Neither track is a production claim until its results are inspected.
+
+    ### Track A — Euler transfer
 
     This notebook prepares four Euler gamma settings, then compares **scratch FNO**,
     **full fine-tuning of epoch 59**, and **a frozen FNO with learned adapters**.
@@ -28,6 +35,8 @@ def _(mo):
     21 GB Euler source files are **never downloaded**. Each completed gamma and
     training job is saved to a new research path in your HF dataset. MoLab's
     local files are temporary; the HF copies are the durable record.
+    The four existing Euler artifacts that all contain gamma 1.13 are left
+    untouched; Track A creates four new, independently verified gamma groups.
     """)
     return
 
@@ -709,6 +718,115 @@ def _(
                           commit_message="Publish Euler Track A held-out summary")
         print("Saved summary:", _remote_prefix)
     mo.vstack([mo.md(f"**54 final jobs complete.** Results: `{_remote_prefix}`"), figure])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Track B · Does Delta-V reduce design runs?
+
+    This is a **separate, retrospective outcome-table experiment**. The current
+    radiative-layer artifact has only **nine distinct `t_cool` settings** and
+    two measured outcomes, `mass_flux` and `turbulent_velocity`. We hold out
+    whole cooling-time settings in three predefined folds. Starting from three
+    observed settings, a fixed Gaussian-process uncertainty rule selects the
+    next setting. All three arms receive the **same observed settings**:
+
+    1. A Gaussian process/kriging outcome predictor.
+    2. A small outcome network trained from scratch.
+    3. The same network warm-started on the **other two fluid systems' outcome
+       tables**, then fitted on the observed radiative settings. This is an
+       outcome-table warm start, **not** the epoch-59 FNO's field features.
+
+    Set a target normalized RMSE below. It applies to **both** outcomes and is
+    normalized by the non-test design-range within each fold. The output shows
+    first observed-run count reaching the target, predicted outcomes, one- and
+    two-sigma coverage, and settings avoided relative to measuring all nine.
+    Failure to meet the target is reported as failure, not zero saved runs.
+
+    **Limitations:** These nine values are previously published aggregates of
+    sampled training frames, not a fresh trajectory-held-out dataset. Avoided
+    settings are a retrospective cost proxy, not measured solver savings. The
+    warm start does not use FNO features because those would require partial
+    simulation fields at every queried design and must be costed separately.
+    Do not present this as proven prospective design-run reduction.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    b_target = mo.ui.number(value=0.2, start=0.01, step=0.01,
+                            label="Maximum normalized RMSE per outcome")
+    b_button = mo.ui.run_button(label="8 · Run Track B and save design-run benchmark")
+    mo.vstack([b_target, b_button])
+    return b_button, b_target
+
+
+@app.cell
+def _(
+    CODE,
+    DATASET,
+    Path,
+    ROOT,
+    api,
+    b_button,
+    b_target,
+    file_sha256,
+    hf_hub_download,
+    json,
+    mo,
+    subprocess,
+    sys,
+    time,
+    token,
+):
+    mo.stop(not b_button.value, mo.md("Click **Run Track B** when ready."))
+    target = float(b_target.value)
+    if not 0 < target < 1:
+        raise ValueError("Select a normalized target strictly between 0 and 1")
+    remote_path = "research/design-runs-track-b/v1/results.json"
+    revision = api.dataset_info(DATASET).sha
+    _b_names = ("turbulent_radiative_layer_2D", "rayleigh_benard", "shear_flow")
+    _b_paths = [hf_hub_download(DATASET, f"checkpoints/parametric_{name}.npz",
+                                repo_type="dataset", revision=revision, token=token)
+                for name in _b_names]
+    _b_hashes = {name: file_sha256(path) for name, path in zip(_b_names, _b_paths)}
+    existing = set(api.list_repo_files(DATASET, repo_type="dataset"))
+    if remote_path in existing:
+        _b_saved = hf_hub_download(DATASET, remote_path, repo_type="dataset", token=token)
+        _b_report = json.loads(Path(_b_saved).read_text())
+        if _b_report["protocol"]["target_normalized_rmse_each_outcome"] != target:
+            raise ValueError("Track B has a different locked target. Use a new research version for a new study")
+        if _b_report["protocol"]["input_sha256"] != _b_hashes:
+            raise ValueError("Outcome tables changed since the saved Track B run")
+        print("Using already saved Track B result:", remote_path)
+    else:
+        _b_output = ROOT / f"track-b-{time.time_ns()}"
+        subprocess.run([sys.executable, "research/track_b.py",
+                        "--radiative", _b_paths[0], "--rayleigh", _b_paths[1],
+                        "--shear", _b_paths[2], "--output-dir", str(_b_output),
+                        "--target", str(target)], cwd=CODE, check=True)
+        _b_report = json.loads((_b_output / "results.json").read_text())
+        _b_report["protocol"]["artifact_revision"] = revision
+        _b_payload = json.dumps(_b_report, indent=2, allow_nan=False) + "\n"
+        (_b_output / "results.json").write_text(_b_payload)
+        if remote_path in set(api.list_repo_files(DATASET, repo_type="dataset")):
+            raise RuntimeError("Track B result appeared remotely during this run; inspect before uploading")
+        api.upload_file(path_or_fileobj=(_b_output / "results.json"),
+                        path_in_repo=remote_path, repo_id=DATASET,
+                        repo_type="dataset", commit_message="Save Track B design-run benchmark")
+        print("Saved Track B:", remote_path)
+    lines = ["| Arm | Folds meeting target | First runs by fold | Saved from nine-setting sweep | 68% coverage | 95% coverage |",
+             "|---|---:|---|---|---:|---:|"]
+    for row in _b_report["summary"]:
+        lines.append("| {} | {}/3 | {} | {} | {:.1%} | {:.1%} |".format(
+            row["method"], row["folds_meeting_target"],
+            row["first_runs_to_target_by_fold"],
+            row["runs_saved_from_nine_setting_sweep_by_fold"],
+            row["final_68pct_coverage"], row["final_95pct_coverage"]))
+    mo.md("\n".join(lines))
     return
 
 
