@@ -12,10 +12,13 @@ CPU compute is sufficient. No FNO checkpoint or large simulation fields are down
 1. Open the `.py` notebook using the link above, or import its GitHub URL in MoLab.
 2. Let the package environment install. The notebook declares Python 3.11–3.13
    and exact versions for marimo, NumPy, SciPy, pandas, scikit-learn, matplotlib,
-   joblib, threadpoolctl, and huggingface-hub. If packages are missing, use the
+   joblib, threadpoolctl, huggingface-hub, and python-dotenv. If packages are missing, use the
    package panel's manifest; the notebook does not invoke pip inside reactive cells.
 3. Add `HF_TOKEN` in MoLab Secrets, with write access to the existing dataset
-   `KrishMalik/deltav-fluid`. Never paste the token into notebook source.
+   `KrishMalik/deltav-fluid`. Alternatively save `HF_TOKEN=your_token` in `.env`
+   beside the notebook. The notebook reads it on Prepare and save/retry, without
+   printing it or copying `.env` into artifacts. Existing environment secrets take
+   precedence. Never paste the token into notebook source.
 4. Review `task4_config` in step 2 and click **2 · Prepare experiment**. Keep automatic
    HF saving enabled. Inspect the data audit, source audit, split plan and 128 preflight
    checks in steps 3–8. Preparation stops before benchmark training.
@@ -112,7 +115,7 @@ reference, including plots. Use the native `.py` notebook for MoLab and HF persi
   140 embedded correctness checks, including saved-model prediction reproduction.
 - Two stage integration tests verify the preparation gate, exact default-result
   equality with the reference, separate check lists, source snapshot and all 43 artifact hashes.
-- Seven offline persistence tests cover Git/LFS verification, retry idempotency,
+- Nine offline persistence/credential tests cover Git/LFS verification, retry idempotency,
   local/remote corruption, untracked files, partial runs, upload failure, and missing tokens.
 - No authenticated HF upload or hosted MoLab session was performed during local
   verification. The first MoLab run must show the remote verification status before

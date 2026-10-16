@@ -10,6 +10,7 @@
 #     "threadpoolctl==3.6.0",
 #     "joblib==1.5.2",
 #     "huggingface-hub==1.33.0",
+#     "python-dotenv==1.1.1",
 # ]
 # ///
 
@@ -43,7 +44,7 @@ def _(mo):
 
     **Run order:** edit the settings in step 2, click **Prepare experiment**, inspect steps 3–8, then click **Run benchmark** in step 9. Steps 10–14 render and save downstream results automatically. CPU is sufficient; no GPU or large field downloads are needed.
 
-    For durable saving, set `HF_TOKEN` in MoLab Secrets with write access to `KrishMalik/deltav-fluid`. Keep **Save future results to Hugging Face** enabled. Never put a token in this file. If you choose local-only, download the final ZIP before ending the session.
+    For durable saving, set `HF_TOKEN` in MoLab Secrets or in a `.env` file beside the notebook (`HF_TOKEN=your_token`), with write access to `KrishMalik/deltav-fluid`. Keep **Save future results to Hugging Face** enabled. Never put a token in this file. If you choose local-only, download the final ZIP before ending the session.
     """)
     return
 
@@ -143,10 +144,22 @@ def _(mo):
 
 
 @app.cell
-def _(Path):
+def _(Path, os):
+    def get_hf_token():
+        """Read on each attempt; never display or export credentials as artifacts."""
+        from dotenv import dotenv_values
+        token = os.environ.get("HF_TOKEN", "").strip()
+        if token:
+            return token
+        for env_file in dict.fromkeys([Path.cwd() / ".env", Path(__file__).resolve().parent / ".env"]):
+            token = (dotenv_values(env_file, interpolate=False).get("HF_TOKEN") or "").strip()
+            if token:
+                return token
+        return ""
+
     def preflight_hf(token):
         if not token:
-            raise ValueError("Add HF_TOKEN to MoLab Secrets, or explicitly uncheck HF saving for a local-only run.")
+            raise ValueError("Add HF_TOKEN to MoLab Secrets or .env beside the notebook, save the file, then click Prepare again. You can also uncheck HF saving for a local-only run.")
         from huggingface_hub import HfApi
         api = HfApi(token=token)
         api.whoami()
@@ -200,7 +213,7 @@ def _(Path):
         run_dir.with_suffix(".hf-receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
         return receipt
 
-    return preflight_hf, save_run_to_hf
+    return get_hf_token, preflight_hf, save_run_to_hf
 
 
 @app.cell
@@ -211,7 +224,7 @@ def _(
     json,
     mo,
     np,
-    os,
+    get_hf_token,
     preflight_hf,
     prepare_button,
     save_to_hf,
@@ -221,7 +234,7 @@ def _(
 ):
     mo.stop(not prepare_button.value, mo.md("Review the controls above, then prepare the experiment."))
     if save_to_hf.value:
-        preflight_hf(os.environ.get("HF_TOKEN", ""))
+        preflight_hf(get_hf_token())
     HF_REPO = 'KrishMalik/deltav-fluid'
     HF_REVISION = 'e25651ff92cf1d8f8818164a0277b8613e83d8b3'
     GITHUB_REVISION = '5645c6ec675e466649bc9e35a8da92848f3a60bd'
@@ -1154,11 +1167,11 @@ def _(mo, run_result):
 
 
 @app.cell(hide_code=True)
-def _(mo, os, retry_save, run_result, save_run_to_hf, save_to_hf):
+def _(get_hf_token, mo, retry_save, run_result, save_run_to_hf, save_to_hf):
     _retry = retry_save.value
     if save_to_hf.value:
         try:
-            _receipt = save_run_to_hf(run_result["run_dir"], os.environ.get("HF_TOKEN", ""))
+            _receipt = save_run_to_hf(run_result["run_dir"], get_hf_token())
         except Exception as _error:
             mo.output.replace(mo.md(
                 f"**Remote save NOT verified ({type(_error).__name__}).** Your local results and ZIP remain available. "

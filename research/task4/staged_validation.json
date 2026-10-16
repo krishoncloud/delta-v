@@ -1,10 +1,10 @@
 {
-  "notebook_sha256": "07dfb6a9e1dc822f51bbfeb9f58f78698703fd60b640d84cbfb1277dd155552a",
+  "notebook_sha256": "600467c72085e59252686a5e272f90f317f14ce3570ecbda22786affbf22cd70",
   "validation_date": "2026-10-16",
   "numbered_steps": 14,
   "marimo_cells": 36,
   "marimo_check": "passed",
-  "offline_tests_passed": 9,
+  "offline_tests_passed": 11,
   "benchmark_fits": 936,
   "held_out_scalar_predictions": 9954,
   "correctness_checks": 140,
@@ -26,5 +26,11 @@
     "local-only ZIP download is available"
   ],
   "hosted_molab_tested": false,
-  "authenticated_hf_upload_tested": false
+  "authenticated_hf_upload_tested": false,
+  "credential_tests": [
+    "quoted .env token loaded without environment mutation",
+    "updated .env token reread on retry",
+    "environment secret takes precedence"
+  ],
+  "browser_checks_note": "Browser checks were performed on the preceding staged revision; dotenv changes tested offline."
 }

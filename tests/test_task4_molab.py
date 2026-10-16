@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 NOTEBOOK = Path(__file__).resolve().parents[1] / "research" / "molab_task4.py"
@@ -107,6 +108,20 @@ class TestTask4Save(unittest.TestCase):
         self.assertTrue((self.root / "model.bin").exists())
         self.hub.fail_upload = False
         self.assertEqual(self.save()["verified_files"], 3)
+
+    def test_dotenv_token_is_read_without_exporting_it(self):
+        with chdir(self.root), patch.dict("os.environ", {}, clear=True):
+            import os
+            (self.root / ".env").write_text('HF_TOKEN="test-file-token"\n')
+            self.assertEqual(self.definitions["get_hf_token"](), "test-file-token")
+            self.assertNotIn("HF_TOKEN", os.environ)
+            (self.root / ".env").write_text("HF_TOKEN=test-updated-token\n")
+            self.assertEqual(self.definitions["get_hf_token"](), "test-updated-token")
+
+    def test_environment_token_takes_precedence_over_dotenv(self):
+        with chdir(self.root), patch.dict("os.environ", {"HF_TOKEN": "test-secret-token"}, clear=True):
+            (self.root / ".env").write_text("HF_TOKEN=test-file-token\n")
+            self.assertEqual(self.definitions["get_hf_token"](), "test-secret-token")
 
     def test_missing_token_fails_before_network(self):
         with self.assertRaisesRegex(ValueError, "HF_TOKEN"):
