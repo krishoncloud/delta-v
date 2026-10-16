@@ -1,0 +1,35 @@
+[
+  {
+    "additional_settings": 0,
+    "distinct_filename_settings": 9,
+    "interpretation": "No extra settings found; raw fields could improve repeat/aggregation audit",
+    "new_parameters": [],
+    "parsed_source_files": 27,
+    "source_revision": "2ee7756575ff6f90981d0308cbcb6a2ab5995bdc",
+    "system": "turbulent_radiative_layer_2D",
+    "table_settings_absent_from_inventory": [],
+    "unparsed_files": []
+  },
+  {
+    "additional_settings": 0,
+    "distinct_filename_settings": 35,
+    "interpretation": "No extra settings found; raw fields could improve repeat/aggregation audit",
+    "new_parameters": [],
+    "parsed_source_files": 105,
+    "source_revision": "10e143ebedae8a9b1c699b95d5b1eb8feaae09b5",
+    "system": "rayleigh_benard",
+    "table_settings_absent_from_inventory": [],
+    "unparsed_files": []
+  },
+  {
+    "additional_settings": 0,
+    "distinct_filename_settings": 28,
+    "interpretation": "No extra settings found; raw fields could improve repeat/aggregation audit",
+    "new_parameters": [],
+    "parsed_source_files": 84,
+    "source_revision": "fc867f856f306905cf94c1f5df978cc518a2048c",
+    "system": "shear_flow",
+    "table_settings_absent_from_inventory": [],
+    "unparsed_files": []
+  }
+]

@@ -1,0 +1,562 @@
+[
+  {
+    "check": "missing values rejected",
+    "passed": true
+  },
+  {
+    "check": "nonpositive log inputs rejected",
+    "passed": true
+  },
+  {
+    "check": "shape mismatch rejected",
+    "passed": true
+  },
+  {
+    "check": "duplicate column names rejected",
+    "passed": true
+  },
+  {
+    "check": "duplicate settings grouped with mean outcome",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/random-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/random-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-42: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-low-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-low-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-high-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-high-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/random-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/random-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-123: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-low-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-low-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-high-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-high-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/random-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/random-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/interior-2026: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-low-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-low-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-high-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D/axis-0-high-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/random-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/random-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-42: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-low-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-low-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-high-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-high-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-low-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-low-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-high-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-high-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/random-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/random-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-123: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-low-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-low-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-high-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-high-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-low-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-low-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-high-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-high-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/random-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/random-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/interior-2026: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-low-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-low-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-high-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-0-high-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-low-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-low-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-high-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard/axis-1-high-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/random-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/random-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-42: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-low-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-low-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-high-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-high-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-low-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-low-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-high-42: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-high-42: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/random-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/random-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-123: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-low-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-low-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-high-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-high-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-low-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-low-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-high-123: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-high-123: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/random-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/random-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/interior-2026: true interpolation",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-low-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-low-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-high-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-0-high-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-low-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-low-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-high-2026: isolated complete partition",
+    "passed": true
+  },
+  {
+    "check": "shear_flow/axis-1-high-2026: nested order",
+    "passed": true
+  },
+  {
+    "check": "mean: deterministic",
+    "passed": true
+  },
+  {
+    "check": "mean: training-only output mean",
+    "passed": true
+  },
+  {
+    "check": "mean: held-out outcomes cannot affect predictions",
+    "passed": true
+  },
+  {
+    "check": "mean: query set cannot change fit",
+    "passed": true
+  },
+  {
+    "check": "mean: tiny outcomes retain scale",
+    "passed": true
+  },
+  {
+    "check": "linear: deterministic",
+    "passed": true
+  },
+  {
+    "check": "linear: training-only output mean",
+    "passed": true
+  },
+  {
+    "check": "linear: held-out outcomes cannot affect predictions",
+    "passed": true
+  },
+  {
+    "check": "linear: query set cannot change fit",
+    "passed": true
+  },
+  {
+    "check": "linear: tiny outcomes retain scale",
+    "passed": true
+  },
+  {
+    "check": "gp: deterministic",
+    "passed": true
+  },
+  {
+    "check": "gp: training-only output mean",
+    "passed": true
+  },
+  {
+    "check": "gp: held-out outcomes cannot affect predictions",
+    "passed": true
+  },
+  {
+    "check": "gp: query set cannot change fit",
+    "passed": true
+  },
+  {
+    "check": "gp: tiny outcomes retain scale",
+    "passed": true
+  },
+  {
+    "check": "GP: finite nonnegative SD",
+    "passed": true
+  },
+  {
+    "check": "GP: uncertainty preserves tiny scale",
+    "passed": true
+  },
+  {
+    "check": "rank-deficient hull handled",
+    "passed": true
+  },
+  {
+    "check": "turbulent_radiative_layer_2D: saved GP reproduces predictions",
+    "passed": true
+  },
+  {
+    "check": "rayleigh_benard: saved GP reproduces predictions",
+    "passed": true
+  },
+  {
+    "check": "shear_flow: saved GP reproduces predictions",
+    "passed": true
+  },
+  {
+    "check": "measured mass_flux: repeated prediction matches",
+    "passed": true
+  },
+  {
+    "check": "measured mass_flux: repeated uncertainty matches",
+    "passed": true
+  },
+  {
+    "check": "measured turbulent_velocity: repeated prediction matches",
+    "passed": true
+  },
+  {
+    "check": "measured turbulent_velocity: repeated uncertainty matches",
+    "passed": true
+  },
+  {
+    "check": "protocol unchanged after evaluation",
+    "passed": true
+  },
+  {
+    "check": "all planned fits completed",
+    "passed": true
+  },
+  {
+    "check": "all interpolation queries lie within observed hull",
+    "passed": true
+  },
+  {
+    "check": "all boundary queries lie outside observed hull",
+    "passed": true
+  },
+  {
+    "check": "all evaluated errors finite",
+    "passed": true
+  }
+]

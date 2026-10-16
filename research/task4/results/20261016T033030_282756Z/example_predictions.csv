@@ -1,0 +1,5 @@
+system,suite,split,seed,budget,method,outcome,setting_id,parameters,observed,predicted,predictive_sd,lower_95,upper_95,inside_training_hull
+turbulent_radiative_layer_2D,interpolation,interior-42,42,3,gp,mass_flux,turbulent_radiative_layer_2D:003,"{""t_cool"": 0.18000000715255737}",-0.0078393336633503768,-0.027261353699043957,0.01179097706499127,-0.05037124408896463,-0.0041514633091232836,True
+turbulent_radiative_layer_2D,interpolation,interior-42,42,3,gp,mass_flux,turbulent_radiative_layer_2D:004,"{""t_cool"": 0.3199999928474426}",-0.0076559485746459004,-0.022271084881069145,0.010860034202282225,-0.043556360788415474,-0.0009858089737228154,True
+turbulent_radiative_layer_2D,interpolation,interior-42,42,3,gp,turbulent_velocity,turbulent_radiative_layer_2D:003,"{""t_cool"": 0.18000000715255737}",0.050553926064268402,0.060040916163535352,0.0085605844854376879,0.043262478885465139,0.076819353441605565,True
+turbulent_radiative_layer_2D,interpolation,interior-42,42,3,gp,turbulent_velocity,turbulent_radiative_layer_2D:004,"{""t_cool"": 0.3199999928474426}",0.045664593577384949,0.053324683901543643,0.0078343433791035651,0.037969653035980835,0.068679714767106451,True
