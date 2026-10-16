@@ -2,10 +2,11 @@
 
 ## Next feature release: new problems within the fluid lane
 
-See the [14-task release plan and new-problem acceptance criteria](V2_RELEASE_PLAN.md).
+See the [15-task release plan and new-problem acceptance criteria](V2_RELEASE_PLAN.md).
 Task 4 supplies the reference data and GP benchmark; Tasks 5–6 must build and test
 pretrained adaptation on a new customer-style fluid problem before the product
-claims that advantage.
+claims that advantage. Task 15 must complete the public/private separation before
+the next feature launch; its implementation is currently deferred.
 
 ## Task 4: outcome tables and GP baseline
 

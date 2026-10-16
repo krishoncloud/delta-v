@@ -1,7 +1,7 @@
 # Delta-V v2: supported lane, new customer problem
 
-Clarified with Krish on 16 October 2026. This records the 14-task release plan
-from the project handoff and makes the new-customer-problem test explicit.
+Clarified with Krish on 16 October 2026. This records the original 14 release tasks plus Task 15, added by Krish
+before the next feature launch, and makes the new-customer-problem test explicit.
 It does not change historical experiment results or claim deployed functionality.
 
 ## Product contract
@@ -32,7 +32,7 @@ simple baselines. This is a hypothesis to test, not a property assumed from the
 FNO architecture. The product may retain GP as a baseline or fallback, but must
 identify the actual method and must not label GP-only results as an FNO win.
 
-## Status and revised acceptance scope of the 14 tasks
+## Status and revised acceptance scope of the 15 tasks
 
 | # | Task | Status and acceptance scope |
 |---|---|---|
@@ -49,7 +49,8 @@ identify the actual method and must not label GP-only results as an FNO win.
 | 11 | Bundled worked example | A measured Task 4 research example exists. Product completion requires an example connected to the real backend on the accepted input contract, identifying the method actually used. |
 | 12 | Bring-your-runs website | Built as a mock on `frontend/bring-your-runs`; integration pending. Represent lane selection and a new customer study, compatibility and any required field uploads. Keep unsupported lanes unavailable. |
 | 13 | Model demo tab | Built on the frontend branch; integration pending. Keep recorded-field demonstrations distinguishable from the customer study workflow. |
-| 14 | Test/deploy/publish evidence | Pending. Release only within demonstrated capabilities. Pretrained-adaptation and run-savings claims must pass the gates below; mocks and Task 4 GP results cannot substitute. |
+| 14 | Test/deploy/publish evidence | Pending. Deployment requires Task 15 completion. Release only within demonstrated capabilities. Pretrained-adaptation and run-savings claims must pass the gates below; mocks and Task 4 GP results cannot substitute. |
+| 15 | Separate public research from private product development | Pending; implementation paused at Krish's request. Mandatory before the next feature launch and before Task 14 deployment. Verify authorized development access, protect future product code/artifacts and customer data, and preserve the public demo. |
 
 ## Task 5: bridge customer inputs to the pretrained FNO
 
@@ -135,6 +136,8 @@ problem class; one target is not proof for all fluid problems.
 
 ## Task 14 release gates
 
+Task 15 is a prerequisite for deployment, despite its later task number.
+
 - Real lane -> study -> compatibility -> upload -> adaptation -> held-out
   validation -> prediction -> next-run -> report behavior, without mock compute.
 - The input contract is achievable for a customer at prediction time. Additional
@@ -151,6 +154,39 @@ problem class; one target is not proof for all fluid problems.
 
 A functional GP-backed workflow may be useful, but releasing it does not satisfy
 this release's intended demonstration of a pretrained FNO advantage.
+
+
+## Task 15: public/private separation before the next feature launch
+
+Status: pending, deliberately deferred. Krish added this task on 16 October 2026
+and requires completion before the next feature launch. Adding the task does not
+resume the paused migration or authorize an automatic visibility change.
+
+Acceptance criteria:
+
+1. Decide and document the publication boundary: selected research reports,
+   reproducible benchmarks, demo notebooks/sample data and the public demo stay
+   intentionally public; future production adaptation/orchestration code,
+   commercial checkpoints, customer uploads, customer-adapted models and workflows
+   use private development/storage locations.
+2. Verify authorized GitHub/HF access for the owner and development tools before
+   moving work. Private visibility must not strand development or require secrets
+   to be pasted into source. Do not assume existing connector access covers a new
+   private repository.
+3. Create and verify the required private repositories/storage, with explicit
+   destinations for new product artifacts. Audit export and upload paths so
+   customer data and private models are not included in public research uploads.
+4. Preserve the public demo: audit its artifact dependencies and verify authorized
+   runtime access before changing any repository it uses. Test the running demo
+   after the separation. Do not silently break unauthenticated artifact loading.
+5. Record what was changed and confirm visibility/access at each destination.
+   Existing public copies cannot be recalled; do not present this task as making
+   already published code or weights secret retrospectively.
+
+At the time of deferral, no private repository creation was submitted, no
+visibility was changed, and no weights or customer data were migrated. Resume
+implementation only when Krish explicitly revisits it. Task 14 deployment remains
+blocked until these acceptance criteria are satisfied.
 
 ## Frontend inspection and integration notes
 
