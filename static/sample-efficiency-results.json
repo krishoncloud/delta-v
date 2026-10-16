@@ -1,0 +1,89 @@
+{
+  "status": "mock",
+  "label": "Illustrative curve shapes only. These are not results.",
+  "system": "Fluids lane, The Well (planned sweep)",
+  "metric": "Scalar relative L2 on trajectory-held-out data",
+  "target_rel_l2": 0.15,
+  "split": "trajectory",
+  "seeds": 3,
+  "arms": {
+    "scratch": {
+      "k": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "rel_l2": [
+        0.62,
+        0.48,
+        0.33,
+        0.22,
+        0.14,
+        0.09
+      ],
+      "std": [
+        0.06,
+        0.05,
+        0.04,
+        0.03,
+        0.02,
+        0.01
+      ]
+    },
+    "pretrained": {
+      "k": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "rel_l2": [
+        0.4,
+        0.3,
+        0.2,
+        0.13,
+        0.09,
+        0.07
+      ],
+      "std": [
+        0.05,
+        0.04,
+        0.03,
+        0.02,
+        0.015,
+        0.01
+      ]
+    },
+    "gp": {
+      "k": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "rel_l2": [
+        0.44,
+        0.34,
+        0.25,
+        0.17,
+        0.12,
+        0.08
+      ],
+      "std": [
+        0.05,
+        0.04,
+        0.03,
+        0.025,
+        0.02,
+        0.01
+      ]
+    }
+  }
+}

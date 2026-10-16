@@ -158,9 +158,25 @@ function toggleTheme() {
     document.documentElement.dataset.theme === "dark" ? "light" : "dark",
   );
 }
+const PAGE_TITLES = {
+  simulator: "Model demo",
+  workbench: "Workbench: bring your runs",
+  evidence: "Evidence",
+};
 function route() {
-  const hash = location.hash.slice(1).split("?")[0];
+  const rawHash = location.hash.slice(1);
+  if (rawHash.split("?")[0] === "demo") {
+    // "#demo" is an alias of the Model demo page; keep any selection link.
+    location.replace(
+      "#simulator" +
+        (rawHash.includes("?") ? rawHash.slice(rawHash.indexOf("?")) : ""),
+    );
+    return;
+  }
+  const hash = rawHash.split("?")[0];
   page = [
+    "workbench",
+    "evidence",
     "simulator",
     "history",
     "datasets",
@@ -184,8 +200,10 @@ function route() {
   document.title =
     "Delta-V — " +
     (page === "home"
-      ? "Learned physics surrogates, one domain lane at a time"
-      : pretty(page));
+      ? "Start from the runs you already have"
+      : PAGE_TITLES[page] || pretty(page));
+  document.body.dataset.page = page;
+  if (typeof DeltaPages !== "undefined") DeltaPages.onRoute(page);
   if (page !== "simulator") {
     stopPlayback();
     stopRolloutPlayback();

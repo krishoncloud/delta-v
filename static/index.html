@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Delta-V — Learned physics surrogates, one domain lane at a time</title>
+    <title>Delta-V — Start from the runs you already have</title>
     <meta
       name="description"
-      content="Delta-V is a platform for learned engineering surrogates, built one physical domain at a time. Lane 1 is fluid dynamics: three systems, fast parameter estimates, neural next-state prediction and bounded rollout, every result compared against real simulation data."
+      content="Delta-V fits a model pretrained on fluid physics to the simulation runs you already have, predicts the rest of your design space with an error estimate, and suggests the few runs worth doing next. Prototype: the workbench runs on mock data until the model is connected."
     />
     <meta name="theme-color" content="#0B0A12" />
     <link rel="icon" href="logo.svg" />
@@ -17,6 +17,7 @@
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
     />
     <link rel="stylesheet" href="app.css?v=prototype-4" />
+    <link rel="stylesheet" href="flow.css?v=prototype-4" />
   </head>
   <body>
     <a class="skip" href="#main-content">Skip to content</a>
@@ -30,10 +31,11 @@
             stroke-linejoin="round"
             stroke-linecap="round"
           /></svg
-        ><span>DELTA-V</span><span class="badge">PROTOTYPE</span></a
+        ><span>DELTA-V</span><span class="badge">PROTOTYPE</span><span class="badge mock-badge" title="This page shows mock data">MOCK DATA</span></a
       >
       <nav class="topnav" aria-label="Main navigation">
-        <a href="#about">The project</a><a href="#datasets">Datasets</a
+        <a href="#workbench">Workbench</a><a href="#evidence">Evidence</a
+        ><a href="#simulator">Model demo</a><a href="#about">The project</a
         ><a
           href="https://github.com/krishoncloud/delta-v"
           target="_blank"
@@ -58,7 +60,7 @@
           title="Switch theme"
         >
           ☼</button
-        ><a class="btn primary small" href="#simulator">Open simulator ↗</a>
+        ><a class="btn primary small" href="#workbench">Bring your runs</a>
       </div>
     </header>
     <main id="main-content">
@@ -66,72 +68,122 @@
         <section class="hero">
           <div class="hero-copy">
             <p class="eyebrow">
-              <span class="live-dot"></span> LANE 1 · FLUID DYNAMICS
+              <span class="live-dot"></span> FLUID DYNAMICS · 2D · PROTOTYPE
             </p>
-            <h1>Complex physics.<br /><span>A faster first look.</span></h1>
+            <h1>Start from the runs<br /><span>you already have.</span></h1>
             <p class="hero-description">
-              Delta-V is a platform for learned physics surrogates, built one
-              domain lane at a time. Fluids is the first lane: adjust a
-              parameter, predict the next state, roll the prediction forward,
-              and see exactly where the model agrees with simulation.
+              Delta-V fits a model pretrained on fluid physics to your
+              simulation runs, predicts the rest of your design space with an
+              error estimate, and suggests the few runs worth doing next. The
+              aim is fewer solver runs to a usable design. Whether it gets
+              there is what we are measuring.
+            </p>
+            <p class="claim-chip" id="claim-chip">
+              <span class="mock-tag" id="claim-tag">PENDING</span
+              ><span id="claim-text">Not yet measured.</span
+              ><a href="#evidence">Evidence →</a>
             </p>
             <div class="hero-actions">
-              <a
-                class="btn primary"
+              <a class="btn primary" href="#workbench">Bring your runs</a
+              ><a
+                class="text-link"
                 href="#simulator?system=shear_flow&amp;sample=sf_Re1e5_Sc1&amp;field=pressure&amp;frame=4&amp;tour=1"
-                >Explore a 30-second example ↗</a
-              ><a class="text-link" href="#about">Understand Delta-V →</a>
+                >See the model working →</a
+              >
             </div>
             <p class="hero-note">
-              Experimental · Lane 1 of a multi-domain system · Ground truth
-              included
+              Prototype. The workbench and the worked example run on mock data
+              until the model is connected.
             </p>
           </div>
-          <div class="hero-visual">
+          <div class="hero-chart">
             <div class="visual-label">
-              <span class="live-dot"></span> FROM THE WELL
-              <span class="mono">01 / 03</span>
+              <span><span class="live-dot"></span> WORKED EXAMPLE · PIPE BEND</span
+              ><span class="mock-tag">MOCK</span>
             </div>
-            <div class="hero-field">
-              <img
-                src="field-preview.png"
-                alt="Real shear-flow tracer field from The Well, showing layered fluid mixing"
-                width="256"
-                height="512"
-              />
-              <div class="field-axis mono">y ↑</div>
-            </div>
+            <div id="home-chart" aria-live="polite">Loading the example…</div>
             <div class="visual-caption">
               <div>
-                <strong>Shear-driven mixing</strong
-                ><span>Ground truth · tracer · t = 6.40</span>
+                <strong>A few runs in, a full design range out</strong
+                ><span>Synthetic data. The band is an approximate ±2σ.</span>
               </div>
-              <a
-                href="#simulator"
-                data-start="shear_flow"
-                aria-label="Explore shear flow"
-                >↗</a
-              >
+              <a href="#workbench" aria-label="Open the workbench">↗</a>
             </div>
           </div>
         </section>
         <div class="fact-strip">
-          <div><strong>01</strong><span>domain lane live · fluids</span></div>
-          <div><strong>03</strong><span>systems in this lane</span></div>
-          <div><strong>4 → 1 → 30</strong><span>frames in → next state → rollout</span></div>
-          <div><strong>The Well</strong><span>open simulation data</span></div>
+          <div><strong>2D</strong><span>fluid problems, resampled to a fixed grid</span></div>
+          <div><strong>CSV</strong><span>design parameters and outcomes in</span></div>
+          <div><strong>15%</strong><span>self-imposed error target</span></div>
+          <div><strong>3 to 200</strong><span>runs per file, up to 3 design parameters</span></div>
         </div>
         <section class="landing-section">
           <div class="section-intro">
-            <p class="eyebrow">FROM A QUESTION TO A COMPARISON</p>
-            <h2>Two views of the same physics.</h2>
+            <p class="eyebrow">HOW IT WORKS</p>
+            <h2>Four steps from a CSV to a next run.</h2>
+          </div>
+          <div class="how-grid">
+            <div class="how-card">
+              <span class="step-number">01 / BRING</span>
+              <h3>Upload your runs</h3>
+              <p>
+                One row per run: your design parameters and the outcome you
+                care about. The file is checked before anything is fitted.
+              </p>
+            </div>
+            <div class="how-card">
+              <span class="step-number">02 / FIT</span>
+              <h3>Start from a pretrained model</h3>
+              <p>
+                A model pretrained on fluid simulations is adapted to your
+                runs. With few runs a pretrained start should help most. The
+                Evidence page tests that.
+              </p>
+            </div>
+            <div class="how-card">
+              <span class="step-number">03 / PREDICT</span>
+              <h3>See the range, with error</h3>
+              <p>
+                The outcome across your whole design range, with an
+                uncertainty band and the places the model is least sure.
+              </p>
+            </div>
+            <div class="how-card">
+              <span class="step-number">04 / NEXT</span>
+              <h3>Run only what matters</h3>
+              <p>
+                A short list of design points to simulate in your own solver.
+                Add the results and refit until the error target is met.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="landing-section" id="example-section">
+          <div class="section-intro">
+            <p class="eyebrow">WORKED EXAMPLE <span class="mock-tag">MOCK</span></p>
+            <h2>A pipe bend, end to end.</h2>
             <p>
-              Start with a quick numeric estimate. Go deeper with a spatial
-              prediction you can inspect against the reference.
+              Someone designing a pipe bend has a handful of solver runs and
+              wants pressure drop across the whole design range. These numbers
+              come from a synthetic formula and a stand-in model, to show the
+              flow. They are not results.
+            </p>
+          </div>
+          <div class="stat-row" id="home-stats"></div>
+          <a class="btn primary" href="#workbench" data-load-example>Open this example in the workbench</a>
+        </section>
+        <section class="landing-section">
+          <div class="section-intro">
+            <p class="eyebrow">THE MODEL UNDERNEATH</p>
+            <h2>See the pretrained model working.</h2>
+            <p>
+              The fluid model behind the workbench is live in the Model demo:
+              three fluid systems, next-state prediction and bounded rollout,
+              each compared with real simulation data.
             </p>
           </div>
           <div class="tier-grid">
-            <a href="#simulator" class="tier-card"
+            <a href="#simulator" class="tier-card" data-start="shear_flow"
               ><span class="step-number">01 / PARAMETRIC</span>
               <div class="mini-chart" aria-hidden="true">
                 <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -164,12 +216,11 @@
           </div>
           <div>
             <p>
-              Delta-V is an early prototype of a system for learned engineering
-              surrogates. Fluid dynamics is the first domain lane; the tooling,
-              the maturity ladder and the honesty rules are meant to carry over
-              to the next lanes. Prediction quality varies by system and field;
-              every prediction comes with its measured error. These
-              approximations complement high-fidelity solvers.
+              Delta-V is an early prototype. It handles 2D fluid problems,
+              resamples data onto a fixed grid, and helps narrow a design
+              space. It does not replace the final verification run in your own
+              solver. The workbench is mock until the model is connected, and
+              every number from a mock source says so.
             </p>
             <a class="text-link" href="#about"
               >What works, what doesn’t, and what’s next →</a
@@ -188,15 +239,17 @@
               />
             </svg>
             DELTA-V</span
-          ><span>Built with The Well · Krish Malik &amp; Adya Anwesha</span>
+          >
         </footer>
       </div>
       <div id="workspace" hidden>
         <aside class="sidebar">
           <p class="eyebrow">WORKSPACE</p>
           <nav id="workspace-menu" aria-label="Workspace navigation">
-            <a href="#simulator" data-nav="simulator"
-              ><span>◈</span> Simulator</a
+            <a href="#workbench" data-nav="workbench"><span>◉</span> Workbench</a
+            ><a href="#evidence" data-nav="evidence"><span>∿</span> Evidence</a
+            ><a href="#simulator" data-nav="simulator"
+              ><span>◈</span> Model demo</a
             ><a href="#history" data-nav="history"><span>◷</span> Run history</a
             ><a href="#datasets" data-nav="datasets"><span>▧</span> Datasets</a
             ><a href="#models" data-nav="models"><span>◇</span> Model</a
@@ -229,6 +282,43 @@
             </p>
           </div>
           <div id="notice" role="alert" hidden></div>
+          <section id="page-workbench" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">WORKBENCH <span class="mock-tag">MOCK</span></p>
+                <h1>Bring your runs</h1>
+                <p>
+                  Check your runs, fit, see predictions with error, and get the
+                  few runs worth doing next.
+                </p>
+              </div>
+            </div>
+            <div class="mock-banner" role="note">
+              <span class="mock-tag">MOCK</span>
+              <div>
+                <strong>Front-end preview.</strong> Nothing here comes from the
+                Delta-V model yet. Your CSV is parsed and checked for real, in
+                your browser, and is never uploaded. The fit and the
+                predictions are a Gaussian process stand-in, and the worked
+                example is synthetic.
+              </div>
+            </div>
+            <ol class="wb-steps" id="wb-steps" aria-label="Workbench steps"></ol>
+            <div id="wb-panel" aria-live="polite"></div>
+          </section>
+          <section id="page-evidence" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">EVIDENCE <span class="mock-tag" id="ev-tag">MOCK</span></p>
+                <h1>Do pretrained models need fewer runs?</h1>
+                <p>
+                  The sample-efficiency sweep: error against the number of
+                  training trajectories, for three starting points.
+                </p>
+              </div>
+            </div>
+            <div id="ev-root">Loading…</div>
+          </section>
           <section id="page-simulator" class="page" hidden>
             <div class="page-heading">
               <div>
@@ -1391,7 +1481,7 @@
                       >Model and dataset artifacts ↗</a
                     >
                   </p>
-                  <p>Created by Krish Malik and Adya Anwesha.</p>
+                  <p>Created by Krish Malik.</p>
                 </section>
               </article>
               <aside class="about-aside">
@@ -1429,6 +1519,9 @@
     <script src="colormaps.js"></script>
     <script src="rollout.js?v=prototype-4"></script>
     <script src="launch.js?v=prototype-4"></script>
+    <script src="flow.js?v=prototype-4"></script>
+    <script src="pages.js?v=prototype-4"></script>
+    <script src="workbench.js?v=prototype-4"></script>
     <script src="app.js?v=prototype-4"></script>
   </body>
 </html>
