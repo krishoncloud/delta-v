@@ -16,8 +16,12 @@ CPU compute is sufficient. No FNO checkpoint or large simulation fields are down
    package panel's manifest; the notebook does not invoke pip inside reactive cells.
 3. Add `HF_TOKEN` in MoLab Secrets, with write access to the existing dataset
    `KrishMalik/deltav-fluid`. Never paste the token into notebook source.
-4. Review `task4_config` and click **Run task 4**. Keep automatic HF saving enabled.
-5. Wait for **Saved and verified on Hugging Face** and open the exact run link.
+4. Review `task4_config` in step 2 and click **2 · Prepare experiment**. Keep automatic
+   HF saving enabled. Inspect the data audit, source audit, split plan and 128 preflight
+   checks in steps 3–8. Preparation stops before benchmark training.
+5. Click **9 · Run benchmark**. Steps 10–13 display the learning curves, uncertainty,
+   worked example, matched comparisons, reusable-model checks and final report.
+6. In step 14, wait for **Saved and verified on Hugging Face** and open the exact run link.
    A failed upload leaves the completed local artifacts and ZIP available.
    **Retry save** retries persistence without repeating the benchmark.
 
@@ -46,6 +50,31 @@ uvx marimo edit --sandbox research/molab_task4.py
 ```
 
 Uncheck automatic HF saving only if you intentionally want a local-only run.
+
+## Notebook structure
+
+The native notebook has 14 explained steps across 36 reactive cells, following
+`research/molab_track_a.py` on the Euler research branch. Each scientific stage
+executes in its own cell; there is no monolithic `run_task4()` wrapper.
+
+| Step | Action and visible evidence |
+|---|---|
+| 1–2 | Import pinned dependencies, choose seeds/restarts/tolerances, prepare a unique run |
+| 3–4 | Verify embedded source hashes, validate schema, show setting counts and input ranges |
+| 5 | Audit official source filenames for additional parameter settings |
+| 6 | Lock the protocol and show test sizes, training pools, anchors and budgets |
+| 7–8 | Explain GP/mean/linear models and run leakage, scaling and determinism checks |
+| 9 | Explicitly launch the benchmark and retain all fits and warnings |
+| 10 | Display learning curves and uncertainty coverage alongside interval widths |
+| 11 | Show supplied data, query predictions and hidden-reference comparison |
+| 12 | Compare methods on matched evaluations; optionally evaluate predeclared tolerances |
+| 13 | Save/reload GP bundles, check full execution, produce report and artifact manifest |
+| 14 | Download all artifacts and verify automatic HF persistence, with retry |
+
+Click Prepare again and then Run benchmark to start a fresh run. Edits to the
+configuration invalidate downstream results. Do not edit execution cells mid-run.
+The check lists are copied between stages so a rerun does not accumulate duplicate
+correctness records. Original reference evidence remains immutable.
 
 ## Current committed evidence
 
@@ -81,6 +110,8 @@ reference, including plots. Use the native `.py` notebook for MoLab and HF persi
 - `marimo check research/molab_task4.py` passes.
 - Native execution: 936 benchmark model fits; 9,954 held-out scalar predictions;
   140 embedded correctness checks, including saved-model prediction reproduction.
+- Two stage integration tests verify the preparation gate, exact default-result
+  equality with the reference, separate check lists, source snapshot and all 43 artifact hashes.
 - Seven offline persistence tests cover Git/LFS verification, retry idempotency,
   local/remote corruption, untracked files, partial runs, upload failure, and missing tokens.
 - No authenticated HF upload or hosted MoLab session was performed during local
@@ -90,6 +121,10 @@ reference, including plots. Use the native `.py` notebook for MoLab and HF persi
 ```bash
 python tests/test_task4_molab.py
 ```
+
+The staged revision was also exercised through a local browser: prepare, pause,
+benchmark, plot/report rendering and local-only download availability. See
+[`staged_validation.json`](staged_validation.json) for the revision verification record.
 
 ## Scientific scope
 

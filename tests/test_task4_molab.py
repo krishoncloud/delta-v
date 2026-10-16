@@ -1,4 +1,5 @@
 """Offline persistence checks; no HF token or network requests are used."""
+from contextlib import chdir
 import hashlib
 import importlib.util
 import json
@@ -110,6 +111,54 @@ class TestTask4Save(unittest.TestCase):
     def test_missing_token_fails_before_network(self):
         with self.assertRaisesRegex(ValueError, "HF_TOKEN"):
             self.definitions["preflight_hf"]("")
+
+
+class TestTask4Stages(unittest.TestCase):
+    def run_stages(self, benchmark):
+        spec = importlib.util.spec_from_file_location("task4_stages", NOTEBOOK)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.app.run(defs={
+            "prepare_button": SimpleNamespace(value=True),
+            "save_to_hf": SimpleNamespace(value=False),
+            "benchmark_button": SimpleNamespace(value=benchmark),
+        })[1]
+
+    def test_preparation_stops_before_training(self):
+        with tempfile.TemporaryDirectory() as folder, chdir(folder):
+            definitions = self.run_stages(benchmark=False)
+            self.assertEqual(len(definitions["preflight_checks"]), 128)
+            self.assertNotIn("metrics", definitions)
+            self.assertNotIn("run_result", definitions)
+            self.assertTrue((definitions["RUN_DIR"] / "protocol.json").exists())
+            self.assertFalse((definitions["RUN_DIR"] / "metrics.csv").exists())
+
+    def test_full_staged_run_matches_reference_and_verifies_every_artifact(self):
+        import pandas as pd
+
+        reference = NOTEBOOK.parent / "task4/results/20261016T033030_282756Z"
+        with tempfile.TemporaryDirectory() as folder, chdir(folder):
+            definitions = self.run_stages(benchmark=True)
+            run = definitions["run_result"]["run_dir"]
+            self.assertEqual(len(definitions["fit_rows"]), 936)
+            self.assertEqual(len(definitions["predictions"]), 9954)
+            self.assertEqual(len(definitions["preflight_checks"]), 128)
+            self.assertEqual(len(definitions["model_checks"]), 131)
+            self.assertEqual(len(definitions["final_checks"]), 140)
+            for name in ("metrics.csv", "predictions.csv", "summary.csv",
+                         "comparison_summary.csv", "example_predictions.csv"):
+                pd.testing.assert_frame_equal(pd.read_csv(run / name),
+                                              pd.read_csv(reference / name), check_exact=True)
+            self.assertEqual(json.loads((run / "protocol.json").read_text()),
+                             json.loads((reference / "protocol.json").read_text()))
+            manifest = json.loads((run / "artifact_manifest.json").read_text())
+            self.assertEqual(len(manifest), 43)
+            self.assertEqual({str(p.relative_to(run)) for p in run.rglob("*") if p.is_file()},
+                             set(manifest) | {"artifact_manifest.json"})
+            for name, digest in manifest.items():
+                self.assertEqual(hashlib.sha256((run / name).read_bytes()).hexdigest(), digest)
+            self.assertEqual((run / "sources/molab_task4.py").read_bytes(), NOTEBOOK.read_bytes())
+            self.assertTrue(definitions["run_result"]["archive"].exists())
 
 
 if __name__ == "__main__":
