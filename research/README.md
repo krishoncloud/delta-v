@@ -1,5 +1,12 @@
 # Reproducible evaluation and transfer work
 
+## Next feature release: new problems within the fluid lane
+
+See the [14-task release plan and new-problem acceptance criteria](V2_RELEASE_PLAN.md).
+Task 4 supplies the reference data and GP benchmark; Tasks 5–6 must build and test
+pretrained adaptation on a new customer-style fluid problem before the product
+claims that advantage.
+
 ## Task 4: outcome tables and GP baseline
 
 Use [the native MoLab notebook](molab_task4.py) for the scalar-outcome benchmark.
