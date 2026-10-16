@@ -256,5 +256,5 @@ epoch-3 weights due to a save-if-better bug and is not automatically better.
 
 ## Credits
 
-Built by Krish Malik and Adya Anwesha on Polymathic AI's The Well. Source:
+Built by Krish Malik Source:
 https://github.com/krishoncloud/delta-v
