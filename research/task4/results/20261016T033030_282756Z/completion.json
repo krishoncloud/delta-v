@@ -1,0 +1,15 @@
+{
+  "checks_passed": 140,
+  "customer_utility_validated": false,
+  "individual_run_dataset_verified": false,
+  "protocol_sha256": "0e2c6e3829b0cbdcbf9943f475503fc9882b8310af1bb8a7f6d71b395c3cc84b",
+  "result_files": [
+    "metrics.csv",
+    "predictions.csv",
+    "summary.csv",
+    "REPORT.md",
+    "models/index.json"
+  ],
+  "status": "task4_aggregated_setting_pilot_complete",
+  "transfer_based_run_savings_demonstrated": false
+}

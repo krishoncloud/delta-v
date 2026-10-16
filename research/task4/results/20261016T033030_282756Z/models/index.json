@@ -1,0 +1,125 @@
+{
+  "rayleigh_benard": {
+    "fit_details": {
+      "constant_training_outcomes": [
+        false,
+        false
+      ],
+      "fit_predict_seconds": 0.014650207999920895,
+      "kernels": [
+        "5.91**2 * Matern(length_scale=[6.06, 6.9], nu=2.5) + WhiteKernel(noise_level=0.00581)",
+        "2.35**2 * Matern(length_scale=[3.81, 5.26], nu=2.5) + WhiteKernel(noise_level=0.00321)"
+      ],
+      "warnings": [],
+      "x_mean": [
+        8.0,
+        1.848997720012489e-09
+      ],
+      "x_scale": [
+        1.4142135623730951,
+        0.6717095703727234
+      ],
+      "y_mean": [
+        0.0028861933361640085,
+        0.2047105231755317
+      ],
+      "y_scale": [
+        0.002359452166378225,
+        0.08857941508100291
+      ]
+    },
+    "fit_settings": 35,
+    "input_columns": [
+      "rayleigh_number",
+      "prandtl"
+    ],
+    "outcome_columns": [
+      "mass_flux",
+      "turbulent_velocity"
+    ],
+    "path": "models/rayleigh_benard_all_settings.joblib",
+    "scope": "all-setting fit; not an evaluation result"
+  },
+  "shear_flow": {
+    "fit_details": {
+      "constant_training_outcomes": [
+        false,
+        false
+      ],
+      "fit_predict_seconds": 0.013162583999928756,
+      "kernels": [
+        "0.878**2 * Matern(length_scale=[1.8, 0.01], nu=2.5) + WhiteKernel(noise_level=0.35)",
+        "0.952**2 * Matern(length_scale=[0.01, 0.0105], nu=2.5) + WhiteKernel(noise_level=0.0935)"
+      ],
+      "warnings": [
+        "outcome 0: The optimal value found for dimension 1 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.",
+        "outcome 1: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value."
+      ],
+      "x_mean": [
+        4.849485002168009,
+        1.8489977208055057e-09
+      ],
+      "x_scale": [
+        0.6100325948179927,
+        0.6717095703727234
+      ],
+      "y_mean": [
+        -1.0147405826485876e-06,
+        0.428084797310155
+      ],
+      "y_scale": [
+        3.1992038342695754e-06,
+        0.05678517183234983
+      ]
+    },
+    "fit_settings": 28,
+    "input_columns": [
+      "reynolds",
+      "schmidt"
+    ],
+    "outcome_columns": [
+      "mass_flux",
+      "turbulent_velocity"
+    ],
+    "path": "models/shear_flow_all_settings.joblib",
+    "scope": "all-setting fit; not an evaluation result"
+  },
+  "turbulent_radiative_layer_2D": {
+    "fit_details": {
+      "constant_training_outcomes": [
+        false,
+        false
+      ],
+      "fit_predict_seconds": 0.010229541999933645,
+      "kernels": [
+        "1.01**2 * Matern(length_scale=0.709, nu=2.5) + WhiteKernel(noise_level=0.06)",
+        "1.92**2 * Matern(length_scale=2.65, nu=2.5) + WhiteKernel(noise_level=0.00695)"
+      ],
+      "warnings": [],
+      "x_mean": [
+        -0.4984455442520273
+      ],
+      "x_scale": [
+        0.6456129421427149
+      ],
+      "y_mean": [
+        -0.012779121437825088,
+        0.05109054018481886
+      ],
+      "y_scale": [
+        0.01632520194433328,
+        0.01207699638862642
+      ]
+    },
+    "fit_settings": 9,
+    "input_columns": [
+      "t_cool"
+    ],
+    "outcome_columns": [
+      "mass_flux",
+      "turbulent_velocity"
+    ],
+    "path": "models/turbulent_radiative_layer_2D_all_settings.joblib",
+    "scope": "all-setting fit; not an evaluation result"
+  }
+}

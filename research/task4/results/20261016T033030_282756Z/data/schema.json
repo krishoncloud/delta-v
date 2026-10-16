@@ -1,0 +1,301 @@
+{
+  "rayleigh_benard": {
+    "aggregation": "sampled-window means; original counts and trajectory membership unavailable",
+    "dimensionless_inputs": [
+      "rayleigh_number",
+      "prandtl"
+    ],
+    "input_columns": [
+      "rayleigh_number",
+      "prandtl"
+    ],
+    "input_transform": "log10",
+    "mass_flux_definition": "spatial mean(scalar * vy); scalar's physical meaning is system-specific",
+    "members": {
+      "rayleigh_benard:000": [
+        0
+      ],
+      "rayleigh_benard:001": [
+        1
+      ],
+      "rayleigh_benard:002": [
+        2
+      ],
+      "rayleigh_benard:003": [
+        3
+      ],
+      "rayleigh_benard:004": [
+        4
+      ],
+      "rayleigh_benard:005": [
+        5
+      ],
+      "rayleigh_benard:006": [
+        6
+      ],
+      "rayleigh_benard:007": [
+        7
+      ],
+      "rayleigh_benard:008": [
+        8
+      ],
+      "rayleigh_benard:009": [
+        9
+      ],
+      "rayleigh_benard:010": [
+        10
+      ],
+      "rayleigh_benard:011": [
+        11
+      ],
+      "rayleigh_benard:012": [
+        12
+      ],
+      "rayleigh_benard:013": [
+        13
+      ],
+      "rayleigh_benard:014": [
+        14
+      ],
+      "rayleigh_benard:015": [
+        15
+      ],
+      "rayleigh_benard:016": [
+        16
+      ],
+      "rayleigh_benard:017": [
+        17
+      ],
+      "rayleigh_benard:018": [
+        18
+      ],
+      "rayleigh_benard:019": [
+        19
+      ],
+      "rayleigh_benard:020": [
+        20
+      ],
+      "rayleigh_benard:021": [
+        21
+      ],
+      "rayleigh_benard:022": [
+        22
+      ],
+      "rayleigh_benard:023": [
+        23
+      ],
+      "rayleigh_benard:024": [
+        24
+      ],
+      "rayleigh_benard:025": [
+        25
+      ],
+      "rayleigh_benard:026": [
+        26
+      ],
+      "rayleigh_benard:027": [
+        27
+      ],
+      "rayleigh_benard:028": [
+        28
+      ],
+      "rayleigh_benard:029": [
+        29
+      ],
+      "rayleigh_benard:030": [
+        30
+      ],
+      "rayleigh_benard:031": [
+        31
+      ],
+      "rayleigh_benard:032": [
+        32
+      ],
+      "rayleigh_benard:033": [
+        33
+      ],
+      "rayleigh_benard:034": [
+        34
+      ]
+    },
+    "original_extraction_notebook_sha256": "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf",
+    "outcome_columns": [
+      "mass_flux",
+      "turbulent_velocity"
+    ],
+    "physical_outcome_units": "not established in NPZ; values retained in stored units",
+    "retrieval": "embedded verified HF artifact snapshot",
+    "row_semantics": "mean outcomes at an aggregated design setting; not one solver run",
+    "source_revision_of_original_aggregation_verified": false,
+    "source_sha256": "9d9acc3130e749f583624386de2b9da8f62f1c55ec4e2e9608eadfac4d99bac4",
+    "source_url": "https://huggingface.co/datasets/KrishMalik/deltav-fluid/resolve/e25651ff92cf1d8f8818164a0277b8613e83d8b3/checkpoints/parametric_rayleigh_benard.npz",
+    "t_cool_units": null,
+    "trajectory_lineage_verified": false,
+    "turbulent_velocity_definition": "sqrt(spatial mean((vx-mean(vx))**2 + (vy-mean(vy))**2))"
+  },
+  "shear_flow": {
+    "aggregation": "sampled-window means; original counts and trajectory membership unavailable",
+    "dimensionless_inputs": [
+      "reynolds",
+      "schmidt"
+    ],
+    "input_columns": [
+      "reynolds",
+      "schmidt"
+    ],
+    "input_transform": "log10",
+    "mass_flux_definition": "spatial mean(scalar * vy); scalar's physical meaning is system-specific",
+    "members": {
+      "shear_flow:000": [
+        0
+      ],
+      "shear_flow:001": [
+        1
+      ],
+      "shear_flow:002": [
+        2
+      ],
+      "shear_flow:003": [
+        3
+      ],
+      "shear_flow:004": [
+        4
+      ],
+      "shear_flow:005": [
+        5
+      ],
+      "shear_flow:006": [
+        6
+      ],
+      "shear_flow:007": [
+        7
+      ],
+      "shear_flow:008": [
+        8
+      ],
+      "shear_flow:009": [
+        9
+      ],
+      "shear_flow:010": [
+        10
+      ],
+      "shear_flow:011": [
+        11
+      ],
+      "shear_flow:012": [
+        12
+      ],
+      "shear_flow:013": [
+        13
+      ],
+      "shear_flow:014": [
+        14
+      ],
+      "shear_flow:015": [
+        15
+      ],
+      "shear_flow:016": [
+        16
+      ],
+      "shear_flow:017": [
+        17
+      ],
+      "shear_flow:018": [
+        18
+      ],
+      "shear_flow:019": [
+        19
+      ],
+      "shear_flow:020": [
+        20
+      ],
+      "shear_flow:021": [
+        21
+      ],
+      "shear_flow:022": [
+        22
+      ],
+      "shear_flow:023": [
+        23
+      ],
+      "shear_flow:024": [
+        24
+      ],
+      "shear_flow:025": [
+        25
+      ],
+      "shear_flow:026": [
+        26
+      ],
+      "shear_flow:027": [
+        27
+      ]
+    },
+    "original_extraction_notebook_sha256": "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf",
+    "outcome_columns": [
+      "mass_flux",
+      "turbulent_velocity"
+    ],
+    "physical_outcome_units": "not established in NPZ; values retained in stored units",
+    "retrieval": "embedded verified HF artifact snapshot",
+    "row_semantics": "mean outcomes at an aggregated design setting; not one solver run",
+    "source_revision_of_original_aggregation_verified": false,
+    "source_sha256": "0749be9561ba382268c0c4e9c2961ced4483b79051fc22dbedfe3b2521fafe28",
+    "source_url": "https://huggingface.co/datasets/KrishMalik/deltav-fluid/resolve/e25651ff92cf1d8f8818164a0277b8613e83d8b3/checkpoints/parametric_shear_flow.npz",
+    "t_cool_units": null,
+    "trajectory_lineage_verified": false,
+    "turbulent_velocity_definition": "sqrt(spatial mean((vx-mean(vx))**2 + (vy-mean(vy))**2))"
+  },
+  "turbulent_radiative_layer_2D": {
+    "aggregation": "sampled-window means; original counts and trajectory membership unavailable",
+    "dimensionless_inputs": [],
+    "input_columns": [
+      "t_cool"
+    ],
+    "input_transform": "log10",
+    "mass_flux_definition": "spatial mean(scalar * vy); scalar's physical meaning is system-specific",
+    "members": {
+      "turbulent_radiative_layer_2D:000": [
+        0
+      ],
+      "turbulent_radiative_layer_2D:001": [
+        1
+      ],
+      "turbulent_radiative_layer_2D:002": [
+        2
+      ],
+      "turbulent_radiative_layer_2D:003": [
+        3
+      ],
+      "turbulent_radiative_layer_2D:004": [
+        4
+      ],
+      "turbulent_radiative_layer_2D:005": [
+        5
+      ],
+      "turbulent_radiative_layer_2D:006": [
+        6
+      ],
+      "turbulent_radiative_layer_2D:007": [
+        7
+      ],
+      "turbulent_radiative_layer_2D:008": [
+        8
+      ]
+    },
+    "original_extraction_notebook_sha256": "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf",
+    "outcome_columns": [
+      "mass_flux",
+      "turbulent_velocity"
+    ],
+    "physical_outcome_units": "not established in NPZ; values retained in stored units",
+    "retrieval": "embedded verified HF artifact snapshot",
+    "row_semantics": "mean outcomes at an aggregated design setting; not one solver run",
+    "source_revision_of_original_aggregation_verified": false,
+    "source_sha256": "3e068d1cef27941eedd29c7f9289789d171687ab44fd5e4d530030f9e48f009d",
+    "source_url": "https://huggingface.co/datasets/KrishMalik/deltav-fluid/resolve/e25651ff92cf1d8f8818164a0277b8613e83d8b3/checkpoints/parametric_turbulent_radiative_layer_2D.npz",
+    "t_cool_units": "not established from artifact",
+    "trajectory_lineage_verified": false,
+    "turbulent_velocity_definition": "sqrt(spatial mean((vx-mean(vx))**2 + (vy-mean(vy))**2))"
+  }
+}

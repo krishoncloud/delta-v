@@ -1,5 +1,13 @@
 # Reproducible evaluation and transfer work
 
+## Task 4: outcome tables and GP baseline
+
+Use [the native MoLab notebook](molab_task4.py) for the scalar-outcome benchmark.
+It pins dependencies, embeds the small verified tables, and saves each completed
+run to Hugging Face with remote hash verification. CPU compute is sufficient.
+See [task 4 instructions and committed results](task4/README.md) for setup,
+the full artifact inventory, and the measured pilot's limits.
+
 These offline tools never download `slices/` and do not modify the served model.
 The supplied notebook was inspected as source, not executed. Its ungated cleanup
 cells delete local/remote checkpoints and Euler slices; do not run those cells
