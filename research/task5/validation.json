@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-17",
+  "environment": {
+    "marimo": "0.25.1",
+    "torch": "2.8.0",
+    "neuraloperator": "2.0.0",
+    "numpy": "2.1.2",
+    "scipy": "1.14.1",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.8.0",
+    "huggingface-hub": "1.33.0"
+  },
+  "delivered_notebook_sha256": "1d242ff9e101caf49b48cbb6ba68eb40888c7543db2a46c597edbfaa7a29cf5b",
+  "offline_checks": {
+    "passed": 8,
+    "command": "python -m unittest discover -s tests -p test_task5_molab.py -v",
+    "tiny_fno_used_only_for_offline_staged_test": true
+  },
+  "full_notebook_source_smoke": {
+    "source_checkpoint_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "notebook_sha256": "1d242ff9e101caf49b48cbb6ba68eb40888c7543db2a46c597edbfaa7a29cf5b",
+    "training_result": {
+      "completed_steps": 6,
+      "best_step": 6,
+      "initial_train_loss": 1.8433769680559635,
+      "initial_train_field_loss": 1.7512055225670338,
+      "final_train_loss": 1.3269639015197754,
+      "final_train_field_loss": 1.1588486898690462,
+      "initial_development_loss": 1.9358456532160442,
+      "best_development_loss": 1.428007894092136,
+      "seconds": 17.281479582999964,
+      "stop_reason": "step cap",
+      "seed": 42,
+      "reserved_evaluated": false
+    },
+    "inference_checks": {
+      "reload_matches": true,
+      "query_batch_invariant": true,
+      "excluded_labels_invariant": true,
+      "parameter_conditioning_changes_field": true,
+      "parameter_perturbation_max_field_change": 0.32417556643486023,
+      "reserved_evaluated": false,
+      "query_requires_no_targets": true
+    },
+    "completion_gates": {
+      "status": "NEEDS WORK",
+      "gates": {
+        "training_field_loss_improved": true,
+        "development_loss_improved": true,
+        "beats_mean_on_at_least_one_outcome": false,
+        "reload_matches": true,
+        "query_batch_invariant": true,
+        "excluded_labels_invariant": true,
+        "parameter_conditioning_changes_field": true,
+        "query_requires_no_targets": true
+      }
+    },
+    "artifact_count": 84,
+    "device": "cpu"
+  },
+  "additional_200_step_learning_check": {
+    "notebook_sha256": "a1916090d55e7bb2a5bfd1176577b4db33dc43667834c1fd841bb381133df077",
+    "execution": "Direct fit_study call, CPU, two threads; same 200-step GPU default budget; not executed on MoLab or CUDA",
+    "version_note": "Executed before final unit/manifest validation hardening, zero-pressure RMS derivative handling and recovery button addition; final notebook has a separate real-checkpoint staged smoke test.",
+    "training_result": {
+      "completed_steps": 200,
+      "best_step": 180,
+      "initial_train_loss": 1.8433769904077053,
+      "initial_train_field_loss": 1.7512055225670338,
+      "final_train_loss": 0.00415382235951256,
+      "final_train_field_loss": 0.0038259721841313876,
+      "initial_development_loss": 1.9358456465933058,
+      "best_development_loss": 0.0041239001762328874,
+      "seconds": 257.82614679200015,
+      "stop_reason": "step cap",
+      "seed": 42,
+      "reserved_evaluated": false
+    },
+    "development_rmse": {
+      "kinetic_energy": 0.00984120358359151,
+      "pressure_rms": 0.004051616869018762
+    },
+    "baseline_development_rmse": {
+      "mean": 0.161115,
+      "linear": 0.028451,
+      "gp": 0.000277
+    },
+    "interpretation": "FNO learned the controlled task and beat mean/linear here; GP remains better. Scalar outcomes are mathematically equal in the reference. No scratch ablation, customer transfer, solver savings or independent test claim."
+  },
+  "storage": "Source, tests, docs and this compact validation evidence are published. Generated field bundles and adapted weights remain local."
+}

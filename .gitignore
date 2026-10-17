@@ -7,3 +7,4 @@ venv/
 .env
 .env.*
 !.env.example
+delta_v_task5_results/
