@@ -60,3 +60,13 @@ not customer simulation savings, robust new-problem transfer, calibrated
 uncertainty or production readiness. Task 6 needs a harder audited study and
 matched scratch/adapter/full-tuning comparisons. Task 15 remains paused and
 mandatory before launch.
+
+
+## Subsequent user MoLab GPU run
+
+The [user's verified run](results/20261017T062457_609851Z/README.md) supersedes
+local smoke-only completion status: 300 steps on CUDA, all eight gates passed.
+The earlier local results above remain historical evidence. The executed source
+includes a stronger on-disk corruption check, now adopted into molab_task5.py.
+Actual MoLab dependencies differ from the header pins; environment.json records
+those versions. The original model remains local while Task 15 is pending.

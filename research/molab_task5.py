@@ -849,13 +849,13 @@ def _(mo):
 
     We reload the saved weights and metadata from disk and call `predict_study` on `queries.csv`. The inference function accepts the known initial state and knobs; no outcomes or completed target fields are accepted. It reports each outcome's units, method and interpolation-support status. Uncertainty is explicitly `not_calibrated`; Tasks 7 and 8 add reliable intervals and next-run suggestions.
 
-    Checks compare in-memory versus reloaded predictions, isolated versus grouped queries, sensitivity to changed controls with the same initial field, and invariance to unrelated reference-label changes. Parameter sensitivity is a wiring check, not physical correctness. Held-out outcomes remain untouched. Downloading the model allows this same inference flow without retraining.
+    Checks compare in-memory versus reloaded predictions, isolated versus grouped queries, sensitivity to changed controls with the same initial field, and invariance when every completed training/development target field and reference label is overwritten with garbage in a scratch copy of the bundle. Parameter sensitivity is a wiring check, not physical correctness. Held-out outcomes remain untouched. Downloading the model allows this same inference flow without retraining.
     """)
     return
 
 
 @app.cell
-def _(metrics, predict_study, model, study_data, normalization, config, torch, load_adapted, run_dir, np, write_json, pd, mo):
+def _(metrics, predict_study, model, study_data, normalization, config, torch, load_adapted, run_dir, np, write_json, pd, mo, Path, shutil):
     _development_scored=len(metrics)
     query_predictions,query_fields=predict_study(model,study_data['study'],normalization,study_data['queries'],study_data['root'],config['device'])
     # Move the original to CPU while reloading to avoid holding two full models on GPU.
@@ -877,10 +877,19 @@ def _(metrics, predict_study, model, study_data, normalization, config, torch, l
         _sensitivity=float(np.max(np.abs(_changed_fields-_reloaded_fields[:1])))
     except ValueError:
         _sensitivity=0.0
-    # Predictor signature never accepts runs/labels. Mutating a detached reference table
-    # must have no influence; recompute rather than asserting the signature alone.
-    _shadow=study_data['runs'].copy(); _shadow.loc[_shadow.split=='development',_outs]=1e9
-    _again,_=predict_study(reloaded,contract['study'],contract['normalization'],study_data['queries'],study_data['root'],config['device'])
+    # Leakage check on disk, not just on the function signature: copy the bundle, overwrite
+    # every completed target field and every reference outcome label with garbage, and
+    # predict the same queries from the corrupted copy. Query initial fields stay intact.
+    import tempfile as _tempfile
+    with _tempfile.TemporaryDirectory() as _scratch:
+        _corrupt_root=Path(_scratch)/'study'
+        shutil.copytree(study_data['root'],_corrupt_root)
+        _corrupt_runs=study_data['runs'].copy()
+        for _target in _corrupt_runs.loc[_corrupt_runs.split!='reserved','target_file']:
+            np.save(_corrupt_root/_target,np.full((4,*study_data['study']['grid']),1e6,dtype='float32'))
+        _corrupt_runs.loc[_corrupt_runs.split!='reserved',_outs]=1e9
+        _corrupt_runs.to_csv(_corrupt_root/'runs.csv',index=False)
+        _again,_=predict_study(reloaded,contract['study'],contract['normalization'],study_data['queries'],_corrupt_root,config['device'])
     _labels_ok=bool(np.allclose(_again[_outs],_reloaded_predictions[_outs],rtol=1e-5,atol=1e-6))
     checks={'reload_matches':_reload_ok,'query_batch_invariant':_batch_ok,'excluded_labels_invariant':_labels_ok,
             'parameter_conditioning_changes_field':_sensitivity>1e-7,'parameter_perturbation_max_field_change':_sensitivity,

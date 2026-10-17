@@ -1,0 +1,5 @@
+{
+  "conditioner": true,
+  "backbone": true,
+  "all_parameters_trainable": true
+}

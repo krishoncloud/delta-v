@@ -86,3 +86,13 @@ make future customer data or adapted weights public.
 The integration test uses a tiny FNO **only through test overrides**, to exercise
 every notebook stage offline. The notebook has no tiny-model UI or fallback.
 See [validation.md](validation.md) for separate checks with the actual source FNO.
+
+
+## Completed user GPU run
+
+[20261017T062457_609851Z](results/20261017T062457_609851Z/README.md) is the
+verified 300-step MoLab run: all eight gates passed, selected step 280,
+13.40 seconds for the training stage. The exact notebook snapshot includes the
+follow-up correction that corrupts target files and labels for the inference
+leakage check. The adapted model remains in the original local ZIP.
+See the [user handoff](USER_HANDOFF_2026-10-17.md) for Task 6 and website context.
