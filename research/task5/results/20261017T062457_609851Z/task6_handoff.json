@@ -1,0 +1,44 @@
+{
+  "task5_status": "READY FOR TASK 6",
+  "architecture_file": "model_contract.json",
+  "training_configuration": "configuration.json",
+  "reserved_run_ids": [
+    "reserved-0",
+    "reserved-1",
+    "reserved-2",
+    "reserved-3",
+    "reserved-4",
+    "reserved-5",
+    "reserved-6",
+    "reserved-7",
+    "reserved-8",
+    "reserved-9",
+    "reserved-10",
+    "reserved-11",
+    "reserved-12",
+    "reserved-13",
+    "reserved-14",
+    "reserved-15"
+  ],
+  "reserved_reference_generated_or_evaluated": false,
+  "candidate_arms": [
+    "pretrained_full_finetune",
+    "pretrained_adapter_only",
+    "identical_input_scratch",
+    "gp",
+    "linear",
+    "mean"
+  ],
+  "before_test": [
+    "Audit harder new target problem and source exposure",
+    "Lock engineering tolerances, primary metrics and all tuning/validation costs",
+    "Freeze architecture and preprocessing",
+    "Ensure whole-setting splits and count repeats",
+    "Disclose field supervision versus scalar-only inputs",
+    "Use fresh confirmatory data; this development set is already inspected"
+  ],
+  "uncertainty": "Task 7",
+  "next_runs": "Task 8",
+  "real_solver_workflow": "Task 9",
+  "privacy_before_launch": "Task 15 pending"
+}

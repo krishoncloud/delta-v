@@ -129,3 +129,13 @@ or completed experiment. Repeat across seeds before making a transfer claim.
 Actual adapter experiments require prepared Euler train/validation/test data
 and a suitable training runtime. The supplied notebook assumes a GPU; this
 repository does not provision or purchase compute.
+
+## Task 5: parameter-conditioned FNO notebook
+
+Import [molab_task5.py](molab_task5.py) directly into MoLab. This single file
+contains all 14 stages of the scoped Task 5 development workflow, from study
+validation through actual FNO adaptation and verified local artifact downloads.
+See [Task 5 instructions and limits](task5/README.md) and
+[validation evidence](task5/validation.md). The default exact vortex is an
+implementation test; it does not establish customer-run savings or FNO superiority.
+New customer artifacts and adapted weights are not uploaded automatically.

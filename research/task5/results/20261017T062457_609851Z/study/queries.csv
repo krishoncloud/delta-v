@@ -1,0 +1,5 @@
+query_id,amplitude,viscosity,initial_file
+query-0,0.7,0.035,fields/query-0-initial.npy
+query-1,0.9,0.055,fields/query-1-initial.npy
+query-2,1.1,0.075,fields/query-2-initial.npy
+query-3,1.3,0.045,fields/query-3-initial.npy

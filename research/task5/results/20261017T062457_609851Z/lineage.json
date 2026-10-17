@@ -1,0 +1,38 @@
+{
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "epoch": 59,
+  "loaded_tensor_keys": 40,
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "total_real_parameters": 71507988,
+  "trainable_real_parameters": 71507988,
+  "new_modules": [
+    "conditioner"
+  ],
+  "loaded_modules": [
+    "backbone"
+  ],
+  "source_grid": [
+    256,
+    256
+  ],
+  "target_grid": [
+    64,
+    64
+  ],
+  "task": "known initial state + parameters -> fixed-time field -> physical outcomes",
+  "exposure_limitation": "Legacy checkpoint lacks complete source split ledger"
+}

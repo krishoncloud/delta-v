@@ -1,0 +1,9 @@
+{
+  "reload_matches": true,
+  "query_batch_invariant": true,
+  "excluded_labels_invariant": true,
+  "parameter_conditioning_changes_field": true,
+  "parameter_perturbation_max_field_change": 0.05491548776626587,
+  "reserved_evaluated": false,
+  "query_requires_no_targets": true
+}

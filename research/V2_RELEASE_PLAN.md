@@ -40,7 +40,7 @@ identify the actual method and must not label GP-only results as an FNO win.
 | 2 | Prepare four-gamma Euler data | Completed for Track A; not automatically the dataset for the product-transfer test. |
 | 3 | Euler scratch/full-fine-tune/adapter sweep | Completed: 54 jobs. Field-transfer evidence; not a knobs-to-outcome product result. |
 | 4 | Scalar-outcome dataset and GP baseline | Research deliverable complete: three outcome tables, audits, matched mean/linear/GP comparisons, held-out predictions and measured example. Original aggregation provenance gaps remain recorded. The new MoLab run's HF save was not verified in the latest check; its downloaded ZIP integrity was verified. |
-| 5 | Parameter-conditioned outcome prediction | Pending. Build the real customer-input-to-prediction bridge, including an explicit way to use the pretrained FNO, before claiming neural adaptation in the workbench. |
+| 5 | Parameter-conditioned outcome prediction | Complete within the controlled development scope. [Verified MoLab GPU run](task5/results/20261017T062457_609851Z/README.md): 300 steps, selected step 280, 13.40 seconds, all eight gates passed. Actual pretrained FNO conditioning, field-derived outcomes and saved inference bundle work. GP remains better on this fixture; harder new-problem transfer is Task 6. Website integration is pending. |
 | 6 | New-fluid-problem transfer benchmark; adapter versus full fine-tuning | Pending. Main scientific acceptance test for this release: does fluid pretraining help the actual customer prediction task, compared with scratch, GP, linear and mean? Detailed gates below. |
 | 7 | Ensemble uncertainty | Pilot neural calibration was weak. Evaluate coverage and interval width on the new target problem; do not equate predicted SD with a guarantee. |
 | 8 | Sobol/LHS and next-run selection | Pending. Compare complete acquisition workflows at equal engineering targets and count all required target simulations. Retrospective Task 4 budgets are not a validated stopping policy. |
@@ -208,3 +208,29 @@ Inspected `frontend/bring-your-runs` at
 
 This document records the integration requirements; it does not modify, merge or
 mark the frontend as deployed.
+
+
+## Task 5 completion and carried-forward requirements — 17 October 2026
+
+The user's [complete handoff](task5/USER_HANDOFF_2026-10-17.md) and
+[GPU evidence](task5/results/20261017T062457_609851Z/README.md) are preserved.
+
+- Task 6: freeze the target, query contract, tolerances, six arms (mean, linear,
+  GP, scratch FNO, pretrained full tuning, pretrained frozen backbone), nested
+  budgets, seeds, tuning/compute rules and fresh confirmatory set before training.
+  Use a realistic harder target, report outcome dependence and disclose richer
+  field supervision. Completion does not depend on who wins.
+- Candidate pilot changes: scale-aware loss, boundary-compatible coordinates,
+  mini-batches and a learning-rate schedule. Diagnose on pilot data and freeze
+  before confirmation; these are proposed changes, not proven fixes. More knobs
+  or a regime change does not guarantee FNO beats GP. GP can also be extended to
+  field outputs/features, so compare the actual implemented baselines explicitly.
+- Tasks 10/12: shared validated core; browser study upload; asynchronous fit job
+  and status; validation/queued/training/checking/done states; predictions, report
+  and downloads. Keep training out of the lightweight web request process.
+- Task 14: select and measure a GPU worker, queue limits, cold starts, inference
+  latency and concurrent load. Provider pricing and deployed capacity need fresh
+  verification; the supplied hosting discussion is not a capacity benchmark.
+- Task 15: approved private per-study storage and isolation before customer data
+  or new adapted weights are uploaded. A frozen backbone may allow compact
+  per-study adapters; measure accuracy, fitting speed and artifact size in Task 6.

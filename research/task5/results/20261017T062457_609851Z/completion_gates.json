@@ -1,0 +1,13 @@
+{
+  "status": "READY FOR TASK 6",
+  "gates": {
+    "training_field_loss_improved": true,
+    "development_loss_improved": true,
+    "beats_mean_on_at_least_one_outcome": true,
+    "reload_matches": true,
+    "query_batch_invariant": true,
+    "excluded_labels_invariant": true,
+    "parameter_conditioning_changes_field": true,
+    "query_requires_no_targets": true
+  }
+}

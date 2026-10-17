@@ -1,0 +1,9 @@
+{
+  "study_mode": "controlled_vortex",
+  "bundle_path": "",
+  "checkpoint_path": "",
+  "device": "cuda",
+  "steps": 300,
+  "max_seconds": 900.0,
+  "seed": 42
+}
