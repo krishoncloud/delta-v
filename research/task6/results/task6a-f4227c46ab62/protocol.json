@@ -1,0 +1,951 @@
+{
+  "created_utc": "2026-10-17T16:15:07.267427+00:00",
+  "options": {
+    "audit_accepted": true,
+    "tolerance_basis": "These are provisional research thresholds for this synthetic benchmark, not customer-approved engineering limits. I chose absolute tolerances of 0.015 in each nondimensional outcome, zero additional relative tolerance, 90% joint per-setting success, and a maximum error of 2\u00d7 tolerance to make the run-to-accuracy comparison measurable. Results will be reported against these thresholds and should not be treated as safe design decisions.",
+    "absolute_tolerance": [
+      0.015,
+      0.015
+    ],
+    "relative_tolerance": 0.0,
+    "relative_floor": 0.001,
+    "success_fraction": 0.9,
+    "max_tolerance_ratio": 2.0,
+    "margin": 0.1,
+    "steps": 400,
+    "max_seconds": 3600.0,
+    "external_audit_path": "",
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "seeds": [
+      42,
+      123,
+      2026
+    ]
+  },
+  "config": {
+    "device": "cuda",
+    "lr": 0.0001,
+    "batch": 2,
+    "validate_every": 20,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "ridge_alphas": [
+      1e-06,
+      0.001,
+      0.1,
+      1.0
+    ],
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "steps": 400,
+    "max_seconds": 3600.0
+  },
+  "config_basis": "Fixed before any Task 6 fitting from Task 5 findings, with no pilot or ablation run: scale-aware relative field loss with a floor (Task 5 under-weighted low-amplitude cases), periodic sine/cosine coordinates (Task 5 edge artifacts on a periodic domain), minibatch 2 and cosine learning-rate decay (Task 5 validation jitter). Identical for scratch, full and frozen arms. Validation data select only each fit's saved checkpoint and the baseline ridge strength/GP kernel.",
+  "methods": [
+    "mean",
+    "linear",
+    "gp",
+    "scratch",
+    "pretrained_full",
+    "pretrained_frozen"
+  ],
+  "planned_fits": 72,
+  "planned_neural_fits": 36,
+  "pilot": "none",
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "source_tensor_sha256": "f1d250264aba19c2ac7a6d2ceea34fb174c542c979b719ba634fe59082e9fa0a",
+  "source_epoch": 59,
+  "study_manifest": {
+    "fields/000_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/000_target.npy": {
+      "sha256": "97ab884100f00c69115c20cf0c3a0cc3aaf819f49b838a8e17a5b7722d46ac80",
+      "bytes": 65664
+    },
+    "fields/001_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/001_target.npy": {
+      "sha256": "0c9ed2c7b5bc581f918d9618cf367468309d0b5e3b584ea4261b835c4362d585",
+      "bytes": 65664
+    },
+    "fields/002_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/002_target.npy": {
+      "sha256": "8558ec709d4d1cba4793a203f8e9a1b566ecb3afa6281fea36a8230a937fa4da",
+      "bytes": 65664
+    },
+    "fields/003_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/003_target.npy": {
+      "sha256": "0ed2c2e99f41b8e6adae0067faff6b91283b18986aa7c8813857e937a67e82dd",
+      "bytes": 65664
+    },
+    "fields/004_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/004_target.npy": {
+      "sha256": "44d72d644f2dab15191dba5d5c289eb8566b811b76a5f0c5ac7beeb0c25a86f9",
+      "bytes": 65664
+    },
+    "fields/005_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/005_target.npy": {
+      "sha256": "0df6053844383b251a093bd8b4e8957eeb90449be6360a9d92b972193e474d37",
+      "bytes": 65664
+    },
+    "fields/006_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/006_target.npy": {
+      "sha256": "5563c66e05162e743365004f09147fcd02979f844c3d08afa50e17abd5b71005",
+      "bytes": 65664
+    },
+    "fields/007_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/007_target.npy": {
+      "sha256": "99ddb612cf527f28dd12826d753bb549ff4626785b6b717e5c982c285579c58d",
+      "bytes": 65664
+    },
+    "fields/008_initial.npy": {
+      "sha256": "f2e81f5732a9830f8ca6b052159e529bd9703ba8535d513e39a7b35c7c02770b",
+      "bytes": 65664
+    },
+    "fields/008_target.npy": {
+      "sha256": "dfdac753a6e0dbd2a9b8bf932075e752b68dbbea8a904aa13a08fee65b9bcfc1",
+      "bytes": 65664
+    },
+    "fields/009_initial.npy": {
+      "sha256": "201c0a7958a74701b6c838f22dda92949190c111ca91bb41e46a04bcde91fb42",
+      "bytes": 65664
+    },
+    "fields/009_target.npy": {
+      "sha256": "5bdbd376f5c088419e411b8c0bbf15a0b90ce5c57ed45b9ae0744909222ba043",
+      "bytes": 65664
+    },
+    "fields/010_initial.npy": {
+      "sha256": "6f609452262b4da9ad48b6e6a618da18619dae3781c1358ebef6186f2c4a6492",
+      "bytes": 65664
+    },
+    "fields/010_target.npy": {
+      "sha256": "3c9f9009d6dd42109d00173f50514c3384bd7bc52fd72b5d6f0a95d4122158e4",
+      "bytes": 65664
+    },
+    "fields/011_initial.npy": {
+      "sha256": "484b8c31f4652686102df4798d4583c263aa1f8c2310d5d475bc097af21666fd",
+      "bytes": 65664
+    },
+    "fields/011_target.npy": {
+      "sha256": "229de5ad0ce74b235c528baa01bbf7bf1950ca332461a6cf8cd3265fbced1f78",
+      "bytes": 65664
+    },
+    "fields/012_initial.npy": {
+      "sha256": "9c4542b3fbdb04a01c98bcb4c3336615dcb6cd9f277dac8bb928aa6a4cf317be",
+      "bytes": 65664
+    },
+    "fields/012_target.npy": {
+      "sha256": "ed3298ccc339e1ced5e47eea2b3cebdd8c532597a9c2ec03e23716b5ac504b46",
+      "bytes": 65664
+    },
+    "fields/013_initial.npy": {
+      "sha256": "8da9bf1251a71c3fa57b132f52e37990a22b9a573d38acd32cc14b5b7823365b",
+      "bytes": 65664
+    },
+    "fields/013_target.npy": {
+      "sha256": "35c44a4cf539ff7c422caf7c1e9791d9595865f83376d137e5d24a24f6bb8b33",
+      "bytes": 65664
+    },
+    "fields/014_initial.npy": {
+      "sha256": "1b091c39541b5497be57ef7abe8306347021c5c5f68a509ce8b03e1d9c1cda8b",
+      "bytes": 65664
+    },
+    "fields/014_target.npy": {
+      "sha256": "2c2329e7334b1427c176f994806cfe2219b38e832418c3d3feaa2ee4204eb18b",
+      "bytes": 65664
+    },
+    "fields/015_initial.npy": {
+      "sha256": "54c638d99b914956d97862a8a7e8ee711dc54ed6e38ee12ccc86322d2dd42fd3",
+      "bytes": 65664
+    },
+    "fields/015_target.npy": {
+      "sha256": "d7578b1f70d4cc47f033e053d2f10d7be21931c8d3eeb0d65a01f8b3851627f8",
+      "bytes": 65664
+    },
+    "fields/016_initial.npy": {
+      "sha256": "2c8ef505ba72643ed111f55c5efcd045f05ac8768f14916c46a53f6a02dd11e1",
+      "bytes": 65664
+    },
+    "fields/016_target.npy": {
+      "sha256": "82fabda6105fb1fb9a976a53bfbcdc3066a4be899bf9cbfb6486f0a32bee01f0",
+      "bytes": 65664
+    },
+    "fields/017_initial.npy": {
+      "sha256": "7a2dce3445a947089476d522cf2d821fc37a4c455be44688be902a98cc0de5c4",
+      "bytes": 65664
+    },
+    "fields/017_target.npy": {
+      "sha256": "0512e440e2ca5246b069c6c3a71c7860a5847da9991a56e4aca1f583a9df395b",
+      "bytes": 65664
+    },
+    "fields/018_initial.npy": {
+      "sha256": "9ccb1a5a4fde06fd2133a6ef3d80cfff0d4f592bc9f2072f5894c9ad5034b8e4",
+      "bytes": 65664
+    },
+    "fields/018_target.npy": {
+      "sha256": "30ddb52a2e25224afa011e5cc408a0f49ebcd939c34976b8c2f34b0666193c18",
+      "bytes": 65664
+    },
+    "fields/019_initial.npy": {
+      "sha256": "f761328f8fcaf67bc3a402b44817268911162fbc6e475b15f8b2d5844ff3b1bf",
+      "bytes": 65664
+    },
+    "fields/019_target.npy": {
+      "sha256": "6fc1f534926d8f586ca683198d6584e94474afd4c8a4f637b05efbc5070b4fb6",
+      "bytes": 65664
+    },
+    "fields/020_initial.npy": {
+      "sha256": "17412f6da9de7822939d5926cd24df8a3fd21096b649869d410077d747214005",
+      "bytes": 65664
+    },
+    "fields/020_target.npy": {
+      "sha256": "d18d5193faf504c7fb51bb5601ab78b278fe1349e8694bf05e66d0b8dc4544eb",
+      "bytes": 65664
+    },
+    "fields/021_initial.npy": {
+      "sha256": "24512f7cc894816b15bd131087d934c6aaa2cbefefeae618ababb3cd44355ccd",
+      "bytes": 65664
+    },
+    "fields/021_target.npy": {
+      "sha256": "ba83e93107652b9dd31e447eb374f5059f40c48269b1f2884c84af5a9b7cb262",
+      "bytes": 65664
+    },
+    "fields/022_initial.npy": {
+      "sha256": "d2e8ca7162cef11f14d475ce6059217db2b6c21580ad86c97a4067775478d16d",
+      "bytes": 65664
+    },
+    "fields/022_target.npy": {
+      "sha256": "acd23f9c850a0dda1d26bb15a99063353abb0cd52509da7c463d2734b70cb0b7",
+      "bytes": 65664
+    },
+    "fields/023_initial.npy": {
+      "sha256": "560d980a3f52555bc047959774bb9dedc6536dbaca7e33467e82f65a63f38bcc",
+      "bytes": 65664
+    },
+    "fields/023_target.npy": {
+      "sha256": "81b948d676f1de63f923e56abb5d8a2fc7dc85f64add9a4768110a8da28ba91e",
+      "bytes": 65664
+    },
+    "fields/024_initial.npy": {
+      "sha256": "d13749ce16bd06d749bc9cd5595f9122254817854bfc391dea7bbea97ada8e8f",
+      "bytes": 65664
+    },
+    "fields/024_target.npy": {
+      "sha256": "d1e7f625a3e0e8226e9e47b8d21b9ac1bb4a6a0234fbe9d4dbc65b8f60dca2a7",
+      "bytes": 65664
+    },
+    "fields/025_initial.npy": {
+      "sha256": "251818527206083040f2de0c37cd3c96bcf620df7f8028f347b0d8700fd88e99",
+      "bytes": 65664
+    },
+    "fields/025_target.npy": {
+      "sha256": "54e68fcaa52aaa479bd3741762cef579ab9e9e758b0324ffb571ac88f6425654",
+      "bytes": 65664
+    },
+    "fields/026_initial.npy": {
+      "sha256": "60d6e205a44251233051e303e1a7095205acc8bda07d653775c0f2a45f8ca8e3",
+      "bytes": 65664
+    },
+    "fields/026_target.npy": {
+      "sha256": "3251c367e6b2bb61ced2c6f233e6e3747aae4edfc14088b0fa6fc6893c4cfd6d",
+      "bytes": 65664
+    },
+    "fields/027_initial.npy": {
+      "sha256": "8afabbb8ca5d755eb5cce90131e1441e6cc5cda335c66d23ec6e2f3082f9fee0",
+      "bytes": 65664
+    },
+    "fields/027_target.npy": {
+      "sha256": "fc36307ce48a40fd73d9a5f26867d89dda13c860b63a8a0e5ba22ddc7638ad6b",
+      "bytes": 65664
+    },
+    "fields/028_initial.npy": {
+      "sha256": "dfa62c9ea68d0e6cbdae5a03316d964442064ad523aa63728ecb07f6582baf1e",
+      "bytes": 65664
+    },
+    "fields/028_target.npy": {
+      "sha256": "f9216b56efd86624422d4434affcc7b4a4aa98128e0350d24bd67d9aa2731c14",
+      "bytes": 65664
+    },
+    "fields/029_initial.npy": {
+      "sha256": "511ff11d18688a950948e460ca947e1340038a449c98cb9682c2e5ee855f33b7",
+      "bytes": 65664
+    },
+    "fields/029_target.npy": {
+      "sha256": "3ac44a34013fe0ebec1d7ca18736db47112fc9969ec364c7eae2347626524e95",
+      "bytes": 65664
+    },
+    "fields/030_initial.npy": {
+      "sha256": "ad633d661d8a4fa8854a503cd0a50acdc8f5927364224a37c63ee8e45ac1e291",
+      "bytes": 65664
+    },
+    "fields/030_target.npy": {
+      "sha256": "45e3257ffc60617aeb2c6294c6712f16b159ca41d970ab4df1f63885f1b12206",
+      "bytes": 65664
+    },
+    "fields/031_initial.npy": {
+      "sha256": "9b22494c5a78707ce8e00bb89c92ee08c0cec5c285eaa3d8b41216ffd96294fd",
+      "bytes": 65664
+    },
+    "fields/031_target.npy": {
+      "sha256": "1468c2d70da891c49e6e328fd5aeabd3f31858acac5616ab2f124debf34038c0",
+      "bytes": 65664
+    },
+    "fields/032_initial.npy": {
+      "sha256": "f6c990d405991d1b885dbaa1b7612501f4fd018da3ff7999809ccec44c14e5de",
+      "bytes": 65664
+    },
+    "fields/032_target.npy": {
+      "sha256": "91ee2532a9d6c22b0b58b16d588a672e8b25be7a212e50eff4c9897426f72390",
+      "bytes": 65664
+    },
+    "fields/033_initial.npy": {
+      "sha256": "39e88be26ea4934f729e18dc0b73d1a2973337cae95dcbf49a117649c989e503",
+      "bytes": 65664
+    },
+    "fields/033_target.npy": {
+      "sha256": "a8b0e511462d3f8488e0677e867f33b9fac6fd7e26a58f7558548802508eba94",
+      "bytes": 65664
+    },
+    "fields/034_initial.npy": {
+      "sha256": "c7367521203c32cfabf16a8ec419ceebf5c37edd42b6ebf7013e2a304d343b38",
+      "bytes": 65664
+    },
+    "fields/034_target.npy": {
+      "sha256": "80537d4f5cd594489e18407a21c9501597ef875018daba172aa55297e16653f7",
+      "bytes": 65664
+    },
+    "fields/035_initial.npy": {
+      "sha256": "e2c9db09eac1eed5d2e2f98474cbe4fa26e3c990892b9afbbb38c35a24658cf6",
+      "bytes": 65664
+    },
+    "fields/035_target.npy": {
+      "sha256": "d9745e2e6e2ab22e308a15dc472d691e8e43241e167ea5c3510439b1a64dd94c",
+      "bytes": 65664
+    },
+    "fields/036_initial.npy": {
+      "sha256": "e3c43a19c007197f66ae1d2716f7fafe9774709d4ec8be94dcfc8043f38f866e",
+      "bytes": 65664
+    },
+    "fields/036_target.npy": {
+      "sha256": "e1f700e5bcbc2e8189beeb67b1f4faf7670604c36dbeb2754f481ce2822f1a1b",
+      "bytes": 65664
+    },
+    "fields/037_initial.npy": {
+      "sha256": "ddcea57ac3bec9d1ee92a869ef84e348354d061a30adabbaf792538f01218fbd",
+      "bytes": 65664
+    },
+    "fields/037_target.npy": {
+      "sha256": "9992f5d3c0f3e388c9862329e88c371e1b9126bbe3a26c3a3c2e4ea511a1890a",
+      "bytes": 65664
+    },
+    "fields/038_initial.npy": {
+      "sha256": "79e95ff606f92fa90ebb1d67292367379b24df26329534c6e7381787d3f7c5ab",
+      "bytes": 65664
+    },
+    "fields/038_target.npy": {
+      "sha256": "54b2704e35d325111e6d81e83f43c70de10630ac56ff359625e0b50b7b7f0036",
+      "bytes": 65664
+    },
+    "fields/039_initial.npy": {
+      "sha256": "5813b2026b4759a6cfdfed95c29594fa13843447e985044363a3e0431bc77f75",
+      "bytes": 65664
+    },
+    "fields/039_target.npy": {
+      "sha256": "892858fe53833a70cec542d653f4eb3c4a0db4dd68bcddb3ab398f428b284171",
+      "bytes": 65664
+    },
+    "fields/040_initial.npy": {
+      "sha256": "56a4ac92d5bc6065e70df5948cbbb769535575ab20617fa38db19927f96117a1",
+      "bytes": 65664
+    },
+    "fields/040_target.npy": {
+      "sha256": "fdd6726ae05757660e2129c7f871589d6c25a971c4a6a7ab62eda76afd970cf8",
+      "bytes": 65664
+    },
+    "fields/041_initial.npy": {
+      "sha256": "9d24831acf1151fdbfd64888f362ca01574d636a0cc3ef1ed2e3b4eddd7378d4",
+      "bytes": 65664
+    },
+    "fields/041_target.npy": {
+      "sha256": "ca0f5abd86c87e2518fd346603a547a693e8ef8d79c2040ecfea3cdaa3ee11c4",
+      "bytes": 65664
+    },
+    "fields/042_initial.npy": {
+      "sha256": "aed1537c31903813d247ad2a327cd3a1a46a8442519adccbf0895d3e866d5c07",
+      "bytes": 65664
+    },
+    "fields/042_target.npy": {
+      "sha256": "b28ed82c923946c76fbcd92ba73aef14564ee788f7b08b3f3a4ca20606e17e06",
+      "bytes": 65664
+    },
+    "fields/043_initial.npy": {
+      "sha256": "8c36af0919b2afab828cffc8e94b1164de5afcda0c33b2b6b1049cb6df0c4ccd",
+      "bytes": 65664
+    },
+    "fields/043_target.npy": {
+      "sha256": "88dacd753b5da00c4daa3cc3ed199caf39c047d6601774fe64e9f40b1b27c4c6",
+      "bytes": 65664
+    },
+    "fields/044_initial.npy": {
+      "sha256": "b1315130135331c85ea48f5bbc793a88fa63890cb0b9e8e7b24f0ce8c236efaa",
+      "bytes": 65664
+    },
+    "fields/045_initial.npy": {
+      "sha256": "d7f24352ac789d2657d47d4dbe8204e8b68db95a6608dd31f05539df7fbf718e",
+      "bytes": 65664
+    },
+    "fields/046_initial.npy": {
+      "sha256": "75a8a3bcca336dfad53f50b6364abeea78dc2e968da30cc8ae464669e41b433e",
+      "bytes": 65664
+    },
+    "fields/047_initial.npy": {
+      "sha256": "27e324f81029a554007aabcf91280019082e4228908a43902928664016342482",
+      "bytes": 65664
+    },
+    "fields/048_initial.npy": {
+      "sha256": "f5f57ada5f696aa3822b11dc912a1d19d9c9da30a42e8f3eea9de53576ff0155",
+      "bytes": 65664
+    },
+    "fields/049_initial.npy": {
+      "sha256": "b63bea62a28d21738f38e1a1eca40c194ce6e6776c8a830d2ff753f0bbc16bcc",
+      "bytes": 65664
+    },
+    "fields/050_initial.npy": {
+      "sha256": "9f7eb9f9ac8cc5a28378411a22f1358c83938be3f2f3ece9cc37fc52ed5a8fce",
+      "bytes": 65664
+    },
+    "fields/051_initial.npy": {
+      "sha256": "05d9408908f367a447e7f6171f88987abd0669f607965c12db14738bc3f20fc5",
+      "bytes": 65664
+    },
+    "fields/052_initial.npy": {
+      "sha256": "de199517a2967df37ba557a96683223d55ff3934741ef98ebf0d3987dd00682d",
+      "bytes": 65664
+    },
+    "fields/053_initial.npy": {
+      "sha256": "00e1fbc677de5994cff3e007c1f872b3dcb388bb5def02b03fcba18e932aba8d",
+      "bytes": 65664
+    },
+    "fields/054_initial.npy": {
+      "sha256": "dc40aad33deb48b13bf9cfbb998c9b664ce8668ea66c3a6b5e4ba7e6d3f3660c",
+      "bytes": 65664
+    },
+    "fields/055_initial.npy": {
+      "sha256": "4ed6b45088ebde8f279b306c71cbf2d33c35f0229bb8efe942c027f7fcbc3d65",
+      "bytes": 65664
+    },
+    "fields/056_initial.npy": {
+      "sha256": "4400842416b138a7ed9a36e065ed731b0b3f14d87acef4bf56c303e11c4d0d88",
+      "bytes": 65664
+    },
+    "fields/057_initial.npy": {
+      "sha256": "ffdef8e15b5f0c33237060e171a19d7529c07fa8fb1410cd2ae914933f26b946",
+      "bytes": 65664
+    },
+    "fields/058_initial.npy": {
+      "sha256": "ee4a11554b142ec66cf8ca88de41e4a2bcfabc6f8861d071c92b905044562d52",
+      "bytes": 65664
+    },
+    "fields/059_initial.npy": {
+      "sha256": "110aba9d881e4af102d137ef843b7b65acc08b196e38ba888dcdae311767370f",
+      "bytes": 65664
+    },
+    "fields/060_initial.npy": {
+      "sha256": "7a02e3d5235a883f40057734bbb2d6633a87a006122569023ab2f67a78ba4a03",
+      "bytes": 65664
+    },
+    "fields/061_initial.npy": {
+      "sha256": "a17a5ceb7464a347125405da217a8d9627cfd85bf2451d1cfdfb465b04761d07",
+      "bytes": 65664
+    },
+    "fields/062_initial.npy": {
+      "sha256": "3759be28ed68bc82ece00b34f5fb4e39db22b29093384c8b9c613dc135052dc8",
+      "bytes": 65664
+    },
+    "fields/063_initial.npy": {
+      "sha256": "e0c4bde821d0669ca1ba779f8541575d40c21df00fcf6621e85b52f9792a4ec8",
+      "bytes": 65664
+    },
+    "fields/064_initial.npy": {
+      "sha256": "52f5aab5bd576dc23c97917b423a32e459796826b48d48677ffd41d3eb439e39",
+      "bytes": 65664
+    },
+    "fields/065_initial.npy": {
+      "sha256": "1eac063319316bc7585e055827b96ba7099155d8d00040f901d298e5b9018be0",
+      "bytes": 65664
+    },
+    "fields/066_initial.npy": {
+      "sha256": "672337b5ed4f96e33c108184fd495ef667881b31b6a077f07bb3a0a0ce658041",
+      "bytes": 65664
+    },
+    "fields/067_initial.npy": {
+      "sha256": "405317cebce4aa4c702eb9086190fa0489c4b7f0b2fd593890148b66a58ff684",
+      "bytes": 65664
+    },
+    "reference_costs.csv": {
+      "sha256": "c9a3508aceea6c1dfedc7568c3174763cc32e62b1f086ec22632454d27e5ea25",
+      "bytes": 3897
+    },
+    "runs.csv": {
+      "sha256": "42f92fe13b3177f2f580fbe9b459a0799d5a9a2033b1d76532cf153d4db20d77",
+      "bytes": 9397
+    },
+    "study.json": {
+      "sha256": "b6a5794cf38367bd8dd2e591ed6098d4cadf68eac09445d4397042528b66af8b",
+      "bytes": 1749
+    }
+  },
+  "notebook_code_sha256": "0c610468f087f8256b43602d43b4c970bbe96a8febaa37d24cb1801c6d20decf",
+  "notebook_sha256": "700b7bff418e4bc3c4ffc93d98ffa90390f2d3fd5caf0de1f0f7223df16dcf0b",
+  "environment": {
+    "python": "3.13.11",
+    "packages": {
+      "marimo": "0.25.1",
+      "torch": "2.11.0",
+      "neuraloperator": "2.0.0",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "pandas": "3.0.3",
+      "scikit-learn": "1.9.0",
+      "huggingface-hub": "1.33.0"
+    },
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "cuda": "13.0",
+    "precision": "float32; FFT complex64; solver float64",
+    "source_pretraining_cost": "unknown; excluded from per-customer amortized cost, not claimed free"
+  },
+  "plans": {
+    "42": {
+      "8": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007"
+      ],
+      "16": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s024",
+        "s023",
+        "s026",
+        "s027",
+        "s017",
+        "s015",
+        "s025",
+        "s031"
+      ],
+      "24": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s024",
+        "s023",
+        "s026",
+        "s027",
+        "s017",
+        "s015",
+        "s025",
+        "s031",
+        "s014",
+        "s018",
+        "s011",
+        "s008",
+        "s028",
+        "s020",
+        "s013",
+        "s019"
+      ],
+      "32": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s024",
+        "s023",
+        "s026",
+        "s027",
+        "s017",
+        "s015",
+        "s025",
+        "s031",
+        "s014",
+        "s018",
+        "s011",
+        "s008",
+        "s028",
+        "s020",
+        "s013",
+        "s019",
+        "s022",
+        "s030",
+        "s010",
+        "s012",
+        "s029",
+        "s009",
+        "s021",
+        "s016"
+      ]
+    },
+    "123": {
+      "8": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007"
+      ],
+      "16": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s028",
+        "s010",
+        "s012",
+        "s031",
+        "s018",
+        "s030",
+        "s015",
+        "s014"
+      ],
+      "24": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s028",
+        "s010",
+        "s012",
+        "s031",
+        "s018",
+        "s030",
+        "s015",
+        "s014",
+        "s019",
+        "s009",
+        "s008",
+        "s016",
+        "s026",
+        "s029",
+        "s023",
+        "s027"
+      ],
+      "32": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s028",
+        "s010",
+        "s012",
+        "s031",
+        "s018",
+        "s030",
+        "s015",
+        "s014",
+        "s019",
+        "s009",
+        "s008",
+        "s016",
+        "s026",
+        "s029",
+        "s023",
+        "s027",
+        "s024",
+        "s017",
+        "s020",
+        "s025",
+        "s013",
+        "s022",
+        "s011",
+        "s021"
+      ]
+    },
+    "2026": {
+      "8": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007"
+      ],
+      "16": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s027",
+        "s020",
+        "s028",
+        "s017",
+        "s011",
+        "s023",
+        "s024",
+        "s008"
+      ],
+      "24": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s027",
+        "s020",
+        "s028",
+        "s017",
+        "s011",
+        "s023",
+        "s024",
+        "s008",
+        "s030",
+        "s019",
+        "s021",
+        "s009",
+        "s014",
+        "s010",
+        "s022",
+        "s026"
+      ],
+      "32": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s027",
+        "s020",
+        "s028",
+        "s017",
+        "s011",
+        "s023",
+        "s024",
+        "s008",
+        "s030",
+        "s019",
+        "s021",
+        "s009",
+        "s014",
+        "s010",
+        "s022",
+        "s026",
+        "s025",
+        "s016",
+        "s029",
+        "s013",
+        "s031",
+        "s015",
+        "s012",
+        "s018"
+      ]
+    }
+  },
+  "confirm_ids": [
+    "s044",
+    "s045",
+    "s046",
+    "s047",
+    "s048",
+    "s049",
+    "s050",
+    "s051",
+    "s052",
+    "s053",
+    "s054",
+    "s055",
+    "s056",
+    "s057",
+    "s058",
+    "s059",
+    "s060",
+    "s061",
+    "s062",
+    "s063",
+    "s064",
+    "s065",
+    "s066",
+    "s067"
+  ],
+  "validation_ids": [
+    "s032",
+    "s033",
+    "s034",
+    "s035",
+    "s036",
+    "s037",
+    "s038",
+    "s039",
+    "s040",
+    "s041",
+    "s042",
+    "s043"
+  ],
+  "numerical_audit": {
+    "external": false,
+    "cases": [
+      {
+        "controls": [
+          0.02,
+          1.2,
+          0.8
+        ],
+        "time_difference": [
+          5.0817128283142665e-12,
+          1.399047544481391e-11
+        ],
+        "grid_difference": [
+          7.469214025057624e-09,
+          1.7551456843456492e-08
+        ],
+        "field_relative_l2": 6.717469413191123e-05,
+        "divergence": 3.1308289294429414e-14,
+        "seconds": 4.389894535999986,
+        "solver_executions": 3
+      },
+      {
+        "controls": [
+          0.08,
+          0.2,
+          0.2
+        ],
+        "time_difference": [
+          1.1962653090336062e-14,
+          5.329070518200751e-15
+        ],
+        "grid_difference": [
+          1.942890293094024e-16,
+          3.0531133177191805e-16
+        ],
+        "field_relative_l2": 1.7112629685026084e-12,
+        "divergence": 1.482147737874584e-14,
+        "seconds": 3.44745243400007,
+        "solver_executions": 3
+      },
+      {
+        "controls": [
+          0.05,
+          0.7,
+          0.5
+        ],
+        "time_difference": [
+          3.894662370385049e-13,
+          2.631228568361621e-14
+        ],
+        "grid_difference": [
+          1.4932499681208355e-14,
+          2.355893258254582e-13
+        ],
+        "field_relative_l2": 5.429031811322608e-08,
+        "divergence": 2.0872192862952943e-14,
+        "seconds": 3.4541689809999525,
+        "solver_executions": 3
+      }
+    ]
+  },
+  "primary": "smallest tested budget meeting joint per-setting tolerances, coverage=1, on every seed",
+  "secondary_transfer": "weighted tolerance-normalized RMSE margin at first two budgets, no per-outcome regression",
+  "strata": "interior vs edge: any normalized coordinate <=0.15 or >=0.85; low signal: reference magnitude <= relative_floor",
+  "gp_class": "scalar ARD RBF/Matern-1.5/Matern-2.5 plus white noise; validation-only kernel choice",
+  "field_feature_baseline": "not implemented: scope six mandatory arms; scalar GP comparison confounds field supervision, disclosed",
+  "regime_change": "not tested unless separate future protocol; no transition certified for this candidate",
+  "many_controls": "three controls only; ten-control hypothesis not tested",
+  "scenarios": {
+    "new_study": "primary",
+    "spatial_outcomes": "primary",
+    "fewer_runs": "primary",
+    "many_knobs": "not tested",
+    "regime_transition": "not tested",
+    "OpenFOAM": "Task 9; not tested"
+  },
+  "bootstrap": "paired hierarchical seed/setting resampling; 1000 draws; descriptive with three seeds; no multiplicity correction",
+  "field_maps_ids": [
+    "s044",
+    "s045"
+  ],
+  "sha256": "f4227c46ab627cce1367edbf6d0e40f5cb1044b6e7cd2517b6010d4ff043dc33"
+}

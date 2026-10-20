@@ -1,0 +1,11 @@
+{
+  "signature": "95d056b3689463510c295700102992d9f75754a46ed8bf7d204bcd2da76e735c",
+  "weight": {
+    "sha256": "bdf2956d5dbdcb85dcba8647d1cfff7db1fc3a08078d02909e76afa9ee52f14b",
+    "bytes": 286045477
+  },
+  "reason": "superseded intermediate; first proposed-stop and latest weights retained",
+  "replacement_round": "workflows/r701/fno_lhs/n16",
+  "replacement_sha256": "7cf87119e99db402729ec50a4be5c14496063bde06dfbde16888e8ded6641089",
+  "sha256": "5a756154663fd7d09cf55ae56979f1b5930c74481373036cebdf1bc65ad088e8"
+}

@@ -1,0 +1,28 @@
+name: Prototype feedback
+description: Tell us what you tried and what would help
+title: "Prototype feedback: "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: What were you trying to understand?
+    validations:
+      required: true
+  - type: dropdown
+    id: clarity
+    attributes:
+      label: Was the comparison clear?
+      options: ["Yes", "Partly", "No"]
+  - type: textarea
+    id: useful
+    attributes:
+      label: Which system or feature would make this useful?
+  - type: textarea
+    id: confusion
+    attributes:
+      label: What confused you?
+  - type: dropdown
+    id: use
+    attributes:
+      label: Would you use this before running a full simulation?
+      options: ["Yes", "Maybe", "No", "I do not run simulations"]

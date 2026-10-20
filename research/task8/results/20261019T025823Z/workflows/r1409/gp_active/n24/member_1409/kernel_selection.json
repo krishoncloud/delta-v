@@ -1,0 +1,32 @@
+[
+  {
+    "outcome": "kinetic_energy",
+    "kernel": "matern15",
+    "development_score": 0.0004214531741036901
+  },
+  {
+    "outcome": "kinetic_energy",
+    "kernel": "matern25",
+    "development_score": 6.608851768715166e-05
+  },
+  {
+    "outcome": "kinetic_energy",
+    "kernel": "rbf",
+    "development_score": 0.00012388133747073387
+  },
+  {
+    "outcome": "pressure_rms",
+    "kernel": "matern15",
+    "development_score": 0.0006414990770632234
+  },
+  {
+    "outcome": "pressure_rms",
+    "kernel": "matern25",
+    "development_score": 0.00047718098536417725
+  },
+  {
+    "outcome": "pressure_rms",
+    "kernel": "rbf",
+    "development_score": 0.00045645339588667127
+  }
+]

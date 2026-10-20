@@ -1,0 +1,65 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "fno_lhs",
+  "budget": 16,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00186",
+    "r701-00062",
+    "r701-00356",
+    "r701-00132",
+    "r701-00349",
+    "r701-00120",
+    "r701-00210",
+    "r701-00425"
+  ],
+  "next_ids": [
+    "r701-00078",
+    "r701-00277",
+    "r701-00437",
+    "r701-00276",
+    "r701-00059",
+    "r701-00239",
+    "r701-00289",
+    "r701-00070"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.734375,
+  "probe_max_halfwidth_ratio": 3.2902025606515637,
+  "shadow_after_first_stop": false,
+  "charged_labels": 67,
+  "round_wall_seconds": 176.29793055899995,
+  "selection_seconds": 0.03569627199999559,
+  "data_access_seconds": 3.998105794000139,
+  "non_fit_loop_seconds": 0.1011391519996323,
+  "fit_overhead_seconds": 0.6374395360003291,
+  "fit_receipts": {
+    "member_7016010": "d4995b0171df9447499286dbf3a11a05901cef256dc65184d335254be1bb497b",
+    "member_7017114": "3d6a4440094eac8c04f1c4f4d1a769f39a62bf7aa13c38df48b9b990c5b56d37",
+    "member_7018208": "fe81ddabcb6845e9f724cfb7894e0dd56bb091ba71753a3b329de5c144286d67"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "22cdb7cc9029e0964c01c34d42b9b6e67b7f9a0954283fe728009bda1ea4014a",
+      "bytes": 15792
+    },
+    "calibration_rule.json": {
+      "sha256": "2c1184caf77bf09ced9df721842d745f5ca6ba6aea92ed08979019f381f20352",
+      "bytes": 328
+    },
+    "recommendations.json": {
+      "sha256": "aa57eaf56dba6faadce04018f488637a37ced86f6e2ac5774c101cc3de6701cc",
+      "bytes": 706
+    }
+  },
+  "sha256": "7cf87119e99db402729ec50a4be5c14496063bde06dfbde16888e8ded6641089"
+}

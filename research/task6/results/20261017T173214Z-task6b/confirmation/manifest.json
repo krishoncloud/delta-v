@@ -1,0 +1,10 @@
+{
+  "costs.json": {
+    "sha256": "d1fad2ec728552426e5b824d78e12677de8e2aa9ede33ad50a51ce3dcc149bb1",
+    "bytes": 4875
+  },
+  "reference_fields.npy": {
+    "sha256": "f01cd6bcc96e6764376288ed9ebab983d70be618840f48a4629ab6282de4a88e",
+    "bytes": 1572992
+  }
+}

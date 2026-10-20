@@ -1,0 +1,42 @@
+[
+  {
+    "outcome": "kinetic_energy",
+    "option": 1e-06,
+    "validation_score": 0.046059064516065694
+  },
+  {
+    "outcome": "kinetic_energy",
+    "option": 0.001,
+    "validation_score": 0.046056773282019514
+  },
+  {
+    "outcome": "kinetic_energy",
+    "option": 0.1,
+    "validation_score": 0.04584846534493992
+  },
+  {
+    "outcome": "kinetic_energy",
+    "option": 1.0,
+    "validation_score": 0.045465100758066056
+  },
+  {
+    "outcome": "pressure_rms",
+    "option": 1e-06,
+    "validation_score": 0.07003097798802813
+  },
+  {
+    "outcome": "pressure_rms",
+    "option": 0.001,
+    "validation_score": 0.07002631498863132
+  },
+  {
+    "outcome": "pressure_rms",
+    "option": 0.1,
+    "validation_score": 0.06958388188389843
+  },
+  {
+    "outcome": "pressure_rms",
+    "option": 1.0,
+    "validation_score": 0.06715379489204641
+  }
+]

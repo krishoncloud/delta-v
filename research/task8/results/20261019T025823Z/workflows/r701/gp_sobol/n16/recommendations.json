@@ -1,0 +1,34 @@
+[
+  {
+    "setting_id": "r701-00281",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00401",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00260",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00359",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00011",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00426",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00025",
+    "reason": "gp_sobol fixed label-free order"
+  },
+  {
+    "setting_id": "r701-00373",
+    "reason": "gp_sobol fixed label-free order"
+  }
+]

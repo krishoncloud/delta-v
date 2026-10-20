@@ -1,0 +1,20 @@
+{
+  "protocol": "724091364b2c1a44cd41f2aaa554e79e3fca297e2eb92c24477afd26dbf4d4a2",
+  "experiment_complete": true,
+  "empirical_screen_passed": true,
+  "coverage_screen_passed": true,
+  "width_screen_passed": true,
+  "primary_joint_coverage": 0.915,
+  "primary_coverage_ci95": [
+    0.8681041292843443,
+    0.9462542498225244
+  ],
+  "mean_width": {
+    "kinetic_energy": 0.01461733059541376,
+    "pressure_rms": 0.012681703556608234
+  },
+  "labels_for_primary_workflow": 67,
+  "separate_test_labels": 200,
+  "attempt_seconds": 1061.4520347709995,
+  "calibration_reused_across_budgets": true
+}

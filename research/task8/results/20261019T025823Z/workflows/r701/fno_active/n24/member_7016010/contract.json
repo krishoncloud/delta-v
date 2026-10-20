@@ -1,0 +1,169 @@
+{
+  "normalization": {
+    "train_ids": [
+      "r701-00000",
+      "r701-00001",
+      "r701-00002",
+      "r701-00003",
+      "r701-00004",
+      "r701-00005",
+      "r701-00006",
+      "r701-00007",
+      "r701-00503",
+      "r701-00378",
+      "r701-00090",
+      "r701-00497",
+      "r701-00324",
+      "r701-00175",
+      "r701-00273",
+      "r701-00243",
+      "r701-00121",
+      "r701-00144",
+      "r701-00438",
+      "r701-00339",
+      "r701-00051",
+      "r701-00156",
+      "r701-00286",
+      "r701-00063"
+    ],
+    "x_mean": [
+      0.04112286656993703,
+      0.7697550585938936,
+      0.5686108450380319
+    ],
+    "x_std": [
+      0.02189295431252337,
+      0.3555507196572288,
+      0.21438396759916656
+    ],
+    "outcome_scale": [
+      0.1598285436630249,
+      0.15036778151988983
+    ],
+    "initial_mean": [
+      1.0,
+      1.5522043372850902e-10,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.6476685404777527,
+      0.5850809216499329,
+      0.7869426608085632
+    ],
+    "target_mean": [
+      1.0,
+      2.3283064365386963e-10,
+      2.7939677238464355e-09,
+      9.024839903171156e-11
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.4935947060585022,
+      0.7417211532592773,
+      0.5792140364646912
+    ]
+  },
+  "config": {
+    "master_seed": 20261023,
+    "repetitions": [
+      701,
+      1409,
+      2111
+    ],
+    "member_seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "batch_acquisition": 8,
+    "ceiling": 32,
+    "pool": 512,
+    "probe": 128,
+    "calibration": 39,
+    "test": 200,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "initial": 8,
+    "development": 12,
+    "absolute_tolerance": [
+      0.015,
+      0.015
+    ],
+    "success_fraction": 0.9,
+    "tail_ratio": 2.0,
+    "level": 0.9,
+    "scale_fraction": 0.01,
+    "scale_absolute_floor": 1e-06,
+    "diversity_floor": 0.25,
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "gp_restarts": 2,
+    "edge_threshold": 0.2,
+    "primary_baseline": "gp_active",
+    "attribution_baseline": "fno_lhs",
+    "minimum_median_saving": 8,
+    "retention": "first proposed stop and latest round; other intermediate weights pruned with receipts",
+    "protocol_sha256": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+    "device": "cuda",
+    "seed": 7016010
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "identity": {
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "real_parameters": 71508036,
+    "train_ids": [
+      "r701-00000",
+      "r701-00001",
+      "r701-00002",
+      "r701-00003",
+      "r701-00004",
+      "r701-00005",
+      "r701-00006",
+      "r701-00007",
+      "r701-00503",
+      "r701-00378",
+      "r701-00090",
+      "r701-00497",
+      "r701-00324",
+      "r701-00175",
+      "r701-00273",
+      "r701-00243",
+      "r701-00121",
+      "r701-00144",
+      "r701-00438",
+      "r701-00339",
+      "r701-00051",
+      "r701-00156",
+      "r701-00286",
+      "r701-00063"
+    ],
+    "member_seed": 7016010
+  }
+}

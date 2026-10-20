@@ -1,0 +1,189 @@
+{
+  "method": "pretrained_full",
+  "normalization": {
+    "train_ids": [
+      "s000",
+      "s001",
+      "s002",
+      "s003",
+      "s004",
+      "s005",
+      "s006",
+      "s007"
+    ],
+    "x_mean": [
+      0.05,
+      0.7,
+      0.5
+    ],
+    "x_std": [
+      0.030000000000000002,
+      0.49999999999999994,
+      0.30000000000000004
+    ],
+    "outcome_scale": [
+      0.21039895329042727,
+      0.20585883594752766
+    ],
+    "initial_mean": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.6408593654632568,
+      0.5787917971611023,
+      0.7681145668029785
+    ],
+    "target_mean": [
+      1.0,
+      5.820766091346741e-10,
+      5.820766091346741e-09,
+      1.5552359400317073e-10
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.48436546325683594,
+      0.7193961143493652,
+      0.5483412742614746
+    ]
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "config": {
+    "device": "cuda",
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "ridge_alphas": [
+      1e-06,
+      0.001,
+      0.1,
+      1.0
+    ],
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "seed": 2026
+  },
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "identity": {
+    "random_backbone_hash": "bee0387d4e8f63955b595b3fbf64ab8b1b9547966f818e328fd9947b6f47bfa0",
+    "initial_backbone_hash": "f1d250264aba19c2ac7a6d2ceea34fb174c542c979b719ba634fe59082e9fa0a",
+    "frozen_blocks_hash": "092afc72bc8042541a59636d0419a9e9d654f7f2e5ea8b66b9618347d19ee2a9",
+    "source_loaded": true,
+    "trainable_real_parameters": 71508036,
+    "total_real_parameters": 71508036,
+    "source_differs_from_scratch": true,
+    "frozen_unchanged": null,
+    "adapter_updated": true
+  },
+  "study": {
+    "schema_version": 6,
+    "study_id": "forced_multimode_periodic_ns_v1",
+    "lane": "fluid",
+    "grid": [
+      64,
+      64
+    ],
+    "field_names": [
+      "density",
+      "pressure",
+      "velocity_x",
+      "velocity_y"
+    ],
+    "field_units": [
+      "nondimensional",
+      "nondimensional",
+      "nondimensional",
+      "nondimensional"
+    ],
+    "domain": [
+      [
+        0,
+        6.283185307179586
+      ],
+      [
+        0,
+        6.283185307179586
+      ]
+    ],
+    "boundary_conditions": [
+      "periodic",
+      "periodic"
+    ],
+    "geometry": "fixed periodic square",
+    "target_time": 2.0,
+    "time_unit": "nondimensional",
+    "initial_available_at_query": true,
+    "initial_conditions": "analytic two-mode streamfunction; initial_mix known",
+    "parameters": [
+      {
+        "name": "viscosity",
+        "range": [
+          0.02,
+          0.08
+        ],
+        "unit": "nondimensional"
+      },
+      {
+        "name": "forcing",
+        "range": [
+          0.2,
+          1.2
+        ],
+        "unit": "nondimensional"
+      },
+      {
+        "name": "initial_mix",
+        "range": [
+          0.2,
+          0.8
+        ],
+        "unit": "nondimensional"
+      }
+    ],
+    "outcomes": [
+      {
+        "name": "kinetic_energy",
+        "kind": "mean_kinetic_energy",
+        "unit": "nondimensional"
+      },
+      {
+        "name": "pressure_rms",
+        "kind": "pressure_rms",
+        "unit": "nondimensional"
+      }
+    ],
+    "provenance": "new local numerical generation; code hash recorded in session",
+    "design_seed": 20261018,
+    "solver": "NumPy FFT vorticity RK4, strict 2/3 truncation, float64; version task6-1",
+    "source_exclusion": "different generated study from source registry; legacy exposure ledger unavailable",
+    "readout_definition": "specific mean kinetic energy and zero-gauge pressure RMS over full domain at t=2"
+  }
+}

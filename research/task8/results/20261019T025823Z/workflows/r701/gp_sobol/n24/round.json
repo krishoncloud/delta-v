@@ -1,0 +1,71 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "gp_sobol",
+  "budget": 24,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00332",
+    "r701-00250",
+    "r701-00384",
+    "r701-00417",
+    "r701-00314",
+    "r701-00486",
+    "r701-00312",
+    "r701-00086",
+    "r701-00281",
+    "r701-00401",
+    "r701-00260",
+    "r701-00359",
+    "r701-00011",
+    "r701-00426",
+    "r701-00025",
+    "r701-00373"
+  ],
+  "next_ids": [
+    "r701-00406",
+    "r701-00294",
+    "r701-00137",
+    "r701-00182",
+    "r701-00353",
+    "r701-00200",
+    "r701-00096",
+    "r701-00249"
+  ],
+  "first_proposed_stop": 24,
+  "proposed_stop_now": true,
+  "probe_ready_fraction": 1.0,
+  "probe_max_halfwidth_ratio": 0.586814910056958,
+  "shadow_after_first_stop": false,
+  "charged_labels": 75,
+  "round_wall_seconds": 4.344246833999932,
+  "selection_seconds": 0.03562618599994494,
+  "data_access_seconds": 3.9577474539999002,
+  "non_fit_loop_seconds": 0.09442386900013844,
+  "fit_overhead_seconds": 0.002124601000105031,
+  "fit_receipts": {
+    "member_701": "eb3fabb555263048966ae7a5fd1d84be623a3a04203abab03370011517e65b2a"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "9c0410e01aca3f6c1e82173ff8efb0227c1a7d2370cb63fff8c1c390bb4ec42a",
+      "bytes": 29729
+    },
+    "calibration_rule.json": {
+      "sha256": "8e393f9d14623ca26caa925c31f94718770fd2218abb6e4410e54d31dc817e91",
+      "bytes": 331
+    },
+    "recommendations.json": {
+      "sha256": "c7afad606bb163283dac7dab3cf7cf59a4b6329342ae71ef354600eaf856646a",
+      "bytes": 714
+    }
+  },
+  "sha256": "e04b435bec6785bcf74da65104cf8690bb27932f890e0aa787ce46f0f92e2d19"
+}

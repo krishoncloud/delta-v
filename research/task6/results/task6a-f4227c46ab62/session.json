@@ -1,0 +1,24 @@
+{
+  "created_utc": "2026-10-17T16:11:31.224288+00:00",
+  "notebook_sha256": "700b7bff418e4bc3c4ffc93d98ffa90390f2d3fd5caf0de1f0f7223df16dcf0b",
+  "notebook_code_sha256": "0c610468f087f8256b43602d43b4c970bbe96a8febaa37d24cb1801c6d20decf",
+  "environment": {
+    "python": "3.13.11",
+    "packages": {
+      "marimo": "0.25.1",
+      "torch": "2.11.0",
+      "neuraloperator": "2.0.0",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "pandas": "3.0.3",
+      "scikit-learn": "1.9.0",
+      "huggingface-hub": "1.33.0"
+    },
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "cuda": "13.0",
+    "precision": "float32; FFT complex64; solver float64",
+    "source_pretraining_cost": "unknown; excluded from per-customer amortized cost, not claimed free"
+  },
+  "design_seed": 20261017,
+  "bundle": ""
+}

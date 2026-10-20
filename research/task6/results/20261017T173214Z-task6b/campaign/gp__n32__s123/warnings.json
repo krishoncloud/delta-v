@@ -1,0 +1,10 @@
+[
+  "The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-09. Decreasing the bound and calling fit again may find a better value.",
+  "The optimal value found for dimension 0 of parameter k1__k1__constant_value is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.",
+  "The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-09. Decreasing the bound and calling fit again may find a better value.",
+  "lbfgs failed to converge after 23 iteration(s) (status=2):\nABNORMAL: \n\nYou might also want to scale the data as shown in:\n    https://scikit-learn.org/stable/modules/preprocessing.html",
+  "lbfgs failed to converge after 38 iteration(s) (status=2):\nABNORMAL: \n\nYou might also want to scale the data as shown in:\n    https://scikit-learn.org/stable/modules/preprocessing.html",
+  "The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-09. Decreasing the bound and calling fit again may find a better value.",
+  "lbfgs failed to converge after 31 iteration(s) (status=2):\nABNORMAL: \n\nYou might also want to scale the data as shown in:\n    https://scikit-learn.org/stable/modules/preprocessing.html",
+  "The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-09. Decreasing the bound and calling fit again may find a better value."
+]

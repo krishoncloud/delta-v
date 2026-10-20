@@ -1,0 +1,55 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 1409,
+  "policy": "gp_sobol",
+  "budget": 8,
+  "selected_ids": [
+    "r1409-00000",
+    "r1409-00001",
+    "r1409-00002",
+    "r1409-00003",
+    "r1409-00004",
+    "r1409-00005",
+    "r1409-00006",
+    "r1409-00007"
+  ],
+  "next_ids": [
+    "r1409-00449",
+    "r1409-00040",
+    "r1409-00136",
+    "r1409-00180",
+    "r1409-00137",
+    "r1409-00476",
+    "r1409-00281",
+    "r1409-00167"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.0,
+  "probe_max_halfwidth_ratio": 14.350395678273465,
+  "shadow_after_first_stop": false,
+  "charged_labels": 59,
+  "round_wall_seconds": 0.30726766599991606,
+  "selection_seconds": 0.03538970199997493,
+  "data_access_seconds": 0.033750405000319006,
+  "non_fit_loop_seconds": 0.09282100799919135,
+  "fit_overhead_seconds": 0.002157974000510876,
+  "fit_receipts": {
+    "member_1409": "63cbc13638ce7e329aca839c86640bc82fab32236e3b3ea5bd68ecd74ff32b7f"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "0b03e6f7483aefec9c2331affb1816eeb6e3499bc0b32d19097ec66b7ff0dd4d",
+      "bytes": 29834
+    },
+    "calibration_rule.json": {
+      "sha256": "bc8778cf9b5da12de0a8d201d59b74f04613a3a59dba76fb0f5bff985cceca39",
+      "bytes": 332
+    },
+    "recommendations.json": {
+      "sha256": "da9bcf8991d59dce4493a0a971295ffc8d088eaec5f080d048f880cb704a98a3",
+      "bytes": 722
+    }
+  },
+  "sha256": "e1a2cbc841fe07575e22b544646380567149ef8bc7cd20aacbe5ace8ec415784"
+}

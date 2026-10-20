@@ -1,0 +1,79 @@
+{
+  "method": "scratch",
+  "ids": [
+    "s000",
+    "s001",
+    "s002",
+    "s003",
+    "s004",
+    "s005",
+    "s006",
+    "s007",
+    "s024",
+    "s023",
+    "s026",
+    "s027",
+    "s017",
+    "s015",
+    "s025",
+    "s031",
+    "s014",
+    "s018",
+    "s011",
+    "s008",
+    "s028",
+    "s020",
+    "s013",
+    "s019",
+    "s022",
+    "s030",
+    "s010",
+    "s012",
+    "s029",
+    "s009",
+    "s021",
+    "s016"
+  ],
+  "config": {
+    "device": "cuda",
+    "lr": 0.0001,
+    "batch": 2,
+    "validate_every": 20,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "ridge_alphas": [
+      1e-06,
+      0.001,
+      0.1,
+      1.0
+    ],
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "steps": 400,
+    "max_seconds": 3600.0,
+    "seed": 42
+  },
+  "study": "7a1f27bcbcad6019ff2fb284ba0360f16c23bbd398d5ba7e716758521c791e90",
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  }
+}

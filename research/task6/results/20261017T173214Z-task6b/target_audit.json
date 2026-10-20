@@ -1,0 +1,19 @@
+{
+  "study_id": "forced_multimode_periodic_ns_v1",
+  "source_systems": [
+    "turbulent_radiative_layer_2D",
+    "rayleigh_benard",
+    "shear_flow"
+  ],
+  "different_study_registry": true,
+  "legacy_exposure_ledger": "unavailable; study registry exclusion is not a signed full pretraining audit",
+  "outcome_correlation": 0.9287823425255731,
+  "outcome_ratio_std": 0.10498867439931023,
+  "confirmation_references_generated": false,
+  "counts": {
+    "train": 32,
+    "confirmation": 24,
+    "validation": 12
+  },
+  "field_export_bytes": 7354368
+}

@@ -1,0 +1,18 @@
+{
+  "protocol": "724091364b2c1a44cd41f2aaa554e79e3fca297e2eb92c24477afd26dbf4d4a2",
+  "interval_seal": "70e971886c4b3557b901826ff10cf5f3c2f8efafff82b79357cc7b24fda7452b",
+  "artifacts": {
+    "scored_test_predictions.csv": {
+      "sha256": "f33ef37cec0337a385c7b94512c4d3319563aa57387c5b4d685bb1316f4ae27c",
+      "bytes": 10193590
+    },
+    "coverage_width.csv": {
+      "sha256": "03a8f6525a7bec69e0e17f79e71f5f6851f44553bca7529112c0086996a9e059",
+      "bytes": 54188
+    },
+    "strata.csv": {
+      "sha256": "557cfa39dbad66ad72d3fb39655dac5d09caf7fba621e30bdce4fc30434b0133",
+      "bytes": 433810
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "method": "mean",
+  "budget": 16,
+  "seed": 42,
+  "load_seconds": 0.0,
+  "cold_query_seconds": 0.00046563299997615104,
+  "warm_batch_seconds": 0.00031093500001588836,
+  "warm_per_query_seconds": 1.2955625000662016e-05
+}

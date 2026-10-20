@@ -1,0 +1,30 @@
+{
+  "fno_lhs": {
+    "observed_consistent_run_savings_screen": false,
+    "all_repetitions_comparable": true,
+    "median_saved_labels_when_comparable": -8.0,
+    "median_saved_fraction_when_comparable": -0.10666666666666667,
+    "scope": "descriptive paired research comparison; three repetitions do not establish a population guarantee"
+  },
+  "gp_active": {
+    "observed_consistent_run_savings_screen": false,
+    "all_repetitions_comparable": true,
+    "median_saved_labels_when_comparable": 0.0,
+    "median_saved_fraction_when_comparable": 0.0,
+    "scope": "descriptive paired research comparison; three repetitions do not establish a population guarantee"
+  },
+  "gp_random": {
+    "observed_consistent_run_savings_screen": false,
+    "all_repetitions_comparable": true,
+    "median_saved_labels_when_comparable": 0.0,
+    "median_saved_fraction_when_comparable": 0.0,
+    "scope": "descriptive paired research comparison; three repetitions do not establish a population guarantee"
+  },
+  "gp_sobol": {
+    "observed_consistent_run_savings_screen": false,
+    "all_repetitions_comparable": true,
+    "median_saved_labels_when_comparable": 0.0,
+    "median_saved_fraction_when_comparable": 0.0,
+    "scope": "descriptive paired research comparison; three repetitions do not establish a population guarantee"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "selected": "controlled_taylor_green_2d",
+  "source_training_systems": [
+    "turbulent_radiative_layer_2D",
+    "rayleigh_benard",
+    "shear_flow"
+  ],
+  "target_declared_in_source_registry": false,
+  "provenance": {
+    "kind": "controlled_exact_reference",
+    "source_exclusion": "Not one of the three source training systems; inferred from training-code audit, legacy exposure ledger unavailable",
+    "limitation": "Analytical case; no measured solver cost or commercial transfer claim."
+  },
+  "scope": "development only; new-problem superiority unestablished",
+  "candidate_decision": "Old three systems are source-exposed; Euler four-gamma study is not a fresh design sweep; controlled vortex selected for bounded functional pilot"
+}

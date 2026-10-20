@@ -1,0 +1,129 @@
+{
+  "normalization": {
+    "train_ids": [
+      "t7-20261019-0000",
+      "t7-20261019-0001",
+      "t7-20261019-0002",
+      "t7-20261019-0003",
+      "t7-20261019-0004",
+      "t7-20261019-0005",
+      "t7-20261019-0006",
+      "t7-20261019-0007"
+    ],
+    "x_mean": [
+      0.05,
+      0.7,
+      0.5
+    ],
+    "x_std": [
+      0.030000000000000002,
+      0.49999999999999994,
+      0.30000000000000004
+    ],
+    "outcome_scale": [
+      0.21039894223213196,
+      0.20585882663726807
+    ],
+    "initial_mean": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.6408593654632568,
+      0.5787917971611023,
+      0.7681145668029785
+    ],
+    "target_mean": [
+      1.0,
+      5.820766091346741e-10,
+      5.820766091346741e-09,
+      1.5552359400317073e-10
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.48436546325683594,
+      0.7193961143493652,
+      0.5483412742614746
+    ]
+  },
+  "config": {
+    "design_seed": 20261019,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "member_seeds": [
+      1103,
+      2207,
+      3301,
+      4409,
+      5501
+    ],
+    "subset_seed": 42,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "calibration": 39,
+    "test": 200,
+    "levels": [
+      0.5,
+      0.8,
+      0.9,
+      0.95
+    ],
+    "primary_budget": 16,
+    "primary_level": 0.9,
+    "coverage_slack": 0.05,
+    "max_mean_width": [
+      0.03,
+      0.03
+    ],
+    "scale_fraction": 0.01,
+    "scale_absolute_floor": 1e-06,
+    "edge_threshold": 0.2,
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "seed": 4409,
+    "device": "cuda"
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "identity": {
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "real_parameters": 71508036,
+    "train_ids": [
+      "t7-20261019-0000",
+      "t7-20261019-0001",
+      "t7-20261019-0002",
+      "t7-20261019-0003",
+      "t7-20261019-0004",
+      "t7-20261019-0005",
+      "t7-20261019-0006",
+      "t7-20261019-0007"
+    ],
+    "member_seed": 4409
+  }
+}

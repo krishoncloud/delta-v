@@ -1,0 +1,153 @@
+{
+  "normalization": {
+    "train_ids": [
+      "r2111-00000",
+      "r2111-00001",
+      "r2111-00002",
+      "r2111-00003",
+      "r2111-00004",
+      "r2111-00005",
+      "r2111-00006",
+      "r2111-00007",
+      "r2111-00331",
+      "r2111-00471",
+      "r2111-00350",
+      "r2111-00328",
+      "r2111-00374",
+      "r2111-00149",
+      "r2111-00082",
+      "r2111-00420"
+    ],
+    "x_mean": [
+      0.03965284429325484,
+      0.7123614831284426,
+      0.5670433902612522
+    ],
+    "x_std": [
+      0.024979784378218108,
+      0.39550508029954184,
+      0.23608470864711306
+    ],
+    "outcome_scale": [
+      0.17953160405158997,
+      0.17127831280231476
+    ],
+    "initial_mean": [
+      1.0,
+      4.656612873077393e-10,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.6579442024230957,
+      0.5867866277694702,
+      0.7920064330101013
+    ],
+    "target_mean": [
+      1.0,
+      -1.7462298274040222e-10,
+      2.153683453798294e-09,
+      1.6724754914321238e-10
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.5087986588478088,
+      0.7405403852462769,
+      0.5874356031417847
+    ]
+  },
+  "config": {
+    "master_seed": 20261023,
+    "repetitions": [
+      701,
+      1409,
+      2111
+    ],
+    "member_seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "batch_acquisition": 8,
+    "ceiling": 32,
+    "pool": 512,
+    "probe": 128,
+    "calibration": 39,
+    "test": 200,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "initial": 8,
+    "development": 12,
+    "absolute_tolerance": [
+      0.015,
+      0.015
+    ],
+    "success_fraction": 0.9,
+    "tail_ratio": 2.0,
+    "level": 0.9,
+    "scale_fraction": 0.01,
+    "scale_absolute_floor": 1e-06,
+    "diversity_floor": 0.25,
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "gp_restarts": 2,
+    "edge_threshold": 0.2,
+    "primary_baseline": "gp_active",
+    "attribution_baseline": "fno_lhs",
+    "minimum_median_saving": 8,
+    "retention": "first proposed stop and latest round; other intermediate weights pruned with receipts",
+    "protocol_sha256": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+    "device": "cuda",
+    "seed": 21125880
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "identity": {
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "real_parameters": 71508036,
+    "train_ids": [
+      "r2111-00000",
+      "r2111-00001",
+      "r2111-00002",
+      "r2111-00003",
+      "r2111-00004",
+      "r2111-00005",
+      "r2111-00006",
+      "r2111-00007",
+      "r2111-00331",
+      "r2111-00471",
+      "r2111-00350",
+      "r2111-00328",
+      "r2111-00374",
+      "r2111-00149",
+      "r2111-00082",
+      "r2111-00420"
+    ],
+    "member_seed": 21125880
+  }
+}

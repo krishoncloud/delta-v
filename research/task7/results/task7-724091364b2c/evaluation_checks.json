@@ -1,0 +1,7 @@
+{
+  "model_prediction_function_accepts_no_truth": true,
+  "test_intervals_sealed_before_labels": true,
+  "calibration_and_test_ids_disjoint": true,
+  "all_test_settings_scored": true,
+  "finite_ordered_intervals": true
+}

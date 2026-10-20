@@ -1,0 +1,9 @@
+{
+  "method": "pretrained_frozen",
+  "budget": 8,
+  "seed": 2026,
+  "load_seconds": 0.7437962700000753,
+  "cold_query_seconds": 0.004122919999872465,
+  "warm_batch_seconds": 0.05475308599989148,
+  "warm_per_query_seconds": 0.0022813785833288116
+}

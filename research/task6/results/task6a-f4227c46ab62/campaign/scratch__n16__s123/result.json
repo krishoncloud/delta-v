@@ -1,0 +1,35 @@
+{
+  "method": "scratch",
+  "best_step": 400,
+  "validation_score": 0.021743933257274296,
+  "completed_steps": 400,
+  "time_cap_hit": false,
+  "preprocessing_seconds": 0.02682918100003917,
+  "loading_seconds": 1.241891017999933,
+  "training_stage_seconds": 15.590614153000047,
+  "validation_seconds": 0.5972059149997904,
+  "serialization_seconds": 9.207371137999871,
+  "weights_bytes": 286045477,
+  "checks": {
+    "reload_matches": true,
+    "query_batch_invariant": true,
+    "query_requires_no_target_argument": true,
+    "parameter_perturbation_max": 0.025920987129211426,
+    "on_disk_target_corruption_invariant": true
+  },
+  "identity": {
+    "random_backbone_hash": "6e798f8d2cfed099a77c2e9755ccffba718898c4df41c52578b2ecd8828a90e4",
+    "initial_backbone_hash": "6e798f8d2cfed099a77c2e9755ccffba718898c4df41c52578b2ecd8828a90e4",
+    "source_loaded": false,
+    "trainable_real_parameters": 71508036,
+    "total_real_parameters": 71508036,
+    "source_differs_from_scratch": null,
+    "frozen_unchanged": null,
+    "adapter_updated": true
+  },
+  "total_seconds": 18.662490089000016,
+  "peak_cuda_allocated_bytes": 1817214464,
+  "status": "complete",
+  "attempt_seconds": 18.961344289000067,
+  "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+}

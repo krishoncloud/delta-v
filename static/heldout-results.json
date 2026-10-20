@@ -1,0 +1,290 @@
+{
+  "kind": "small official-test-split probe",
+  "notebook_sha256": "e5204f1326e9abf2f16f18cd15ffc6b53425f4d3ac49774c22ed06c318871caf",
+  "artifact_revision": "7bf3f989dcfab6d0f43ea482ab8f26ddbdec3752",
+  "checkpoint_lfs": {
+    "size": 858147645,
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "pointer_size": 134
+  },
+  "selection": "Two fixed official test files per system; trajectory 0; one five-frame window each. Second-file selection replaced unavailable trajectory 1 after inspecting file dimensions, not prediction scores. No training or tuning on these results.",
+  "scope": "Official test files are outside the train-only source path in the supplied notebook. Checkpoint-to-notebook lineage is supplied by the project owner, not cryptographically established. This small probe is not a comprehensive benchmark; the original random-window validation remains unchanged.",
+  "results": [
+    {
+      "id": "test-turbulent_radiative_layer_2D-0",
+      "system": "turbulent_radiative_layer_2D",
+      "source_repo": "polymathic-ai/turbulent_radiative_layer_2D",
+      "source_revision": "2ee7756575ff6f90981d0308cbcb6a2ab5995bdc",
+      "source_file": "data/test/turbulent_radiative_layer_tcool_0.03.hdf5",
+      "trajectory": 0,
+      "start_index": 40,
+      "window_sha256": "5bfeb1001d860d058154a5f3c9a5bb8707dcc11b892297b4f48374d69107c844",
+      "epoch": "59",
+      "request_seconds": 15.33,
+      "quality": {
+        "scalar": {
+          "rel_l2": 0.0921368866610462,
+          "rmse": 5.041511260020363,
+          "ssim": 0.8404381792405617,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "pressure": {
+          "rel_l2": 0.021177113229651597,
+          "rmse": 0.01864500868955454,
+          "ssim": 0.933312987755699,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "velocity_x": {
+          "rel_l2": 0.4166099660210058,
+          "rmse": 0.020636086405861464,
+          "ssim": 0.927088051586292,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        },
+        "velocity_y": {
+          "rel_l2": 0.2533924304813928,
+          "rmse": 0.018314466057010367,
+          "ssim": 0.9018609417059368,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        }
+      }
+    },
+    {
+      "id": "test-turbulent_radiative_layer_2D-1",
+      "system": "turbulent_radiative_layer_2D",
+      "source_repo": "polymathic-ai/turbulent_radiative_layer_2D",
+      "source_revision": "2ee7756575ff6f90981d0308cbcb6a2ab5995bdc",
+      "source_file": "data/test/turbulent_radiative_layer_tcool_0.06.hdf5",
+      "trajectory": 0,
+      "start_index": 40,
+      "window_sha256": "6b4f27d4496bcd79659641a40368ebe580cea4e6fdac7819d9c218558f64381b",
+      "epoch": "59",
+      "request_seconds": 8.304,
+      "quality": {
+        "scalar": {
+          "rel_l2": 0.09333970209988655,
+          "rmse": 5.331717524538843,
+          "ssim": 0.8168149771042293,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "pressure": {
+          "rel_l2": 0.018892189398769615,
+          "rmse": 0.017479893605664213,
+          "ssim": 0.9403976982855311,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "velocity_x": {
+          "rel_l2": 0.16560365528752735,
+          "rmse": 0.006909461182076523,
+          "ssim": 0.9355040194897167,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        },
+        "velocity_y": {
+          "rel_l2": 0.12169970657854891,
+          "rmse": 0.0072735561607879745,
+          "ssim": 0.91202762882574,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        }
+      }
+    },
+    {
+      "id": "test-rayleigh_benard-0",
+      "system": "rayleigh_benard",
+      "source_repo": "polymathic-ai/rayleigh_benard",
+      "source_revision": "10e143ebedae8a9b1c699b95d5b1eb8feaae09b5",
+      "source_file": "data/test/rayleigh_benard_Rayleigh_1e8_Prandtl_1.hdf5",
+      "trajectory": 0,
+      "start_index": 100,
+      "window_sha256": "f439b547de4171d23a50dfab262cbc34b9d36400c3e23626b2c4f2190ee338fe",
+      "epoch": "59",
+      "request_seconds": 135.09,
+      "quality": {
+        "scalar": {
+          "rel_l2": 0.09053746830721095,
+          "rmse": 0.028086244807929716,
+          "ssim": 0.8437501166010603,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "pressure": {
+          "rel_l2": 0.06179088674377223,
+          "rmse": 0.005340849665042176,
+          "ssim": 0.9585483056458021,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "velocity_x": {
+          "rel_l2": 0.08580762505014367,
+          "rmse": 0.017487082382404318,
+          "ssim": 0.8970902807933977,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        },
+        "velocity_y": {
+          "rel_l2": 0.12171038318905214,
+          "rmse": 0.02168715886301549,
+          "ssim": 0.8811903862342578,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        }
+      }
+    },
+    {
+      "id": "test-rayleigh_benard-1",
+      "system": "rayleigh_benard",
+      "source_repo": "polymathic-ai/rayleigh_benard",
+      "source_revision": "10e143ebedae8a9b1c699b95d5b1eb8feaae09b5",
+      "source_file": "data/test/rayleigh_benard_Rayleigh_1e8_Prandtl_10.hdf5",
+      "trajectory": 0,
+      "start_index": 100,
+      "window_sha256": "d7e06d42202df36cafb3dfd36cff09ea10db74022871dbbbed848cd0a55e022b",
+      "epoch": "59",
+      "request_seconds": 30.399,
+      "quality": {
+        "scalar": {
+          "rel_l2": 0.12501406682308067,
+          "rmse": 0.03946089833230639,
+          "ssim": 0.6901413151011127,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "pressure": {
+          "rel_l2": 0.0407383565856774,
+          "rmse": 0.003459113601867384,
+          "ssim": 0.9735592329906673,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "velocity_x": {
+          "rel_l2": 0.1204959896887842,
+          "rmse": 0.013447292129778592,
+          "ssim": 0.8590493486548088,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        },
+        "velocity_y": {
+          "rel_l2": 0.11967775507911885,
+          "rmse": 0.014479394407058602,
+          "ssim": 0.8623501521518787,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        }
+      }
+    },
+    {
+      "id": "test-shear_flow-0",
+      "system": "shear_flow",
+      "source_repo": "polymathic-ai/shear_flow",
+      "source_revision": "fc867f856f306905cf94c1f5df978cc518a2048c",
+      "source_file": "data/test/shear_flow_Reynolds_1e5_Schmidt_1e0.hdf5",
+      "trajectory": 0,
+      "start_index": 60,
+      "window_sha256": "636316be9f010770f174f7ffffcffbb446a1f9f0f23afde3de0824db9ae6a8c5",
+      "epoch": "59",
+      "request_seconds": 16.973,
+      "quality": {
+        "scalar": {
+          "rel_l2": 0.03085154877477134,
+          "rmse": 0.013451359296453727,
+          "ssim": 0.985962767559195,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "pressure": {
+          "rel_l2": 0.05799612459138241,
+          "rmse": 0.002257813621827712,
+          "ssim": 0.9666391425287975,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "velocity_x": {
+          "rel_l2": 0.03622551490153312,
+          "rmse": 0.016016436111449713,
+          "ssim": 0.9909008677423363,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        },
+        "velocity_y": {
+          "rel_l2": 0.06506061792564598,
+          "rmse": 0.004320095179866093,
+          "ssim": 0.9072382759983322,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        }
+      }
+    },
+    {
+      "id": "test-shear_flow-1",
+      "system": "shear_flow",
+      "source_repo": "polymathic-ai/shear_flow",
+      "source_revision": "fc867f856f306905cf94c1f5df978cc518a2048c",
+      "source_file": "data/test/shear_flow_Reynolds_1e5_Schmidt_1e-1.hdf5",
+      "trajectory": 0,
+      "start_index": 60,
+      "window_sha256": "6f20bb32ae5fa8ccb2ea998f130bd5e5b05dc6181196ee3bdafc43236bda9a79",
+      "epoch": "59",
+      "request_seconds": 14.763,
+      "quality": {
+        "scalar": {
+          "rel_l2": 0.018785344968546558,
+          "rmse": 0.007208597500373402,
+          "ssim": 0.9771122014936209,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "pressure": {
+          "rel_l2": 0.058725384000665896,
+          "rmse": 0.0022110222781626275,
+          "ssim": 0.9635548641342241,
+          "threshold": 0.15,
+          "passes": true,
+          "note": null
+        },
+        "velocity_x": {
+          "rel_l2": 0.03755190639285666,
+          "rmse": 0.016555477614099097,
+          "ssim": 0.992205930526905,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        },
+        "velocity_y": {
+          "rel_l2": 0.06602851797283937,
+          "rmse": 0.004286604698971922,
+          "ssim": 0.9136511291153857,
+          "threshold": null,
+          "passes": null,
+          "note": "Directional structure only — no quantitative target for this release."
+        }
+      }
+    }
+  ]
+}

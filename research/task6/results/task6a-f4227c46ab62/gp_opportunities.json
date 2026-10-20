@@ -1,0 +1,26 @@
+[
+  {
+    "opportunity": "new audited fluid study",
+    "verdict": "loss: GP reached tolerance; full FNO did not"
+  },
+  {
+    "opportunity": "spatial engineering outcomes",
+    "verdict": "loss: GP reached tolerance; full FNO did not; fields additionally supplied to FNO"
+  },
+  {
+    "opportunity": "fewer supplied settings",
+    "verdict": "loss: GP reached tolerance; full FNO did not; retrospective only"
+  },
+  {
+    "opportunity": "many controls (~10+)",
+    "verdict": "not tested: three-control candidate"
+  },
+  {
+    "opportunity": "regime transition",
+    "verdict": "not tested: no certified transition"
+  },
+  {
+    "opportunity": "OpenFOAM/customer production",
+    "verdict": "not tested: Task 9"
+  }
+]

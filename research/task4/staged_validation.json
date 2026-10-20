@@ -1,0 +1,36 @@
+{
+  "notebook_sha256": "600467c72085e59252686a5e272f90f317f14ce3570ecbda22786affbf22cd70",
+  "validation_date": "2026-10-16",
+  "numbered_steps": 14,
+  "marimo_cells": 36,
+  "marimo_check": "passed",
+  "offline_tests_passed": 11,
+  "benchmark_fits": 936,
+  "held_out_scalar_predictions": 9954,
+  "correctness_checks": 140,
+  "manifest_listed_artifacts": 43,
+  "reference_run": "research/task4/results/20261016T033030_282756Z",
+  "exact_reference_matches": [
+    "protocol.json",
+    "metrics.csv",
+    "predictions.csv",
+    "summary.csv",
+    "comparison_summary.csv",
+    "example_predictions.csv"
+  ],
+  "browser_checks": [
+    "preparation renders audits and split plan",
+    "128 checks pass before benchmark button",
+    "benchmark completes from separate button",
+    "report states 140 checks passed",
+    "local-only ZIP download is available"
+  ],
+  "hosted_molab_tested": false,
+  "authenticated_hf_upload_tested": false,
+  "credential_tests": [
+    "quoted .env token loaded without environment mutation",
+    "updated .env token reread on retry",
+    "environment secret takes precedence"
+  ],
+  "browser_checks_note": "Browser checks were performed on the preceding staged revision; dotenv changes tested offline."
+}

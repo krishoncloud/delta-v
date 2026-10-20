@@ -1,0 +1,63 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "gp_random",
+  "budget": 16,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00367",
+    "r701-00036",
+    "r701-00396",
+    "r701-00166",
+    "r701-00451",
+    "r701-00144",
+    "r701-00371",
+    "r701-00299"
+  ],
+  "next_ids": [
+    "r701-00484",
+    "r701-00254",
+    "r701-00448",
+    "r701-00278",
+    "r701-00408",
+    "r701-00506",
+    "r701-00505",
+    "r701-00116"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.3203125,
+  "probe_max_halfwidth_ratio": 4.792271065662896,
+  "shadow_after_first_stop": false,
+  "charged_labels": 67,
+  "round_wall_seconds": 3.776038080000035,
+  "selection_seconds": 0.0012273580000510265,
+  "data_access_seconds": 3.4760848339999484,
+  "non_fit_loop_seconds": 0.06190496500016707,
+  "fit_overhead_seconds": 0.0025887689998853602,
+  "fit_receipts": {
+    "member_701": "f7a130665bff9c65ec3fb7507202ea92ac1db9e12b95b8e78e825ad860ace32d"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "2ce483c0ded5cf3a97c9cb0825fc28915fc5d281cdb91ed85d966ba8fd3c2b7a",
+      "bytes": 29786
+    },
+    "calibration_rule.json": {
+      "sha256": "0d8c58f7193686b24f723083dc45298db7a3b2d85852e99f0861321c72940127",
+      "bytes": 329
+    },
+    "recommendations.json": {
+      "sha256": "760bdfd8908b9aaa538e19d72c45860f2b3c76a02f3ae266bf50e7fb29b2b464",
+      "bytes": 722
+    }
+  },
+  "sha256": "8d774d9e33b1566e352fada465952416fc6705efbfd6f9c14ab9405a7d8eb4c0"
+}

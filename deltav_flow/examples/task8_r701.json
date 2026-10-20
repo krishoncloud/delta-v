@@ -1,0 +1,79 @@
+{
+  "example_id": "task8-r701-n16-v1",
+  "title": "Generated periodic flow study, 16 training runs",
+  "data_kind": "generated_research_simulation",
+  "source_archive": {
+    "label": "task8",
+    "sha256": "7f9606daba17fa1e11c852bd80d237d22e8359a75c8906466528a6f4118c5c7b",
+    "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424"
+  },
+  "repetition": 701,
+  "training_budget": 16,
+  "role_counts": {
+    "train": 16,
+    "development": 12,
+    "calibration": 39,
+    "verification": 200
+  },
+  "train_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00186",
+    "r701-00062",
+    "r701-00356",
+    "r701-00132",
+    "r701-00349",
+    "r701-00120",
+    "r701-00210",
+    "r701-00425"
+  ],
+  "recorded_next_ids": [
+    "r701-00078",
+    "r701-00277",
+    "r701-00437",
+    "r701-00276",
+    "r701-00059",
+    "r701-00239",
+    "r701-00289",
+    "r701-00070"
+  ],
+  "recorded_round_sha256": "7cf87119e99db402729ec50a4be5c14496063bde06dfbde16888e8ded6641089",
+  "recorded_member_weights": {
+    "source": "recorded member weights in the research archive",
+    "members": {
+      "7016010": {
+        "sha256": "9981d098a70e7906b09c1f78ab40c31bed9e6f6f66385f3012914a312bce2b5c",
+        "bytes": 286045477
+      },
+      "7017114": {
+        "sha256": "ee1f6c3ff0e62525a360c18177245385b7b92fbc1a615f5be97854d8b86e74d6",
+        "bytes": 286045477
+      },
+      "7018208": {
+        "sha256": "c384a2c715d0d05a97b89d593e15a3cdca61de9435fd2e1edeb16ce611335e13",
+        "bytes": 286045477
+      }
+    }
+  },
+  "candidates": 512,
+  "probes": 128,
+  "recorded_pool_fields": 107,
+  "files": {
+    "study": {
+      "name": "deltav-task8-r701-n16-v1.zip",
+      "sha256": "629f86a4c2f0235596e1adc4f3c591ce856432865279e8483e1296b33aa1ef3b",
+      "bytes": 15115660
+    },
+    "recorded_pool": {
+      "name": "deltav-task8-r701-recorded-pool-v1.zip",
+      "sha256": "f41128419a89de536559b1e815478fa0e620da21eb2dd9a35fc515ce9235868a",
+      "bytes": 6048531
+    }
+  }
+}

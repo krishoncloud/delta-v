@@ -1,0 +1,12 @@
+[
+  {
+    "outcome": "kinetic_energy",
+    "option": null,
+    "validation_score": 0.3477185360225156
+  },
+  {
+    "outcome": "pressure_rms",
+    "option": null,
+    "validation_score": 0.32971685558800345
+  }
+]

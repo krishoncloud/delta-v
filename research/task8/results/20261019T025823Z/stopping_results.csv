@@ -1,0 +1,16 @@
+repetition,policy,proposed_stop_budget,valid_stop,premature_stop,never_stopped,labels_at_proposed_stop,labels_spent_if_no_stop,first_oracle_qualified_budget,delay_from_oracle_budget,later_accuracy_regression,stopped_joint_coverage
+701,fno_active,24,True,False,False,75,,24,0,False,0.845
+701,fno_lhs,24,True,False,False,75,,16,8,False,0.78
+701,gp_active,24,True,False,False,75,,24,0,False,0.86
+701,gp_random,24,True,False,False,75,,16,8,False,0.87
+701,gp_sobol,24,True,False,False,75,,24,0,False,0.815
+1409,fno_active,32,True,False,False,83,,16,16,False,0.9
+1409,fno_lhs,24,True,False,False,75,,16,8,False,0.925
+1409,gp_active,16,True,False,False,67,,16,0,False,0.91
+1409,gp_random,24,True,False,False,75,,24,0,False,0.88
+1409,gp_sobol,24,True,False,False,75,,16,8,False,0.92
+2111,fno_active,24,True,False,False,75,,16,8,False,0.87
+2111,fno_lhs,16,True,False,False,67,,16,0,False,0.86
+2111,gp_active,24,True,False,False,75,,16,8,False,0.96
+2111,gp_random,24,True,False,False,75,,24,0,False,0.885
+2111,gp_sobol,24,True,False,False,75,,16,8,False,0.935

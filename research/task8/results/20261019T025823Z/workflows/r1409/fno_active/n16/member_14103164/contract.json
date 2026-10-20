@@ -1,0 +1,153 @@
+{
+  "normalization": {
+    "train_ids": [
+      "r1409-00000",
+      "r1409-00001",
+      "r1409-00002",
+      "r1409-00003",
+      "r1409-00004",
+      "r1409-00005",
+      "r1409-00006",
+      "r1409-00007",
+      "r1409-00063",
+      "r1409-00456",
+      "r1409-00408",
+      "r1409-00266",
+      "r1409-00216",
+      "r1409-00368",
+      "r1409-00317",
+      "r1409-00362"
+    ],
+    "x_mean": [
+      0.046893445166702616,
+      0.6656889565424506,
+      0.5462287832924109
+    ],
+    "x_std": [
+      0.022840386652530735,
+      0.38099477453836356,
+      0.2243121248763702
+    ],
+    "outcome_scale": [
+      0.1579146832227707,
+      0.1515590250492096
+    ],
+    "initial_mean": [
+      1.0,
+      4.656612873077393e-10,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.6316261887550354,
+      0.580663800239563,
+      0.7737452983856201
+    ],
+    "target_mean": [
+      1.0,
+      4.656612873077393e-10,
+      1.1641532182693481e-09,
+      2.028457402047934e-10
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.44654104113578796,
+      0.6851596832275391,
+      0.545408308506012
+    ]
+  },
+  "config": {
+    "master_seed": 20261023,
+    "repetitions": [
+      701,
+      1409,
+      2111
+    ],
+    "member_seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "batch_acquisition": 8,
+    "ceiling": 32,
+    "pool": 512,
+    "probe": 128,
+    "calibration": 39,
+    "test": 200,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "initial": 8,
+    "development": 12,
+    "absolute_tolerance": [
+      0.015,
+      0.015
+    ],
+    "success_fraction": 0.9,
+    "tail_ratio": 2.0,
+    "level": 0.9,
+    "scale_fraction": 0.01,
+    "scale_absolute_floor": 1e-06,
+    "diversity_floor": 0.25,
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "gp_restarts": 2,
+    "edge_threshold": 0.2,
+    "primary_baseline": "gp_active",
+    "attribution_baseline": "fno_lhs",
+    "minimum_median_saving": 8,
+    "retention": "first proposed stop and latest round; other intermediate weights pruned with receipts",
+    "protocol_sha256": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+    "device": "cuda",
+    "seed": 14103164
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "identity": {
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "real_parameters": 71508036,
+    "train_ids": [
+      "r1409-00000",
+      "r1409-00001",
+      "r1409-00002",
+      "r1409-00003",
+      "r1409-00004",
+      "r1409-00005",
+      "r1409-00006",
+      "r1409-00007",
+      "r1409-00063",
+      "r1409-00456",
+      "r1409-00408",
+      "r1409-00266",
+      "r1409-00216",
+      "r1409-00368",
+      "r1409-00317",
+      "r1409-00362"
+    ],
+    "member_seed": 14103164
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "notebook_sha256": "ed95f31c11a1eb81d6dff83d5a440e6624b698005dca7ce9ff32556724d5bab5",
+  "test_source_sha256": "d202bf4f74abb7e1e301ebdd4049dd88b1d6c61dd908c1c02b9bbe3eef63f20d",
+  "marimo_strict_check": "passed",
+  "automated_tests": {
+    "run": 13,
+    "passed": 13,
+    "failed": 0,
+    "full_tiny_integration_workflow_rounds": 10,
+    "tiny_neural_fits": 8,
+    "gp_workflows": 6,
+    "scored_rows": 400,
+    "subgroup_rows": 110,
+    "actual_resumed_marimo_cells": "passed",
+    "standalone_weight_restore_script": "passed",
+    "scope": "miniature CPU machinery check, not research performance",
+    "duration_seconds": 68.119,
+    "integration_budgets": [
+      8,
+      16
+    ],
+    "integration_acquisition_batch": 8
+  },
+  "actual_source_cpu_smoke": {
+    "scope": "original-source full-size FNO, one CPU optimizer step and four label-free queries; machinery only, not Task8 benchmark evidence",
+    "source_lineage": {
+      "source": {
+        "repo": "KrishMalik/deltav-fluid",
+        "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+        "filename": "checkpoints/domain_fluid.pt",
+        "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+        "bytes": 858147645
+      },
+      "epoch": 59,
+      "loaded_tensor_keys": 40
+    },
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "environment": {
+      "python": "3.13.0",
+      "packages": {
+        "marimo": "0.25.1",
+        "torch": "2.8.0",
+        "neuraloperator": "2.0.0",
+        "numpy": "2.1.2",
+        "scipy": "1.14.1",
+        "pandas": "2.2.3",
+        "scikit-learn": "1.8.0",
+        "matplotlib": "3.9.2",
+        "huggingface-hub": "1.33.0"
+      },
+      "device": "CPU",
+      "cuda": null,
+      "precision": "float32 model, float64 solver"
+    },
+    "notebook_sha256": "ed95f31c11a1eb81d6dff83d5a440e6624b698005dca7ce9ff32556724d5bab5",
+    "result": {
+      "seconds": 4.912995583999873,
+      "completed_steps": 1,
+      "time_cap_hit": false,
+      "best_step": 0,
+      "best_development_score": 0.36096576366722277,
+      "reload_matches": true,
+      "query_batch_invariant": true,
+      "peak_cuda_allocated_bytes": null,
+      "weights_bytes": 286045477,
+      "identity": {
+        "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+        "real_parameters": 71508036,
+        "train_ids": [
+          "r701-00000",
+          "r701-00001",
+          "r701-00002",
+          "r701-00003",
+          "r701-00004",
+          "r701-00005",
+          "r701-00006",
+          "r701-00007"
+        ],
+        "member_seed": 1103
+      }
+    }
+  },
+  "full_cuda_campaign": "not run",
+  "molab_service_execution": "not run",
+  "remote_writes": "none",
+  "default_experiment": {
+    "repetitions": 3,
+    "ensemble_members": 3,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "acquisition_batch": 8,
+    "neural_fits": 72,
+    "gp_workflows": 36,
+    "steps_per_neural_fit": 3000,
+    "estimated_prior_gpu_hours": [
+      1.5,
+      2.5
+    ],
+    "recommended_free_disk_gb": 16,
+    "scope": "estimate; full CUDA campaign not run"
+  },
+  "change_from_original": {
+    "original_neural_fits": 210,
+    "fewer_neural_fits_percent": 65.7142857143,
+    "repetitions_unchanged": true,
+    "training_steps_unchanged": true,
+    "comparators_unchanged": true,
+    "limitations": [
+      "Three-member ensemble uncertainty must be evaluated again",
+      "Eight-run batches cannot resolve four-run savings"
+    ],
+    "original_files": "outputs/task8_original_full/"
+  }
+}

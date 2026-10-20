@@ -1,0 +1,88 @@
+{
+  "config": {
+    "design_seed": 20261019,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "member_seeds": [
+      1103,
+      2207,
+      3301,
+      4409,
+      5501
+    ],
+    "subset_seed": 42,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "calibration": 39,
+    "test": 200,
+    "levels": [
+      0.5,
+      0.8,
+      0.9,
+      0.95
+    ],
+    "primary_budget": 16,
+    "primary_level": 0.9,
+    "coverage_slack": 0.05,
+    "max_mean_width": [
+      0.03,
+      0.03
+    ],
+    "scale_fraction": 0.01,
+    "scale_absolute_floor": 1e-06,
+    "edge_threshold": 0.2,
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ]
+  },
+  "code_sha256": "51439e1dcf9c0cd7e5457a7df24807278b47d9f5086caf8fd48d17349e6b7aff",
+  "environment": {
+    "python": "3.13.11",
+    "packages": {
+      "marimo": "0.25.1",
+      "torch": "2.11.0",
+      "neuraloperator": "2.0.0",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "pandas": "3.0.3",
+      "scikit-learn": "1.9.0",
+      "matplotlib": "3.11.1",
+      "huggingface-hub": "1.33.0"
+    },
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "cuda": "13.0",
+    "precision": "float32 model, float64 solver"
+  },
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "study": "task6 forced multimode periodic NS v1; fresh settings"
+}

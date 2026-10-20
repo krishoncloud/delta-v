@@ -1,0 +1,5 @@
+query_id,amplitude,viscosity,method,support,uncertainty,kinetic_energy,kinetic_energy_unit,pressure_rms,pressure_rms_unit
+query-0,0.7,0.035,pretrained_fno_full_finetune,inside_training_hull,not_calibrated,0.10727459511762188,nondimensional,0.10918618081249425,nondimensional
+query-1,0.9,0.055,pretrained_fno_full_finetune,inside_training_hull,not_calibrated,0.160343339983901,nondimensional,0.1626480702268418,nondimensional
+query-2,1.1,0.075,pretrained_fno_full_finetune,inside_training_hull,not_calibrated,0.2187102595564574,nondimensional,0.2224951399849573,nondimensional
+query-3,1.3,0.045,pretrained_fno_full_finetune,inside_training_hull,not_calibrated,0.3605366511466155,nondimensional,0.36015460717377484,nondimensional

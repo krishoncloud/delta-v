@@ -1,0 +1,17 @@
+[
+  {
+    "method": "gp",
+    "outcome": "kinetic_energy",
+    "warning": "The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value."
+  },
+  {
+    "method": "gp",
+    "outcome": "pressure_rms",
+    "warning": "lbfgs failed to converge after 27 iteration(s) (status=2):\nABNORMAL: \n\nYou might also want to scale the data as shown in:\n    https://scikit-learn.org/stable/modules/preprocessing.html"
+  },
+  {
+    "method": "gp",
+    "outcome": "pressure_rms",
+    "warning": "The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value."
+  }
+]

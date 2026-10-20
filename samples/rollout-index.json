@@ -1,0 +1,118 @@
+[
+  {
+    "id": "rollout-test-turbulent_radiative_layer_2D",
+    "system": "turbulent_radiative_layer_2D",
+    "dials": {
+      "t_cool": 0.03
+    },
+    "t_index": 40,
+    "times": [
+      63.88132095336914,
+      65.47835540771484,
+      67.07538604736328,
+      68.67241668701172,
+      70.26945495605469,
+      71.86648559570312,
+      73.46351623535156,
+      75.06055450439453,
+      76.65758514404297,
+      78.2546157836914,
+      79.85164642333984
+    ],
+    "shape": [
+      11,
+      128,
+      384,
+      4
+    ],
+    "provenance": {
+      "split": "official-test",
+      "repository": "polymathic-ai/turbulent_radiative_layer_2D",
+      "revision": "2ee7756575ff6f90981d0308cbcb6a2ab5995bdc",
+      "file": "data/test/turbulent_radiative_layer_tcool_0.03.hdf5",
+      "trajectory": 0,
+      "start": 40,
+      "range_bytes": 9699328
+    },
+    "sha256": "9ce981a07913476287e5148ffe3f624bd2e9640867eb75251d4c8c3dbc96d3dc",
+    "bytes": 8650880
+  },
+  {
+    "id": "rollout-test-rayleigh_benard",
+    "system": "rayleigh_benard",
+    "dials": {
+      "rayleigh_number": 100000000.0,
+      "prandtl": 1
+    },
+    "t_index": 100,
+    "times": [
+      25.00037384033203,
+      25.249542236328125,
+      25.49970245361328,
+      25.749542236328125,
+      25.9998836517334,
+      26.25040626525879,
+      26.499927520751953,
+      26.750219345092773,
+      27.00055694580078,
+      27.25029754638672,
+      27.49993896484375
+    ],
+    "shape": [
+      11,
+      512,
+      128,
+      4
+    ],
+    "provenance": {
+      "split": "official-test",
+      "repository": "polymathic-ai/rayleigh_benard",
+      "revision": "10e143ebedae8a9b1c699b95d5b1eb8feaae09b5",
+      "file": "data/test/rayleigh_benard_Rayleigh_1e8_Prandtl_1.hdf5",
+      "trajectory": 0,
+      "start": 100,
+      "range_bytes": 12058624
+    },
+    "sha256": "98d1fddb5c222f56afe528a1901cf3abda54e445265615e528b3dfc609ff723b",
+    "bytes": 11534464
+  },
+  {
+    "id": "rollout-test-shear_flow",
+    "system": "shear_flow",
+    "dials": {
+      "reynolds": 100000.0,
+      "schmidt": 1
+    },
+    "t_index": 60,
+    "times": [
+      5.999999999999999,
+      6.1,
+      6.199999999999999,
+      6.3,
+      6.3999999999999995,
+      6.499999999999999,
+      6.6,
+      6.699999999999999,
+      6.8,
+      6.8999999999999995,
+      6.999999999999999
+    ],
+    "shape": [
+      11,
+      256,
+      512,
+      4
+    ],
+    "provenance": {
+      "split": "official-test",
+      "repository": "polymathic-ai/shear_flow",
+      "revision": "fc867f856f306905cf94c1f5df978cc518a2048c",
+      "file": "data/test/shear_flow_Reynolds_1e5_Schmidt_1e0.hdf5",
+      "trajectory": 0,
+      "start": 60,
+      "range_bytes": 23592960
+    },
+    "sha256": "5244d3d807d0f3ef0ff385c4a3b20a92a0321d47755537aa76037c36889a4023",
+    "bytes": 23068800
+  }
+]

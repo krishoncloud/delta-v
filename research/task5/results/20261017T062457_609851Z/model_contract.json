@@ -1,0 +1,247 @@
+{
+  "study": {
+    "schema_version": 1,
+    "study_id": "controlled_taylor_green_2d",
+    "lane": "fluid",
+    "grid": [
+      64,
+      64
+    ],
+    "field_names": [
+      "density",
+      "pressure",
+      "velocity_x",
+      "velocity_y"
+    ],
+    "field_units": [
+      "nondimensional",
+      "nondimensional",
+      "nondimensional",
+      "nondimensional"
+    ],
+    "domain": [
+      [
+        0,
+        6.283185307179586
+      ],
+      [
+        0,
+        6.283185307179586
+      ]
+    ],
+    "geometry": "fixed periodic square",
+    "boundary_conditions": "periodic x and y",
+    "initial_conditions": "Analytical t=0 vortex, known from amplitude; no future state supplied",
+    "initial_available_at_query": true,
+    "target_time": 1.0,
+    "time_unit": "nondimensional",
+    "parameters": [
+      {
+        "name": "amplitude",
+        "unit": "nondimensional",
+        "range": [
+          0.5,
+          1.5
+        ]
+      },
+      {
+        "name": "viscosity",
+        "unit": "nondimensional",
+        "range": [
+          0.01,
+          0.1
+        ]
+      }
+    ],
+    "outcomes": [
+      {
+        "name": "kinetic_energy",
+        "unit": "nondimensional",
+        "kind": "mean_kinetic_energy"
+      },
+      {
+        "name": "pressure_rms",
+        "unit": "nondimensional",
+        "kind": "pressure_rms"
+      }
+    ],
+    "provenance": {
+      "kind": "controlled_exact_reference",
+      "source_exclusion": "Not one of the three source training systems; inferred from training-code audit, legacy exposure ledger unavailable",
+      "limitation": "Analytical case; no measured solver cost or commercial transfer claim."
+    }
+  },
+  "normalization": {
+    "train_run_ids": [
+      "run-000",
+      "run-001",
+      "run-004",
+      "run-005",
+      "run-008",
+      "run-009",
+      "run-011",
+      "run-012",
+      "run-014",
+      "run-016",
+      "run-017",
+      "run-018",
+      "run-019",
+      "run-020",
+      "run-023",
+      "run-024"
+    ],
+    "parameter_names": [
+      "amplitude",
+      "viscosity"
+    ],
+    "x_mean": [
+      1.015625,
+      0.06062500178813934
+    ],
+    "x_std": [
+      0.34763431549072266,
+      0.0342155396938324
+    ],
+    "training_controls": [
+      [
+        0.5,
+        0.009999999776482582
+      ],
+      [
+        0.5,
+        0.032499998807907104
+      ],
+      [
+        0.5,
+        0.10000000149011612
+      ],
+      [
+        0.75,
+        0.009999999776482582
+      ],
+      [
+        0.75,
+        0.07750000059604645
+      ],
+      [
+        0.75,
+        0.10000000149011612
+      ],
+      [
+        1.0,
+        0.032499998807907104
+      ],
+      [
+        1.0,
+        0.054999999701976776
+      ],
+      [
+        1.0,
+        0.10000000149011612
+      ],
+      [
+        1.25,
+        0.032499998807907104
+      ],
+      [
+        1.25,
+        0.054999999701976776
+      ],
+      [
+        1.25,
+        0.07750000059604645
+      ],
+      [
+        1.25,
+        0.10000000149011612
+      ],
+      [
+        1.5,
+        0.009999999776482582
+      ],
+      [
+        1.5,
+        0.07750000059604645
+      ],
+      [
+        1.5,
+        0.10000000149011612
+      ]
+    ],
+    "outcome_scale": [
+      0.1410476565361023,
+      0.1410476565361023
+    ],
+    "initial_mean": [
+      1.0,
+      8.731149137020111e-10,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.3370937705039978,
+      0.5367363691329956,
+      0.5367363691329956
+    ],
+    "target_mean": [
+      1.0,
+      -4.3655745685100555e-10,
+      0.0,
+      0.0
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.2661893665790558,
+      0.4751298129558563,
+      0.4751298427581787
+    ]
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "lineage": {
+    "source": {
+      "repo": "KrishMalik/deltav-fluid",
+      "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+      "filename": "checkpoints/domain_fluid.pt",
+      "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+      "bytes": 858147645
+    },
+    "epoch": 59,
+    "loaded_tensor_keys": 40,
+    "architecture": {
+      "n_modes": [
+        32,
+        32
+      ],
+      "hidden_channels": 128,
+      "in_channels": 16,
+      "out_channels": 4
+    },
+    "total_real_parameters": 71507988,
+    "trainable_real_parameters": 71507988,
+    "new_modules": [
+      "conditioner"
+    ],
+    "loaded_modules": [
+      "backbone"
+    ],
+    "source_grid": [
+      256,
+      256
+    ],
+    "target_grid": [
+      64,
+      64
+    ],
+    "task": "known initial state + parameters -> fixed-time field -> physical outcomes",
+    "exposure_limitation": "Legacy checkpoint lacks complete source split ledger"
+  }
+}

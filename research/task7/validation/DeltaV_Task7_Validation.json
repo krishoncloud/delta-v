@@ -1,0 +1,78 @@
+{
+  "notebook_sha256": "f74bd1b323a3998b113d1e2638418247eaad89f8f4f5c80cb22fcc73d36450d4",
+  "test_source_sha256": "19a64ca248583cfe9035dd8a55a6b4cc80f3cb607570954c5998755ed21f83a3",
+  "marimo_strict_check": "passed",
+  "automated_tests": {
+    "run": 10,
+    "passed": 10,
+    "failed": 0,
+    "integration_neural_fits": 10,
+    "integration_gp_workflows": 2,
+    "integration_scored_interval_rows": 11200,
+    "resumed_marimo_stage_flow": "passed",
+    "fixture": "tiny FNO; two steps; CPU only; no scientific performance evidence"
+  },
+  "actual_source_smoke": {
+    "scope": "one CPU optimizer step, original verified source and full-size architecture; four queries; not a research campaign",
+    "lineage": {
+      "source": {
+        "repo": "KrishMalik/deltav-fluid",
+        "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+        "filename": "checkpoints/domain_fluid.pt",
+        "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+        "bytes": 858147645
+      },
+      "epoch": 59,
+      "loaded_tensor_keys": 40
+    },
+    "environment": {
+      "python": "3.13.0",
+      "packages": {
+        "marimo": "0.25.1",
+        "torch": "2.8.0",
+        "neuraloperator": "2.0.0",
+        "numpy": "2.1.2",
+        "scipy": "1.14.1",
+        "pandas": "2.2.3",
+        "scikit-learn": "1.8.0",
+        "matplotlib": "3.9.2",
+        "huggingface-hub": "1.33.0"
+      },
+      "device": "CPU",
+      "cuda": null,
+      "precision": "float32 model, float64 solver"
+    },
+    "weight_tensor_bytes_estimate": 286032144,
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "result": {
+      "seconds": 4.395451917000173,
+      "completed_steps": 1,
+      "time_cap_hit": false,
+      "best_step": 0,
+      "best_development_score": 2.0254624606645986,
+      "reload_matches": true,
+      "query_batch_invariant": true,
+      "peak_cuda_allocated_bytes": null,
+      "weights_bytes": 286045477,
+      "identity": {
+        "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+        "real_parameters": 71508036,
+        "train_ids": [
+          "t7-20261021-0000",
+          "t7-20261021-0001",
+          "t7-20261021-0002",
+          "t7-20261021-0003",
+          "t7-20261021-0004",
+          "t7-20261021-0005",
+          "t7-20261021-0006",
+          "t7-20261021-0007"
+        ],
+        "member_seed": 1103
+      }
+    }
+  },
+  "full_cuda_campaign": "not run",
+  "molab_service_execution": "not run",
+  "html_export": "unavailable: sandbox denied loopback socket; actual app cell flow tested in-process",
+  "remote_uploads": "none"
+}

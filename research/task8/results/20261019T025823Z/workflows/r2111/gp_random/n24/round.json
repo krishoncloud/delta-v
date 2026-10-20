@@ -1,0 +1,71 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 2111,
+  "policy": "gp_random",
+  "budget": 24,
+  "selected_ids": [
+    "r2111-00000",
+    "r2111-00001",
+    "r2111-00002",
+    "r2111-00003",
+    "r2111-00004",
+    "r2111-00005",
+    "r2111-00006",
+    "r2111-00007",
+    "r2111-00008",
+    "r2111-00411",
+    "r2111-00469",
+    "r2111-00508",
+    "r2111-00414",
+    "r2111-00461",
+    "r2111-00475",
+    "r2111-00170",
+    "r2111-00260",
+    "r2111-00016",
+    "r2111-00349",
+    "r2111-00509",
+    "r2111-00052",
+    "r2111-00036",
+    "r2111-00184",
+    "r2111-00247"
+  ],
+  "next_ids": [
+    "r2111-00351",
+    "r2111-00042",
+    "r2111-00046",
+    "r2111-00233",
+    "r2111-00128",
+    "r2111-00283",
+    "r2111-00496",
+    "r2111-00272"
+  ],
+  "first_proposed_stop": 24,
+  "proposed_stop_now": true,
+  "probe_ready_fraction": 1.0,
+  "probe_max_halfwidth_ratio": 0.5465877339217589,
+  "shadow_after_first_stop": false,
+  "charged_labels": 75,
+  "round_wall_seconds": 3.2561325470005613,
+  "selection_seconds": 0.0012365169995973702,
+  "data_access_seconds": 2.9839122659996065,
+  "non_fit_loop_seconds": 0.06042334599987953,
+  "fit_overhead_seconds": 0.002449268999953347,
+  "fit_receipts": {
+    "member_2111": "efaa54890dff11797b3a52d234cf769d3661d3395310f64a5d507145567913c4"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "c87ab49851374e7fe21d6b63cb22e827cdade68f60f0260cea8e19c44dfde918",
+      "bytes": 29850
+    },
+    "calibration_rule.json": {
+      "sha256": "ebf88c6201d5381a9a020c9566ce4ed29cbb1c77a413ec36a7c143944a741eb0",
+      "bytes": 330
+    },
+    "recommendations.json": {
+      "sha256": "f6b0f24431e2b592a1f3c09bc896d81918f6ee12a843d3b6a13b96328c27a62f",
+      "bytes": 730
+    }
+  },
+  "sha256": "767d89047349180f3e069667980d92a8da2823eb634757e4c1d89d5e3441b1aa"
+}

@@ -1,0 +1,7 @@
+method,smallest_tested_budget,status,validation_settings,confirmation_settings
+mean,,not reached,12,24
+linear,,not reached,12,24
+gp,24.0,reached,12,24
+scratch,24.0,reached,12,24
+pretrained_full,16.0,reached,12,24
+pretrained_frozen,,not reached,12,24

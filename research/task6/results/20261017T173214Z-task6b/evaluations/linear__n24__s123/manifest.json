@@ -1,0 +1,10 @@
+{
+  "predictions.csv": {
+    "sha256": "6e8b350126dc949f36d52e414586e7d8c022004495f10cf2a0178af88c22ad77",
+    "bytes": 8565
+  },
+  "timing.json": {
+    "sha256": "7741b786f11fd493169b2f14cadd01541d3b3a8cd4928fceebb17e0300d916bc",
+    "bytes": 225
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "attempts/20261017T162336_882577.json": {
+    "sha256": "72ddaee7859c0711a84cc0b99b4d3c13b006019ebb0302248ce4d46eab72cc9d",
+    "bytes": 59
+  },
+  "contract.json": {
+    "sha256": "4326804708342c610219b0818c6cfbaf9079c24493968058dd0ebbef9f81618f",
+    "bytes": 4384
+  },
+  "fit_signature.json": {
+    "sha256": "11a7f79a0ff915eb24706ded349c1e07df857a70a001bab0a9d20fa07bc9af21",
+    "bytes": 1264
+  },
+  "learning.csv": {
+    "sha256": "9b8809c155e6b4799878a984a7d3d9d64e22abd3ab2f169d87a12c379bd97b7b",
+    "bytes": 954
+  },
+  "result.json": {
+    "sha256": "312ce143c9dc577c9aedb4e49fdefef3ec15fc86b1e2cb7b3a0c5a5efbd978f4",
+    "bytes": 1270
+  },
+  "runtime_warnings.json": {
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "bytes": 2
+  },
+  "validation_predictions.npy": {
+    "sha256": "25220702477627c6673915528c98d19f1384285693bcef432fe2346b39495774",
+    "bytes": 224
+  },
+  "weights.pt": {
+    "sha256": "0607cb1d2b9ac175d154437e970f31bf01ed0fe1f4627b0501ba6e70380ca6aa",
+    "bytes": 286045477
+  }
+}

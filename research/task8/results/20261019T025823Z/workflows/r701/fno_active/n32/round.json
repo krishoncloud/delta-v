@@ -1,0 +1,72 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "fno_active",
+  "budget": 32,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00503",
+    "r701-00378",
+    "r701-00090",
+    "r701-00497",
+    "r701-00324",
+    "r701-00175",
+    "r701-00273",
+    "r701-00243",
+    "r701-00121",
+    "r701-00144",
+    "r701-00438",
+    "r701-00339",
+    "r701-00051",
+    "r701-00156",
+    "r701-00286",
+    "r701-00063",
+    "r701-00498",
+    "r701-00336",
+    "r701-00321",
+    "r701-00130",
+    "r701-00411",
+    "r701-00165",
+    "r701-00177",
+    "r701-00219"
+  ],
+  "next_ids": [],
+  "first_proposed_stop": 24,
+  "proposed_stop_now": true,
+  "probe_ready_fraction": 1.0,
+  "probe_max_halfwidth_ratio": 0.3259118385666948,
+  "shadow_after_first_stop": true,
+  "charged_labels": 83,
+  "round_wall_seconds": 187.08936655799994,
+  "selection_seconds": 5.230000397205004e-07,
+  "data_access_seconds": 3.984171180999965,
+  "non_fit_loop_seconds": 0.06405982299997959,
+  "fit_overhead_seconds": 0.598634355000172,
+  "fit_receipts": {
+    "member_7016010": "19a624751356e996e31be0670e063c67631584b380792cd1aea55ef8427feeda",
+    "member_7017114": "bb48858091f538889d2d90b2e9d7d152cd253696e03ab76f6ebdecbc5a0ce244",
+    "member_7018208": "4c442f1ae187ec8626cd14cac324db21e1956815c779d70a968ad617d5b175b5"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "311a1368cf367da93970f918b06acf9bb29bd5fa220675fb7bb6b1157db7c796",
+      "bytes": 15733
+    },
+    "calibration_rule.json": {
+      "sha256": "6ffb71bd7060bb30016df4fa0ed5bf4b172de59755677bb35552b74f244a8ce3",
+      "bytes": 333
+    },
+    "recommendations.json": {
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "bytes": 2
+    }
+  },
+  "sha256": "f53ac1518964a37ef9f6e06489fa8b7ae8d06482f62bbe02ba1d954441aef582"
+}

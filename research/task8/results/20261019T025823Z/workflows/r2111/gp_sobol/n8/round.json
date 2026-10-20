@@ -1,0 +1,55 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 2111,
+  "policy": "gp_sobol",
+  "budget": 8,
+  "selected_ids": [
+    "r2111-00000",
+    "r2111-00001",
+    "r2111-00002",
+    "r2111-00003",
+    "r2111-00004",
+    "r2111-00005",
+    "r2111-00006",
+    "r2111-00007"
+  ],
+  "next_ids": [
+    "r2111-00463",
+    "r2111-00509",
+    "r2111-00098",
+    "r2111-00272",
+    "r2111-00079",
+    "r2111-00076",
+    "r2111-00106",
+    "r2111-00130"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.0,
+  "probe_max_halfwidth_ratio": 17.92258186520134,
+  "shadow_after_first_stop": false,
+  "charged_labels": 59,
+  "round_wall_seconds": 0.26846025200029544,
+  "selection_seconds": 0.03534015599962004,
+  "data_access_seconds": 0.030969747000199277,
+  "non_fit_loop_seconds": 0.09163090700076282,
+  "fit_overhead_seconds": 0.0024037859993768507,
+  "fit_receipts": {
+    "member_2111": "d6c0e9271a9bb4a31184558be00378fa08ce808ac83e7467098a601ad98c487a"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "349c9a8afe9ad624ddf575d5c0e435eb58898f41af41209ff20c039bdb2fccd5",
+      "bytes": 29812
+    },
+    "calibration_rule.json": {
+      "sha256": "726ca1633a5b9be519b160193883dc1332fb613d7fad482461467e11bbab813e",
+      "bytes": 329
+    },
+    "recommendations.json": {
+      "sha256": "0c9cd3881e37d8d1595df4fab45bd0b39377df2b7c9db56301177afa47c3ff97",
+      "bytes": 722
+    }
+  },
+  "sha256": "92d7453a7ce78e3c1f0196a59234dce49f013f7938d08ef91fe945cb39caf124"
+}

@@ -1,0 +1,14 @@
+{
+  "completed_steps": 300,
+  "best_step": 280,
+  "initial_train_loss": 1.8434296064078808,
+  "initial_train_field_loss": 1.7512618862092495,
+  "final_train_loss": 0.0021162604571145494,
+  "final_train_field_loss": 0.0018513885152060539,
+  "initial_development_loss": 1.9359031915664673,
+  "best_development_loss": 0.0019879725554751027,
+  "seconds": 13.40368888100005,
+  "stop_reason": "step cap",
+  "seed": 42,
+  "reserved_evaluated": false
+}

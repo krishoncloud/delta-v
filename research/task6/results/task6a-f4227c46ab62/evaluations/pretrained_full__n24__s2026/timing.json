@@ -1,0 +1,9 @@
+{
+  "method": "pretrained_full",
+  "budget": 24,
+  "seed": 2026,
+  "load_seconds": 0.6171850709999944,
+  "cold_query_seconds": 0.004456158000039068,
+  "warm_batch_seconds": 0.054995566999878065,
+  "warm_per_query_seconds": 0.002291481958328253
+}

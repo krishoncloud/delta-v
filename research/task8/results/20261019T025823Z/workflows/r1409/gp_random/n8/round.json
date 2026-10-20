@@ -1,0 +1,55 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 1409,
+  "policy": "gp_random",
+  "budget": 8,
+  "selected_ids": [
+    "r1409-00000",
+    "r1409-00001",
+    "r1409-00002",
+    "r1409-00003",
+    "r1409-00004",
+    "r1409-00005",
+    "r1409-00006",
+    "r1409-00007"
+  ],
+  "next_ids": [
+    "r1409-00261",
+    "r1409-00382",
+    "r1409-00071",
+    "r1409-00217",
+    "r1409-00023",
+    "r1409-00265",
+    "r1409-00461",
+    "r1409-00406"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.0,
+  "probe_max_halfwidth_ratio": 14.350395678273465,
+  "shadow_after_first_stop": false,
+  "charged_labels": 59,
+  "round_wall_seconds": 0.2711058029999549,
+  "selection_seconds": 0.000969504999829951,
+  "data_access_seconds": 0.03348663800034046,
+  "non_fit_loop_seconds": 0.05792566199988869,
+  "fit_overhead_seconds": 0.002253283999834821,
+  "fit_receipts": {
+    "member_1409": "ea5b48749507adfedbafcc9b0f529b7acea2048f43a5f8b354dfee6d462b1e12"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "0b03e6f7483aefec9c2331affb1816eeb6e3499bc0b32d19097ec66b7ff0dd4d",
+      "bytes": 29834
+    },
+    "calibration_rule.json": {
+      "sha256": "bc8778cf9b5da12de0a8d201d59b74f04613a3a59dba76fb0f5bff985cceca39",
+      "bytes": 332
+    },
+    "recommendations.json": {
+      "sha256": "2a8498b6e2e6d03ff866195992c057b3be04cd464b735e153dd1d7daf0666d59",
+      "bytes": 730
+    }
+  },
+  "sha256": "29b38303f7cd6ea1e2122471490a4bd6c77eb1d0e9b2ab677a44f629da43d1fa"
+}

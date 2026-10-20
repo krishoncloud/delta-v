@@ -1,0 +1,9 @@
+{
+  "method": "linear",
+  "budget": 32,
+  "seed": 2026,
+  "load_seconds": 0.0,
+  "cold_query_seconds": 0.00044885900001645496,
+  "warm_batch_seconds": 0.0003333959998599312,
+  "warm_per_query_seconds": 1.38914999941638e-05
+}

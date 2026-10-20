@@ -1,0 +1,17 @@
+budget,method,outcome,spearman
+8,fno,kinetic_energy,0.8007155178879473
+8,fno,pressure_rms,0.4718847971199281
+8,gp,kinetic_energy,0.2482712067801695
+8,gp,pressure_rms,0.4502872571814296
+16,fno,kinetic_energy,0.23962049051226283
+16,fno,pressure_rms,0.4841386034650867
+16,gp,kinetic_energy,0.43719492987324693
+16,gp,pressure_rms,0.31924098102452564
+24,fno,kinetic_energy,0.4394309005591326
+24,fno,pressure_rms,0.5670741768544215
+24,gp,kinetic_energy,0.4292807320183005
+24,gp,pressure_rms,0.44801920048001204
+32,fno,kinetic_energy,0.4589424735618391
+32,fno,pressure_rms,0.38817384991146886
+32,gp,kinetic_energy,0.5224120603015076
+32,gp,pressure_rms,0.5996459911497789

@@ -1,0 +1,71 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "gp_active",
+  "budget": 24,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00176",
+    "r701-00317",
+    "r701-00378",
+    "r701-00309",
+    "r701-00200",
+    "r701-00156",
+    "r701-00026",
+    "r701-00014",
+    "r701-00219",
+    "r701-00249",
+    "r701-00304",
+    "r701-00334",
+    "r701-00438",
+    "r701-00498",
+    "r701-00191",
+    "r701-00144"
+  ],
+  "next_ids": [
+    "r701-00130",
+    "r701-00325",
+    "r701-00332",
+    "r701-00020",
+    "r701-00433",
+    "r701-00352",
+    "r701-00121",
+    "r701-00403"
+  ],
+  "first_proposed_stop": 24,
+  "proposed_stop_now": true,
+  "probe_ready_fraction": 1.0,
+  "probe_max_halfwidth_ratio": 0.39045861081214994,
+  "shadow_after_first_stop": false,
+  "charged_labels": 75,
+  "round_wall_seconds": 2.3655222600000343,
+  "selection_seconds": 0.004971566999984134,
+  "data_access_seconds": 1.9970102259999294,
+  "non_fit_loop_seconds": 0.06358578499998657,
+  "fit_overhead_seconds": 0.002309608000132357,
+  "fit_receipts": {
+    "member_701": "bb94ac327d8566c870f85d5252dc25568695031d16ed9a0fd59db428c521bcad"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "0b021045067cad0f62a897c609d043604a99dfe3fc8f631fc606f35a679dbe12",
+      "bytes": 29700
+    },
+    "calibration_rule.json": {
+      "sha256": "72b53cc724b35e8e4ca46ae2afc1075624e98d80f195fb583aa6e6259eab8c0c",
+      "bytes": 333
+    },
+    "recommendations.json": {
+      "sha256": "084eee87ded20f2d0d8b572adf8dbeee99ac710197dd981bf9c94d61098583fd",
+      "bytes": 1871
+    }
+  },
+  "sha256": "2c4d998caa8e36129b9be146b122673815304e5c589940f62ef8c69de4a27820"
+}

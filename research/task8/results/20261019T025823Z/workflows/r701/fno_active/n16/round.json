@@ -1,0 +1,65 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "fno_active",
+  "budget": 16,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007",
+    "r701-00503",
+    "r701-00378",
+    "r701-00090",
+    "r701-00497",
+    "r701-00324",
+    "r701-00175",
+    "r701-00273",
+    "r701-00243"
+  ],
+  "next_ids": [
+    "r701-00121",
+    "r701-00144",
+    "r701-00438",
+    "r701-00339",
+    "r701-00051",
+    "r701-00156",
+    "r701-00286",
+    "r701-00063"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.1640625,
+  "probe_max_halfwidth_ratio": 5.888547193653601,
+  "shadow_after_first_stop": false,
+  "charged_labels": 67,
+  "round_wall_seconds": 175.77510734099997,
+  "selection_seconds": 0.0049908699999150485,
+  "data_access_seconds": 3.9941494959999773,
+  "non_fit_loop_seconds": 0.0715711660000693,
+  "fit_overhead_seconds": 0.6213791609999362,
+  "fit_receipts": {
+    "member_7016010": "4defee2358307744ad236236b40de3a8b4d755ab19c63cb59af25ca8f7ef636b",
+    "member_7017114": "f753bc761528a9b4633e3d365ab74680e0287c27e0c5d302aff11e589ca00d8c",
+    "member_7018208": "78c32cbbfe5c64a21ea66d8fca652d7fd8d6dafbe1170bd37ef5c43efa6bc1b7"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "deeb069eb0d3917435b6d698941571ed5012509b41f384a0dd636433d81dbf83",
+      "bytes": 15750
+    },
+    "calibration_rule.json": {
+      "sha256": "2c39fc50db67af1a0626d1bc00bfb3d51a53f67768890ea2f61ea18ee561dfa6",
+      "bytes": 329
+    },
+    "recommendations.json": {
+      "sha256": "0e053ee7b23a3e518223d96c7314203465dde2d65829f8727a5ff775dda305f2",
+      "bytes": 1867
+    }
+  },
+  "sha256": "984097b797d2559632222da6d289f021bb56b7daa83af09f999450a053d10d92"
+}

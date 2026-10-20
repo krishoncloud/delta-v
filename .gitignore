@@ -1,0 +1,18 @@
+.artifacts/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+.env
+.env.*
+!.env.example
+delta_v_task5_results/
+
+# Generated training/test outputs remain outside publication evidence.
+delta_v_task6_results/
+delta_v_task7_results/
+delta_v_task8_results/
+work/
+.pytest_cache/
+static/downloads/

@@ -1,0 +1,5 @@
+phase,settings,solver_seconds
+calibration,39,19.20296294899981
+development,12,6.038740164999808
+test,200,97.9809699890061
+train,32,16.032209220000368

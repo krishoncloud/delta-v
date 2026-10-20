@@ -1,0 +1,23 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "scientific_evaluation_complete": true,
+  "primary_workflow_screen": {
+    "observed_consistent_run_savings_screen": false,
+    "all_repetitions_comparable": true,
+    "median_saved_labels_when_comparable": 0.0,
+    "median_saved_fraction_when_comparable": 0.0,
+    "scope": "descriptive paired research comparison; three repetitions do not establish a population guarantee"
+  },
+  "selection_attribution_screen": {
+    "observed_consistent_run_savings_screen": false,
+    "all_repetitions_comparable": true,
+    "median_saved_labels_when_comparable": -8.0,
+    "median_saved_fraction_when_comparable": -0.10666666666666667,
+    "scope": "descriptive paired research comparison; three repetitions do not establish a population guarantee"
+  },
+  "premature_fno_active_stops": 0,
+  "scope": "one generated fluid family; paired repetitions; retrospective assessment of sealed closed-loop paths with shadow continuation",
+  "sequential_coverage_guarantee": false,
+  "source_diversity_scaling": "deferred Task6c-B",
+  "private_storage": "Task15 pending before launch"
+}

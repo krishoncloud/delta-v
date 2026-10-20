@@ -1,0 +1,85 @@
+{
+  "config": {
+    "master_seed": 20261023,
+    "repetitions": [
+      701,
+      1409,
+      2111
+    ],
+    "member_seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "batch_acquisition": 8,
+    "ceiling": 32,
+    "pool": 512,
+    "probe": 128,
+    "calibration": 39,
+    "test": 200,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "initial": 8,
+    "development": 12,
+    "absolute_tolerance": [
+      0.015,
+      0.015
+    ],
+    "success_fraction": 0.9,
+    "tail_ratio": 2.0,
+    "level": 0.9,
+    "scale_fraction": 0.01,
+    "scale_absolute_floor": 1e-06,
+    "diversity_floor": 0.25,
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "gp_restarts": 2,
+    "edge_threshold": 0.2,
+    "primary_baseline": "gp_active",
+    "attribution_baseline": "fno_lhs",
+    "minimum_median_saving": 8,
+    "retention": "first proposed stop and latest round; other intermediate weights pruned with receipts"
+  },
+  "code_sha256": "fbe0370bab2b4c6481faf8ccce26176c632297fad6fd76bd2fd70358e478a67b",
+  "environment": {
+    "python": "3.13.11",
+    "packages": {
+      "marimo": "0.25.1",
+      "torch": "2.11.0",
+      "neuraloperator": "2.0.0",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "pandas": "3.0.3",
+      "scikit-learn": "1.9.0",
+      "matplotlib": "3.11.1",
+      "huggingface-hub": "1.33.0"
+    },
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "cuda": "13.0",
+    "precision": "float32 model, float64 solver"
+  },
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  }
+}

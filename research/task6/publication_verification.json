@@ -1,0 +1,314 @@
+{
+  "supplied_archive": "TASK_6_result.zip",
+  "supplied_archive_sha256": "0f197d13d49526e8528ecd9d6010c0c27c2d45f8d96372b833efdee76a84b2eb",
+  "supplied_archive_bytes": 52860733,
+  "archive_crc_verified": true,
+  "extracted_files": 1126,
+  "protocol_sha256": "7fb9154efb8a8c0eae581c92d2c024d918c0548cdb1210ba64fa33ffec7b7ee2",
+  "protocol_hash_verified": true,
+  "manifest_checks_including_repeated_entries": 1852,
+  "distinct_files_verified_against_original_manifests": 979,
+  "campaign_progress_rows": 72,
+  "completed_fit_receipts": 72,
+  "confirmation_evaluation_manifests": 72,
+  "omitted_original_manifest_entries": [
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n16__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n16__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n16__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n24__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n24__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n24__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n32__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n32__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n32__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n8__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n8__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_frozen__n8__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n16__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n16__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n16__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n24__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n24__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n24__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n32__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n32__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n32__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n8__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n8__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/pretrained_full__n8__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n16__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n16__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n16__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n24__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n24__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n24__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n32__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n32__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n32__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n8__s123/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n8__s2026/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "campaign/scratch__n8__s42/weights.pt"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "source_cache/receipt.json"
+    },
+    {
+      "manifest": "manifest.json",
+      "path": "source_cache/source_tensors.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n16__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n24__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n8__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n16__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n16__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n32__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n16__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n32__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n32__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n32__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n24__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n8__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n8__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n16__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n24__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n32__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n16__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n8__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n16__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n32__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n32__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n24__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n16__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n32__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n16__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n8__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n8__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n24__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n24__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n24__s123/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n8__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/scratch__n8__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n32__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n8__s42/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_full__n24__s2026/manifest.json",
+      "path": "weights.pt"
+    },
+    {
+      "manifest": "campaign/pretrained_frozen__n24__s42/manifest.json",
+      "path": "weights.pt"
+    }
+  ],
+  "omission_reason": "Original evidence download excludes 36 selected neural weight files and the source cache. No omitted weights were supplied in this ZIP. Original manifests are unchanged; report this limitation rather than inventing a complete model backup.",
+  "publication_scope": "Public research evidence, exact executed notebook source and generated benchmark arrays; no trained checkpoints, customer data, credentials, deployment or new training."
+}

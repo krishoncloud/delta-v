@@ -1,0 +1,58 @@
+[
+  {
+    "setting_id": "r701-00219",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.3950910053888235,
+    "diversity_distance": 0.27795770183250373,
+    "utility": 0.6396049686260117
+  },
+  {
+    "setting_id": "r701-00249",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.165791814362237,
+    "diversity_distance": 0.26383740902529984,
+    "utility": 0.5221325724137362
+  },
+  {
+    "setting_id": "r701-00304",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.2053160479318163,
+    "diversity_distance": 0.21409177306178886,
+    "utility": 0.4948651993341171
+  },
+  {
+    "setting_id": "r701-00334",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.0319401468069314,
+    "diversity_distance": 0.28951104069722033,
+    "utility": 0.4820535860812206
+  },
+  {
+    "setting_id": "r701-00438",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.1071297542267853,
+    "diversity_distance": 0.21490569505148802,
+    "utility": 0.4552288055649141
+  },
+  {
+    "setting_id": "r701-00498",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.0461401268303105,
+    "diversity_distance": 0.22123931480390427,
+    "utility": 0.4351205253441832
+  },
+  {
+    "setting_id": "r701-00191",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.3557322527603741,
+    "diversity_distance": 0.09304207907957075,
+    "utility": 0.433538173794135
+  },
+  {
+    "setting_id": "r701-00144",
+    "reason": "raw uncertainty / tolerance \u00d7 diversity",
+    "raw_uncertainty_score": 1.065861260762221,
+    "diversity_distance": 0.20832593990955067,
+    "utility": 0.43300022691165657
+  }
+]

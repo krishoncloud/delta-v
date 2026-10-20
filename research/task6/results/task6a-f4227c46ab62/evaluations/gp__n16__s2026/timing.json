@@ -1,0 +1,9 @@
+{
+  "method": "gp",
+  "budget": 16,
+  "seed": 2026,
+  "load_seconds": 0.0,
+  "cold_query_seconds": 0.000978086000031908,
+  "warm_batch_seconds": 0.0005995689998599119,
+  "warm_per_query_seconds": 2.4982041660829662e-05
+}

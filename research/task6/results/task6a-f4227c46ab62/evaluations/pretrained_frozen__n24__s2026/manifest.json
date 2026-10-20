@@ -1,0 +1,18 @@
+{
+  "field_metrics.csv": {
+    "sha256": "9480b6cc922f89e82e299f1d018c92e1afaf58cc5aeaa32c76c864558bdb965a",
+    "bytes": 11734
+  },
+  "fields.npz": {
+    "sha256": "48c4691c26e7e6d92c59d6fcce067fad53d5772b0270580eb9b8e98ba2bb0e4d",
+    "bytes": 1301018
+  },
+  "predictions.csv": {
+    "sha256": "791a11391d77f7a09306541bcdb8c5205c030d4d60ba9f4a887ab6f40877c0bf",
+    "bytes": 9048
+  },
+  "timing.json": {
+    "sha256": "23a46a46a4dfcae59069d88f62d20a83cfa6d29c828abe6e8efca4f88f4f11e0",
+    "bytes": 245
+  }
+}

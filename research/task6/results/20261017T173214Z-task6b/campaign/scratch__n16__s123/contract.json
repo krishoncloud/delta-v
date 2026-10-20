@@ -1,0 +1,191 @@
+{
+  "method": "scratch",
+  "normalization": {
+    "train_ids": [
+      "s000",
+      "s001",
+      "s002",
+      "s003",
+      "s004",
+      "s005",
+      "s006",
+      "s007",
+      "s028",
+      "s010",
+      "s012",
+      "s031",
+      "s018",
+      "s030",
+      "s015",
+      "s014"
+    ],
+    "x_mean": [
+      0.045925892991706754,
+      0.639183806741727,
+      0.46636198444249477
+    ],
+    "x_std": [
+      0.024363885117008162,
+      0.41285829909032273,
+      0.24138899321497714
+    ],
+    "outcome_scale": [
+      0.1750009869556658,
+      0.16812135472697634
+    ],
+    "initial_mean": [
+      1.0,
+      6.984919309616089e-10,
+      0.0,
+      0.0
+    ],
+    "initial_std": [
+      9.999999747378752e-05,
+      0.5726328492164612,
+      0.5647481679916382,
+      0.7250945568084717
+    ],
+    "target_mean": [
+      1.0,
+      1.1641532182693481e-10,
+      5.587935447692871e-09,
+      9.836753633862827e-11
+    ],
+    "target_std": [
+      9.999999747378752e-05,
+      0.4289260506629944,
+      0.6723766326904297,
+      0.5302257537841797
+    ]
+  },
+  "architecture": {
+    "n_modes": [
+      32,
+      32
+    ],
+    "hidden_channels": 128,
+    "in_channels": 16,
+    "out_channels": 4
+  },
+  "config": {
+    "device": "cuda",
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "ridge_alphas": [
+      1e-06,
+      0.001,
+      0.1,
+      1.0
+    ],
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "seed": 123
+  },
+  "source": null,
+  "identity": {
+    "random_backbone_hash": "6e798f8d2cfed099a77c2e9755ccffba718898c4df41c52578b2ecd8828a90e4",
+    "initial_backbone_hash": "6e798f8d2cfed099a77c2e9755ccffba718898c4df41c52578b2ecd8828a90e4",
+    "frozen_blocks_hash": "36e8199d7e4e46e2037f7dbf191cde95d99240d5b44d264110c05a9ca87b7ff2",
+    "source_loaded": false,
+    "trainable_real_parameters": 71508036,
+    "total_real_parameters": 71508036,
+    "source_differs_from_scratch": null,
+    "frozen_unchanged": null,
+    "adapter_updated": true
+  },
+  "study": {
+    "schema_version": 6,
+    "study_id": "forced_multimode_periodic_ns_v1",
+    "lane": "fluid",
+    "grid": [
+      64,
+      64
+    ],
+    "field_names": [
+      "density",
+      "pressure",
+      "velocity_x",
+      "velocity_y"
+    ],
+    "field_units": [
+      "nondimensional",
+      "nondimensional",
+      "nondimensional",
+      "nondimensional"
+    ],
+    "domain": [
+      [
+        0,
+        6.283185307179586
+      ],
+      [
+        0,
+        6.283185307179586
+      ]
+    ],
+    "boundary_conditions": [
+      "periodic",
+      "periodic"
+    ],
+    "geometry": "fixed periodic square",
+    "target_time": 2.0,
+    "time_unit": "nondimensional",
+    "initial_available_at_query": true,
+    "initial_conditions": "analytic two-mode streamfunction; initial_mix known",
+    "parameters": [
+      {
+        "name": "viscosity",
+        "range": [
+          0.02,
+          0.08
+        ],
+        "unit": "nondimensional"
+      },
+      {
+        "name": "forcing",
+        "range": [
+          0.2,
+          1.2
+        ],
+        "unit": "nondimensional"
+      },
+      {
+        "name": "initial_mix",
+        "range": [
+          0.2,
+          0.8
+        ],
+        "unit": "nondimensional"
+      }
+    ],
+    "outcomes": [
+      {
+        "name": "kinetic_energy",
+        "kind": "mean_kinetic_energy",
+        "unit": "nondimensional"
+      },
+      {
+        "name": "pressure_rms",
+        "kind": "pressure_rms",
+        "unit": "nondimensional"
+      }
+    ],
+    "provenance": "new local numerical generation; code hash recorded in session",
+    "design_seed": 20261018,
+    "solver": "NumPy FFT vorticity RK4, strict 2/3 truncation, float64; version task6-1",
+    "source_exclusion": "different generated study from source registry; legacy exposure ledger unavailable",
+    "readout_definition": "specific mean kinetic energy and zero-gauge pressure RMS over full domain at t=2"
+  }
+}

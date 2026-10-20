@@ -1,0 +1,57 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "fno_active",
+  "budget": 8,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007"
+  ],
+  "next_ids": [
+    "r701-00503",
+    "r701-00378",
+    "r701-00090",
+    "r701-00497",
+    "r701-00324",
+    "r701-00175",
+    "r701-00273",
+    "r701-00243"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.0,
+  "probe_max_halfwidth_ratio": 8.886221066230538,
+  "shadow_after_first_stop": false,
+  "charged_labels": 59,
+  "round_wall_seconds": 160.09497273,
+  "selection_seconds": 0.0039054860000078406,
+  "data_access_seconds": 0.035605002999943736,
+  "non_fit_loop_seconds": 0.07007551000003787,
+  "fit_overhead_seconds": 0.6330268769999066,
+  "fit_receipts": {
+    "member_7016010": "ce3cba9c2555f501c05ac00312b90660011c385aa9fb10b1f4a36d323997cd6e",
+    "member_7017114": "0976b88a1be5ac0f6a327fcdf078455258ea64e4cff20c5f120198c56c4e07d5",
+    "member_7018208": "127a00854d2e544a3f68a5190d40bdd972e659a6b6f7ec0c7ba3daacfcb92e3c"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "9265fae741ea783069d307073d3ccc7c3616ab5f64da12a6274979b7fb21f8a1",
+      "bytes": 15761
+    },
+    "calibration_rule.json": {
+      "sha256": "31467f73b719a09b2b4cfd50bc8182aecb6138dd21147c799e09ecb3b7eff5ed",
+      "bytes": 331
+    },
+    "recommendations.json": {
+      "sha256": "062d46d709c0817603fdd8b10def2412b4f7dfaede6c9e25306fad0d20c01010",
+      "bytes": 1858
+    }
+  },
+  "sha256": "fbb93625834a810fdf14beaeddab55ed8e17bf9fdc8392889bbe87113d9623b8"
+}

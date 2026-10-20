@@ -1,0 +1,55 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 701,
+  "policy": "gp_random",
+  "budget": 8,
+  "selected_ids": [
+    "r701-00000",
+    "r701-00001",
+    "r701-00002",
+    "r701-00003",
+    "r701-00004",
+    "r701-00005",
+    "r701-00006",
+    "r701-00007"
+  ],
+  "next_ids": [
+    "r701-00367",
+    "r701-00036",
+    "r701-00396",
+    "r701-00166",
+    "r701-00451",
+    "r701-00144",
+    "r701-00371",
+    "r701-00299"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.0,
+  "probe_max_halfwidth_ratio": 22.92610340975176,
+  "shadow_after_first_stop": false,
+  "charged_labels": 59,
+  "round_wall_seconds": 0.24764448299993091,
+  "selection_seconds": 0.0009771519999048905,
+  "data_access_seconds": 0.03095695499996509,
+  "non_fit_loop_seconds": 0.06032203200015829,
+  "fit_overhead_seconds": 0.002406986999858418,
+  "fit_receipts": {
+    "member_701": "c85a0c89b0331fc4221ca004b66bff5bd37763d726bb951edb17150cd2dcaed9"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "ac8811de4621db9f303211be35b92ffb0c860c307c6298b8af6af1b8a000f410",
+      "bytes": 29726
+    },
+    "calibration_rule.json": {
+      "sha256": "dfc636737f8b0b6d0305109f01af1fe65627e02eaf9472430640bdac73875b08",
+      "bytes": 331
+    },
+    "recommendations.json": {
+      "sha256": "d40f80d5c123237504689e5b8c3eb8c564de2b07d43406108ee14c4cb20a8e6d",
+      "bytes": 722
+    }
+  },
+  "sha256": "1ff313d5fed81e0d1566b7d61642e0a2c3c663512b51830980d918d74c5db967"
+}

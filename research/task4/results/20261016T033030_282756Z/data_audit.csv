@@ -1,0 +1,4 @@
+system,artifact_rows,distinct_settings,input_dimensions,grouped_duplicate_rows,near_zero_flux_rows_abs_lt_1e_8,individual_run_counts_known
+turbulent_radiative_layer_2D,9,9,1,0,0,False
+rayleigh_benard,35,35,2,0,0,False
+shear_flow,28,28,2,0,22,False

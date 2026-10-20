@@ -1,0 +1,36 @@
+{
+  "seconds": 52.41100977800011,
+  "completed_steps": 3000,
+  "time_cap_hit": false,
+  "best_step": 2000,
+  "best_development_score": 0.0008901142361058996,
+  "reload_matches": true,
+  "query_batch_invariant": true,
+  "peak_cuda_allocated_bytes": 1738456576,
+  "weights_bytes": 286045477,
+  "identity": {
+    "source_sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "real_parameters": 71508036,
+    "train_ids": [
+      "r701-00000",
+      "r701-00001",
+      "r701-00002",
+      "r701-00003",
+      "r701-00004",
+      "r701-00006",
+      "r701-00007",
+      "r701-00186",
+      "r701-00062",
+      "r701-00356",
+      "r701-00349",
+      "r701-00425",
+      "r701-00078",
+      "r701-00437",
+      "r701-00276",
+      "r701-00239",
+      "r701-00289",
+      "r701-00070"
+    ],
+    "member_seed": 1103
+  }
+}

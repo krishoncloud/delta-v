@@ -1,0 +1,26 @@
+[
+  {
+    "opportunity": "new audited fluid study",
+    "verdict": "win on this study: 16 versus 24 supplied settings"
+  },
+  {
+    "opportunity": "spatial engineering outcomes",
+    "verdict": "win on this study: 16 versus 24 supplied settings; fields additionally supplied to FNO"
+  },
+  {
+    "opportunity": "fewer supplied settings",
+    "verdict": "win on this study: 16 versus 24 supplied settings; retrospective only"
+  },
+  {
+    "opportunity": "many controls (~10+)",
+    "verdict": "not tested: three-control candidate"
+  },
+  {
+    "opportunity": "regime transition",
+    "verdict": "not tested: no certified transition"
+  },
+  {
+    "opportunity": "OpenFOAM/customer production",
+    "verdict": "not tested: Task 9"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "signature": "ed27a519a6b5c6c491f9e6ca5c4cfb19e5223ccb56c51c059f29ee10638c191f",
+  "weight": {
+    "sha256": "79c7e24397c68b024202fff0627b9bf44031470587c8aac55ff98f67599d2d97",
+    "bytes": 286045477
+  },
+  "reason": "superseded intermediate; first proposed-stop and latest weights retained",
+  "replacement_round": "workflows/r1409/fno_active/n24",
+  "replacement_sha256": "6113372140b57ebb930f31964092df7f2447373fed95b56996f7f4c599b57d46",
+  "sha256": "ea95a7dcf12e2d3e6cd22bdfbc454ee15a22176f496e7a45fa72cca5291435e5"
+}

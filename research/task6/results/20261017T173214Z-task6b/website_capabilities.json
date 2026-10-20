@@ -1,0 +1,84 @@
+{
+  "lane": "fluid",
+  "study_id": "forced_multimode_periodic_ns_v1",
+  "grid": [
+    64,
+    64
+  ],
+  "boundary_conditions": [
+    "periodic",
+    "periodic"
+  ],
+  "known_initial_fields_required": true,
+  "fields": [
+    "density",
+    "pressure",
+    "velocity_x",
+    "velocity_y"
+  ],
+  "parameters": [
+    {
+      "name": "viscosity",
+      "range": [
+        0.02,
+        0.08
+      ],
+      "unit": "nondimensional"
+    },
+    {
+      "name": "forcing",
+      "range": [
+        0.2,
+        1.2
+      ],
+      "unit": "nondimensional"
+    },
+    {
+      "name": "initial_mix",
+      "range": [
+        0.2,
+        0.8
+      ],
+      "unit": "nondimensional"
+    }
+  ],
+  "outcomes": [
+    {
+      "name": "kinetic_energy",
+      "kind": "mean_kinetic_energy",
+      "unit": "nondimensional"
+    },
+    {
+      "name": "pressure_rms",
+      "kind": "pressure_rms",
+      "unit": "nondimensional"
+    }
+  ],
+  "uncertainty": "uncalibrated; Task 7 pending",
+  "methods": [
+    "mean",
+    "linear",
+    "gp",
+    "scratch",
+    "pretrained_full",
+    "pretrained_frozen"
+  ],
+  "contract": [
+    "validate_bundle",
+    "fit_neural/fit_baseline",
+    "reload_neural/predict_baseline",
+    "predict_neural"
+  ],
+  "job_states": [
+    "validating",
+    "queued",
+    "training",
+    "checking",
+    "done",
+    "failed",
+    "cancelled",
+    "rejected"
+  ],
+  "deployment": "heavy training in worker; measured concurrency and capacity not established",
+  "storage": "isolated private study storage required; Task 15 pending; this notebook performs no remote writes"
+}

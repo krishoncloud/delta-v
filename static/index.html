@@ -1,0 +1,1630 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Delta-V: Amplify Your Simulations</title>
+    <meta
+      name="description"
+      content="Delta-V adapts a pretrained physics model (FNO) to a compatible simulation study, predicts untested settings with calibrated intervals, and plans the next batch of runs. Prototype with one supported study type."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="app.css?v=redesign-21" />
+    <link rel="stylesheet" href="flow.css?v=redesign-21" />
+  </head>
+  <body>
+    <a class="skip" href="#main-content">Skip to content</a>
+    <header class="topbar">
+      <a href="#home" class="brand" aria-label="Delta-V home"
+        ><svg viewBox="0 0 60 40" fill="none" aria-hidden="true">
+          <path
+            d="M4 35 20 5 36 35H4M36 35 56 5"
+            stroke="currentColor"
+            stroke-width="3.4"
+            stroke-linejoin="round"
+            stroke-linecap="round"
+          /></svg
+        ><span>DELTA-V</span><span class="badge">Prototype</span></a
+      >
+      <nav class="topnav" aria-label="Main navigation">
+        <a href="#workbench" data-nav="workbench">Try it</a>
+        <a href="#how" data-nav="how">How it works</a>
+        <a href="#evidence" data-nav="evidence">Research</a>
+      </nav>
+      <div class="top-actions">
+        <button
+          id="menu-toggle"
+          class="icon-btn"
+          aria-expanded="false"
+          aria-controls="mobile-navigation"
+          aria-label="Open navigation"
+          type="button"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </button>
+        <details class="contact-menu">
+          <summary>Contact</summary>
+          <div class="contact-pop">
+            <a href="https://cal.id/krish-malik" target="_blank" rel="noopener">Book a call</a>
+            <a href="https://www.linkedin.com/in/krish-malik-0933822b3/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="mailto:krishmalikus@gmail.com">krishmalikus@gmail.com</a>
+          </div>
+        </details>
+        <button
+          id="theme"
+          class="icon-btn"
+          aria-label="Switch to light mode"
+          title="Switch theme"
+          type="button"
+        ></button
+        ><a class="btn primary small" href="#workbench?start=example">Explore the worked example</a>
+      </div>
+    </header>
+    <dialog id="mobile-navigation" aria-label="Site navigation">
+      <div class="drawer-head">
+        <span class="brand-text">DELTA-V</span>
+        <button class="icon-btn" id="close-navigation" type="button" aria-label="Close navigation">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <nav aria-label="Site navigation">
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#workbench" data-nav="workbench">Try it</a>
+        <a href="#how" data-nav="how">How it works</a>
+        <a href="#evidence" data-nav="evidence">Research</a>
+        <p class="nav-group">Contact</p>
+        <a href="https://cal.id/krish-malik" target="_blank" rel="noopener">Book a call</a>
+        <a href="https://www.linkedin.com/in/krish-malik-0933822b3/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:krishmalikus@gmail.com">krishmalikus@gmail.com</a>
+        <p class="nav-group">More</p>
+        <a href="#settings" data-nav="settings">Settings</a>
+      </nav>
+    </dialog>
+    <main id="main-content">
+      <div id="page-home" class="page landing">
+        <section class="hero">
+          <div class="hero-copy">
+            <h1>Amplify Your Simulations</h1>
+            <p class="hero-description">Use the runs you already have to predict new settings and plan your next batch.</p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#workbench?start=example">Explore the worked example</a
+              ><a class="text-link" href="#how">How it works</a>
+            </div>
+            <div class="claim-card" id="claim-chip">
+              <p class="proof-fig"><span id="claim-tag" hidden></span><strong id="claim-text">597 / 600</strong> held-out settings within tolerance</p>
+              <p class="claim-qual" id="claim-qual">Generated research study · three repeats · 67 labelled runs per fit</p>
+              <details class="proof-more"><summary>What the 67 runs are</summary>
+                <p>Each fit used 16 training runs, 12 development runs to choose checkpoints and 39 calibration runs to set the intervals. Each repeat was then checked on 200 separate held-out settings that were never used to fit it. Generated research data, not customer data yet.</p>
+              </details>
+              <a href="#evidence">See the research</a>
+            </div>
+            <p class="hero-note" id="home-gpu-note">Adapting your own uploads needs a GPU, which is off in this public demo.</p>
+          </div>
+          <figure class="hero-chart">
+            <figcaption class="chart-title">
+              <span>Kinetic energy: prediction vs. solver</span
+              ><span class="evidence-tag">Recorded research</span>
+            </figcaption>
+            <div id="home-chart" class="chart-mount">Loading the evidence…</div>
+            <p class="flow-note" id="home-chart-caption">Recorded research results, not live.</p>
+          </figure>
+        </section>
+        <section class="landing-section">
+          <figure class="vision" aria-labelledby="home-vision-title">
+            <figcaption>
+              <p class="vision-tag">Illustrative goal, not measured savings</p>
+              <h2 id="home-vision-title">The goal: fewer solver runs for a new problem</h2>
+              <p>Each square is one solver run. The usual approach assumes a planned sweep of 100 runs. The Delta-V side is built from what one fit actually needs: 8 starting runs, 12 + 39 runs to check and calibrate the model, and one suggested batch of 8, about 67 in total.</p>
+            </figcaption>
+            <div class="vision-pair">
+              <div class="vision-col">
+                <h3>Usual approach <span>about 100 runs</span></h3>
+                <div class="run-grid" aria-hidden="true"><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i><i class="c-run"></i></div>
+                <p>Plan a full sweep of the settings and run all of it.</p>
+              </div>
+              <div class="vision-col">
+                <h3>With Delta-V <span>goal: about 60 to 70</span></h3>
+                <div class="run-grid" aria-hidden="true"><i class="c-train"></i><i class="c-train"></i><i class="c-train"></i><i class="c-train"></i><i class="c-train"></i><i class="c-train"></i><i class="c-train"></i><i class="c-train"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-check"></i><i class="c-next"></i><i class="c-next"></i><i class="c-next"></i><i class="c-next"></i><i class="c-next"></i><i class="c-next"></i><i class="c-next"></i><i class="c-next"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i><i class="c-saved"></i></div>
+                <p>Start from the few runs you can afford, adapt the pretrained model, predict the rest, then run only a bounded batch where it is still unsure.</p>
+              </div>
+            </div>
+            <ul class="vision-key">
+              <li><i class="c-train"></i>5 to 10 starting runs</li>
+              <li><i class="c-check"></i>Runs that check and calibrate the model</li>
+              <li><i class="c-next"></i>Suggested next runs, inside your limits</li>
+              <li><i class="c-saved"></i>Runs you may not need</li>
+            </ul>
+            <p class="flow-note">In our research the model was already accurate with 16 training runs, and the next-run picker saved about one batch at tighter accuracy targets. Lower total cost on a real customer solver is what we are testing now.</p>
+          </figure>
+        </section>
+        <section class="landing-section flow-strip" aria-labelledby="flow-title">
+          <h2 id="flow-title">Four steps, using runs you already paid for</h2>
+          <ol class="flow-steps">
+            <li><h3>Bring your runs</h3><p>Upload one ZIP of finished simulations. It is checked, and you are told exactly what to fix.</p></li>
+            <li><h3>Get a fitted model</h3><p>A pretrained model is adapted to your study and checked on runs it never saw.</p></li>
+            <li><h3>Predict untested settings</h3><p>Ask for any setting in your study's range and get the outcome with a 90% prediction interval.</p></li>
+            <li><h3>Run only what helps</h3><p>Set your range, accuracy target and run budget. Get the few runs worth simulating next, add their results, and stop when the model is good enough.</p></li>
+          </ol>
+          <p class="flow-strip-links"><a class="text-link" href="#how">What it is meant to save</a><a class="text-link" href="#evidence">What the tests showed</a></p>
+        </section>
+        <footer class="site-footer">
+          <span class="brand"
+            ><svg viewBox="0 0 60 40" fill="none" aria-hidden="true">
+              <path d="M4 35 20 5 36 35H4M36 35 56 5" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round" />
+            </svg>
+            DELTA-V</span
+          >
+          <nav aria-label="Footer">
+            <a href="https://cal.id/krish-malik" target="_blank" rel="noopener">Book a call</a>
+            <a href="https://www.linkedin.com/in/krish-malik-0933822b3/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="mailto:krishmalikus@gmail.com">Email</a>
+            <a href="#settings">Settings</a>
+            <a href="technical-note.html">Technical note</a>
+            <a href="https://github.com/krishoncloud/delta-v" target="_blank" rel="noopener">GitHub</a>
+          </nav>
+        </footer>
+      </div>
+      <div id="workspace" hidden>
+        <aside class="sidebar">
+          <nav id="workspace-menu" aria-label="Workspace navigation">
+            <p class="nav-group">Work</p>
+            <a href="#workbench" data-nav="workbench">Workbench</a>
+            <a href="#history" data-nav="history">Run history</a>
+            <p class="nav-group">Results</p>
+            <a href="#evidence" data-nav="evidence">Evidence</a>
+            <a href="#simulator" data-nav="simulator">Model demo</a>
+            <p class="nav-group">Research and docs</p>
+            <a href="#datasets" data-nav="datasets">Datasets</a>
+            <a href="#models" data-nav="models">Model details</a>
+            <a href="#about" data-nav="about">About Delta-V</a>
+            <a href="#probe" data-nav="probe">Historical probe</a>
+            <p class="nav-group">Preferences</p>
+            <a href="#settings" data-nav="settings">Settings</a>
+          </nav>
+          <div class="sidebar-info">
+            <span class="eyebrow">CURRENT SELECTION</span>
+            <div id="selection-info">Choose a system in the simulator.</div>
+          </div>
+          <div class="sidebar-bottom">
+            <div class="status">
+              <span id="dot" class="dot"></span
+              ><span id="status-text">Connecting to model</span>
+            </div>
+          </div>
+        </aside>
+        <div class="workspace-content">
+          <div id="wake" class="wake" hidden role="status">
+            <strong id="wake-title">Waking up the model</strong
+            ><span id="wake-phase">connecting</span
+            ><span id="wake-elapsed">0s</span>
+            <div class="wake-bar"><div id="wake-fill"></div></div>
+            <p>
+              The first request after sleep can take a minute or two. You can
+              read the project notes while it loads.
+            </p>
+          </div>
+          <div id="notice" role="alert" hidden></div>
+          <section id="page-workbench" class="page" hidden>
+            <p class="wb-kicker"><strong>Research prototype for fluid simulations.</strong> A more robust model and more physics domains are in progress.</p>
+            <div class="page-heading wb-page-head">
+              <div>
+                <p class="eyebrow" id="wb-eyebrow" hidden>WORKBENCH</p>
+                <h1 id="wb-title">Workbench</h1>
+                <p id="wb-sub">Bring compatible simulation runs, adapt the pretrained model, explore untested settings and plan the next batch.</p>
+              </div>
+            </div>
+            <p class="scope-banner" id="wb-scope" role="note">
+              One study type for now: a 2D periodic flow on a fixed 64 × 64 grid.
+            </p>
+            <div class="mobile-step">
+              <label class="field" for="wb-step-select"><span id="wb-step-label">Step</span></label>
+              <select id="wb-step-select"></select>
+            </div>
+            <ol class="wb-steps" id="wb-steps" aria-label="Workbench steps"></ol>
+            <div id="wb-panel"></div>
+          </section>
+          <section id="page-how" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>How it works</h1>
+                <p>What Delta-V is for, the flow it expects, and where the saving is meant to come from.</p>
+              </div>
+            </div>
+            <div class="doc">
+              <section class="doc-section">
+                <h2>The problem</h2>
+                <p>Simulations cost money and time. Teams often plan a large batch of runs up front, many of which turn out not to be needed. Delta-V is meant to get more out of the runs you already have, so the next batch can be smaller and better aimed.</p>
+              </section>
+              <section class="doc-section">
+                <h2>The flow</h2>
+                <ol class="how-flow">
+                  <li><strong>Bring the runs you have.</strong> One ZIP: the settings of each run, its starting and final fields, and which runs are for training, checking and calibrating.</li>
+                  <li><strong>The model adapts.</strong> A model pretrained on other fluid simulations is fine-tuned to your study, then checked on runs it never saw.</li>
+                  <li><strong>Explore without simulating.</strong> Ask for any setting inside your study's range and get the predicted outcome with a 90% prediction interval.</li>
+                  <li><strong>Set your limits, run only the useful few.</strong> You say which settings range matters, how accurate is enough and how many runs you can afford. Delta-V suggests a small batch inside those limits, usually 4 to 8 runs, that fills the gaps. You run them in your own solver and add the results.</li>
+                  <li><strong>Stop when it is good enough.</strong> When the 90% prediction intervals are inside the accuracy you need across your range, you likely have enough runs for that question. Confirm with a few solver runs</li>
+                </ol>
+              </section>
+              <section class="doc-section">
+                <h2>Where the saving is meant to come from</h2>
+                <div class="saving-grid">
+                  <div><h3>Smaller batches</h3><p>Ask for a handful of well-placed runs instead of a large blind sweep.</p></div>
+                  <div><h3>Stopping early</h3><p>A stop signal tells you when more runs would not change the answer much.</p></div>
+                  <div><h3>Explore without another solver run</h3><p>Trying a new setting is a prediction, not a simulation. Predictions still use some compute.</p></div>
+                </div>
+              </section>
+              <section class="doc-section">
+                <h2>What it asks of you</h2>
+                <p>Before the first prediction the model needs about 59 finished runs: 8 to train on, 12 to pick the best version of the model, and 39 to calibrate the prediction intervals. That cost is paid once per study. In our tests the model was already accurate with 16 training runs.</p>
+                <p>When you add finished runs later, they are saved as a new version of your study (version 2, 3 and so on). The model you already have keeps working; it still uses version 1. Re-adapt on a GPU, about 3 to 4 minutes, to include the new runs.</p>
+              </section>
+              <section class="doc-section">
+                <h2>Where it stands today</h2>
+                <ul class="plain-list">
+                  <li>More accurate than standard methods when only 8 to 16 training runs are available.</li>
+                  <li>Calibrated 90% prediction intervals that held up on 200 unseen cases.</li>
+                  <li>A stop signal that never stopped too early in our tests.</li>
+                  <li>Lower total cost is showing promising early results, and we are working on it further with real solvers. The budget numbers below are your own scenario.</li>
+                </ul>
+                <p><a class="text-link" href="#evidence">See every test and result</a></p>
+              </section>
+              <section class="doc-section" aria-labelledby="budget-title">
+                <h2 id="budget-title">Your budget scenario</h2>
+                <p>Compare the runs you planned with the runs you have used so far. It works on the study you have open in Try it.</p>
+                <div id="how-budget"></div>
+              </section>
+            </div>
+          </section>
+          <section id="page-evidence" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>Research</h1>
+                <p>The tests behind Delta-V, what each one showed, and what comes next. Every number comes from recorded research runs on one generated flow study.</p>
+              </div>
+            </div>
+            <div id="ev-root">Loading…</div>
+            <section class="ledger-section" aria-labelledby="findings-title">
+              <h2 id="findings-title">What we found</h2>
+              <ul class="findings">
+                <li><strong>Accurate with few runs.</strong> With 16 training runs, 597 of 600 held-out settings were within tolerance, and error was clearly lower than standard methods at 8 to 16 runs (Tests 6, 8 and 8b).</li>
+                <li><strong>Honest uncertainty.</strong> The calibrated 90% prediction intervals covered 91.5% of 200 unseen cases (Test 7).</li>
+                <li><strong>Knowing when to stop.</strong> The stop signal was right in 15 of 15 runs, never too early (Test 8). An exploratory replay of the next-run picker saved about one batch at tighter targets.</li>
+              </ul>
+              <p class="flow-note">All measured on one generated 2D flow study type, not customer data.</p>
+            </section>
+            <section class="ledger-section" aria-labelledby="tests-title">
+              <h2 id="tests-title">The tests behind it</h2>
+              <p class="flow-note">Each test answered one question. Later tests built on what earlier ones showed.</p>
+              <ol class="test-ledger">
+                <li>
+                  <span class="t-num">1–3</span>
+                  <div class="t-body">
+                    <h3>Does earlier learning help on a fluid the model never saw?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>We held one fluid system (compressible Euler flow) out of pretraining, then trained two copies on the same small amount of its data: one starting from the pretrained model, one from scratch.</p></details>
+                    <p class="t-result">The pretrained start reached a final loss of 0.0089 against 0.0107 from scratch, 16.3% lower, after 30 training passes.</p>
+                    <p class="t-note">Owner-reported run on one setting of the gas constant, without saved checkpoints. A fuller rerun is planned.</p>
+                  </div>
+                  <span class="t-verdict v-mixed">Owner-reported</span>
+                </li>
+                <li>
+                  <span class="t-num">4</span>
+                  <div class="t-body">
+                    <h3>A fair baseline to compare against</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>We built outcome tables for the three training systems and measured standard methods (mean, linear and Gaussian process) on them, so later results had something honest to beat.</p></details>
+                  </div>
+                  <span class="t-verdict v-neutral">Baseline built</span>
+                </li>
+                <li>
+                  <span class="t-num">5</span>
+                  <div class="t-body">
+                    <h3>Can the model predict outcomes from settings?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>We connected the pretrained field model to scalar outcomes, so it takes a setting and returns a number, and checked every stage end to end on a GPU.</p></details>
+                    <p class="t-result">All eight checks passed. On that simple test case the standard method was still more accurate, which set up Test 6.</p>
+                  </div>
+                  <span class="t-verdict v-neutral">Pipeline check</span>
+                </li>
+                <li>
+                  <span class="t-num">6</span>
+                  <div class="t-body">
+                    <h3>Does pretraining help on a new problem?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>A new generated flow study with three settings and two outcomes. We compared the pretrained model with a from-scratch model and a Gaussian process at 8, 16, 24 and 32 training runs. A first round showed the models were undertrained, so we reran with longer training.</p></details>
+                    <p class="t-result">The pretrained model reached the accuracy target with 16 runs; the other methods needed 24. At 8 runs its error was about a third of the Gaussian process's. From 24 runs on, the Gaussian process caught up and pulled ahead.</p>
+                  </div>
+                  <span class="t-verdict v-good">Measured on generated study</span>
+                </li>
+                <li>
+                  <span class="t-num">7</span>
+                  <div class="t-body">
+                    <h3>Can the prediction intervals be trusted?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>Five copies of the model each make a prediction; how much they disagree gives a raw range. We tuned that range on 39 separate runs, locked the rule, then tested it on 200 unseen cases.</p></details>
+                    <p class="t-result">The 90% prediction intervals contained the true result 91.5% of the time. The raw ranges alone were too narrow, which is why the tuning step stays.</p>
+                  </div>
+                  <span class="t-verdict v-good">Measured on generated study</span>
+                </li>
+                <li>
+                  <span class="t-num">8</span>
+                  <div class="t-body">
+                    <h3>Does choosing the next runs save runs?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>Five complete workflows, each starting from 8 runs and adding 8 at a time, repeated three times. Each one decided for itself when to stop.</p></details>
+                    <p class="t-result">Spreading runs evenly hit the accuracy target at 16 runs in all three repeats. The stop signal was right every time: 15 of 15 stops, none too early. Total runs used ended up level with the best standard workflow.</p>
+                  </div>
+                  <span class="t-verdict v-good">Measured on generated study</span>
+                </li>
+                <li>
+                  <span class="t-num">8b</span>
+                  <div class="t-body">
+                    <h3>A tougher baseline, and a cheaper way to calibrate</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>We compared against a stronger field-based method (POD with Gaussian processes) on the same runs, and tried tuning the ranges without the 39 extra runs.</p></details>
+                    <p class="t-result">The pretrained model was clearly more accurate at 8 and 16 runs, with error about 31% lower for kinetic energy and 52% lower for pressure at 16. The cheaper calibration came out too cautious, but calibrating on the 12 checking runs looks like a promising shortcut.</p>
+                  </div>
+                  <span class="t-verdict v-good">Measured, retrospective</span>
+                </li>
+                <li>
+                  <span class="t-num">+</span>
+                  <div class="t-body">
+                    <h3>A smarter next-run picker</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>We replayed the whole loop with every candidate solved in advance, comparing random picks, even spreading, uncertainty only, and a picker that adds runs only where the range is still too wide.</p></details>
+                    <p class="t-result">The picker was never worse than the alternatives and saved about one batch of 4 runs at the tighter accuracy targets. It also asks for fewer runs as the model improves: 5 at 16 runs, 3 at 24.</p>
+                  </div>
+                  <span class="t-verdict v-neutral">Exploratory replay</span>
+                </li>
+              </ol>
+            </section>
+            <section class="ledger-section" aria-labelledby="limits-title">
+              <h2 id="limits-title">Where it stands</h2>
+              <div class="stand-grid">
+                <div>
+                  <h3>What holds up</h3>
+                  <ul class="plain-list">
+                    <li>More accurate than standard methods at 8 to 16 runs, in four separate tests.</li>
+                    <li>Calibrated 90% prediction intervals, measured at 91.5% coverage.</li>
+                    <li>A reliable signal for when you have enough runs.</li>
+                    <li>A locked, repeatable test process: rules fixed before results were seen.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3>What comes next</h3>
+                  <ul class="plain-list">
+                    <li>Run the workflow on a real customer solver, where each run is expensive.</li>
+                    <li>Lower total cost is showing promising early results: the next-run picker already saved about one batch at tighter accuracy targets. We are building on it.</li>
+                    <li>Make calibration cheaper using runs you already supply.</li>
+                    <li>Support more study types: so far, one generated 2D flow family on a 64 × 64 grid.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="flow-note">With many runs (24 or more), standard methods match or beat the pretrained model. Delta-V's advantage is when runs are scarce.</p>
+            </section>
+            <section class="ledger-section" aria-labelledby="earlier-title">
+              <h2 id="earlier-title">More details</h2>
+              <p class="flow-note">The original model demo, datasets and project background. These are research records, not part of the current workflow.</p>
+              <ul class="earlier-list">
+                <li><a href="#simulator">Model demo</a><span>The original model predicting the next frame of three flows, shown beside the real frame.</span></li>
+                <li><a href="#probe">Euler probe</a><span>The full record of Tests 1 to 3.</span></li>
+                <li><a href="#datasets">Datasets</a><span>The three flow systems the model was pretrained on.</span></li>
+                <li><a href="#models">Model details</a><span>Architecture and checkpoint of the original model.</span></li>
+                <li><a href="#about">Project story</a><span>Why Delta-V was built and the choices along the way.</span></li>
+              </ul>
+            </section>
+          </section>
+          <section id="page-simulator" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>Inspect the pretrained model</h1>
+                <p>Four recorded snapshots predict the next frame. This original checkpoint is separate from the study-adapted Workbench model.</p>
+              </div>
+              <button class="btn secondary small" id="tour-start">
+                Feature walkthrough →
+              </button>
+            </div>
+            <div
+              id="tour"
+              hidden
+              class="tour"
+              role="region"
+              aria-label="Feature walkthrough"
+            >
+              <span id="tour-count" class="eyebrow"></span>
+              <h3 id="tour-title"></h3>
+              <p id="tour-copy"></p>
+              <div>
+                <button id="tour-back" class="btn secondary small">Back</button
+                ><button id="tour-next" class="btn primary small">Next</button
+                ><button id="tour-close" class="text-link">Close tour</button>
+              </div>
+            </div>
+            <div class="selection-bar" id="selection-bar">
+              <label
+                >Physical system<select id="systems" disabled>
+                  <option>Loading systems…</option>
+                </select><small class="hint">One of the three flows the model was trained on.</small></label
+              ><label
+                >Field<select id="channels" disabled>
+                  <option>—</option>
+                </select><small class="hint">The quantity shown in the images.</small></label
+              ><label
+                >Recorded example<select id="samples" disabled>
+                  <option>—</option>
+                </select><small class="hint">A recorded simulation window.</small></label
+              ><label
+                >Snapshot<select id="time-select" disabled>
+                  <option>—</option>
+                </select><small class="hint">f0 to f3 are the input; f4 is predicted.</small></label
+              ><button class="btn primary" id="run" disabled>
+                Show FNO prediction
+              </button>
+            </div>
+            <div class="selection-context">
+              <p id="sample-description"></p>
+              <p id="load-status" role="status">Connecting to the model…</p>
+              <button id="share-result" class="btn secondary small" disabled>
+                Share this comparison ↗
+              </button>
+              <a
+                id="binary-result"
+                class="text-link"
+                hidden
+                download="delta-v-prediction.npy"
+                >Download display arrays (.npy)</a
+              >
+              <div id="share-box" hidden>
+                <label id="share-label" for="share-url">Comparison link</label
+                ><input id="share-url" readonly />
+              </div>
+            </div>
+            <section id="example-guide" class="card launch-guide" hidden>
+              <h2>Will the model match the next snapshot?</h2>
+              <p id="example-progress" role="status"></p>
+              <ol>
+                <li>
+                  <strong>Model prediction:</strong> the next selected field
+                  estimated from four earlier snapshots.
+                </li>
+                <li>
+                  <strong>Recorded simulation:</strong> the actual next snapshot
+                  from the original simulation.
+                </li>
+                <li>
+                  <strong>Where they differ:</strong> signed prediction minus
+                  reference. Read the numeric error alongside the image.
+                </li>
+              </ol>
+              <p>
+                The starting pressure view falls below the release error target.
+                Switch to <strong>Tracer</strong> to see a field that misses it.
+              </p>
+              <a
+                id="example-complete"
+                href="#about"
+                class="btn primary small"
+                hidden
+                >Understand this comparison →</a
+              >
+            </section>
+            <section id="euler-research" class="card prose launch-guide" hidden>
+              <h2>Euler generalization probe</h2>
+              <p>
+                Euler was held out of joint pretraining, then fine-tuned on
+                scarce data. The recorded two-arm comparison reports 16.3% lower
+                error for the pretrained start. This is not a live prediction.
+              </p>
+              <a class="btn primary" href="#probe"
+                >See the two-arm experiment and its limitations →</a
+              >
+            </section>
+                        <div class="dashboard-grid" id="field-workspace">
+              <div class="dashboard-main">
+                                <section class="card comparison-card" id="comparison-card">
+                  <div class="card-head">
+                    <h2>One-step prediction: next frame (f4) from four recorded frames</h2>
+                    <span class="tag">FNO prediction</span>
+                  </div>
+                  <div id="comparison-empty" class="empty">
+                    Run a prediction to compare the next state with ground
+                    truth.
+                  </div>
+                  <div id="comparison" class="comparison" hidden></div>
+                  <div class="quality" id="quality" hidden></div>
+                  <p
+                    id="result-explanation"
+                    class="launch-explanation"
+                    hidden
+                  ></p>
+                  <details class="metric-help">
+                    <summary>What are these numbers testing?</summary>
+                    <p>
+                      <strong>Relative error (rel. L2):</strong> total
+                      prediction error compared with the size of the reference
+                      field. Lower is better; it is not a percentage accuracy
+                      score.
+                    </p>
+                    <p>
+                      <strong>Typical error (RMSE):</strong> error magnitude in
+                      this field’s simulation units. Different fields have
+                      different scales.
+                    </p>
+                    <p>
+                      <strong>Structure match (SSIM):</strong> local image
+                      structure similarity. 1 is an exact match; it does not
+                      prove conservation or physical correctness.
+                    </p>
+                    <p>
+                      These scores test one next-step prediction on a training
+                      example. Parameter-slider estimates, unseen trajectories,
+                      long rollouts, and transfer to Euler are not validated by
+                      them.
+                    </p>
+                  </details>
+                  <p class="comparison-note small muted">
+                    Errors use full-precision fields and ground truth resampled
+                    to 256 × 256. Self-imposed v1 target: scalar and pressure
+                    rel. L2 &lt;15%; velocities have no quantitative target.
+                    This target is not a held-out validation claim. Display
+                    colors are quantized and can clip predictions outside the
+                    reference range.
+                  </p>
+                </section>
+                <details class="card" id="current-card"><summary>Recorded frames: the four inputs (f0–f3) and the reference next frame (f4)</summary>
+                  <div class="card-head">
+                    <h2>Recorded frame <span class="tag">Solver data</span></h2>
+                    <span id="field-meta" class="small muted"></span>
+                  </div>
+                  <div class="current-layout">
+                    <div class="stage" id="stage">
+                      <div class="empty" id="stage-empty">
+                        Choose a sample to inspect a real field.
+                      </div>
+                      <div id="panels" class="panels" hidden></div>
+                    </div>
+                    <div class="view-info">
+                      <p id="view-description">
+                        Four input frames and one reference next frame from a
+                        real simulation.
+                      </p>
+                      <p class="small muted" id="scale-note"></p>
+                      <div class="view-tools">
+                        <button
+                          class="icon-btn"
+                          id="zoom"
+                          aria-label="Zoom current field"
+                          title="Zoom current field"
+                        ><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M11 8v6M8 11h6M16 16l4 4"/></svg></button
+                        ><button
+                          class="icon-btn"
+                          id="fullscreen"
+                          aria-label="Expand current field"
+                          title="Expand current field"
+                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button
+                        ><button
+                          class="icon-btn"
+                          id="download"
+                          aria-label="Download current field as PNG"
+                          title="Download field"
+                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="foot mono" id="foot"></div>
+                </details>
+
+                <section class="card timeline" id="timeline" hidden>
+                  <div class="card-head">
+                    <h2>Step through the recorded frames</h2>
+                    <span class="small muted"
+                      >Solver data · not a prediction or rollout</span
+                    >
+                  </div>
+                  <div class="playback">
+                    <button
+                      class="icon-btn"
+                      id="prev-frame"
+                      aria-label="Previous frame"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14M18 6l-8 6 8 6"/></svg></button
+                    ><button
+                      class="icon-btn"
+                      id="play"
+                      aria-label="Play recorded frames"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg></button
+                    ><button
+                      class="icon-btn"
+                      id="next-frame"
+                      aria-label="Next frame"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14M6 6l8 6-8 6"/></svg></button
+                    ><input
+                      id="scrubber"
+                      aria-label="Recorded frame"
+                      type="range"
+                      min="0"
+                      max="4"
+                      value="0"
+                      step="1"
+                    /><label class="small"
+                      >Playback<select
+                        id="fps"
+                        aria-label="Playback frame rate"
+                      >
+                        <option value="1">1 fps</option>
+                        <option value="2">2 fps</option>
+                        <option value="5">5 fps</option>
+                      </select></label
+                    >
+                  </div>
+                  <div class="tl-track" id="tl-track"></div>
+                  <p class="small muted" id="tl-info"></p>
+                </section>
+              </div>
+                          </div>
+            <section id="rollout" class="card launch-guide">
+              <p class="eyebrow" id="rollout-capability">
+                Autoregressive playback: connecting to the backend
+              </p>
+              <h2>How far can the prediction follow the flow?</h2>
+              <p>
+                Use f0–f3 to predict f4, then feed each prediction back into the
+                next four-frame input. This is a generated sequence, not
+                recorded-frame playback. FPS controls playback speed, not
+                inference speed.
+              </p>
+              <div class="rollout-controls">
+                <label
+                  >First predicted frame<input
+                    id="rollout-start"
+                    type="number"
+                    min="4"
+                    max="35"
+                    value="4"
+                    step="1"
+                /></label>
+                <label
+                  >Last predicted frame<input
+                    id="rollout-end"
+                    type="number"
+                    min="4"
+                    max="35"
+                    value="10"
+                    step="1"
+                /></label>
+                <button id="rollout-run" class="btn primary" disabled>
+                  Generate range
+                </button>
+              </div>
+              <p id="rollout-status" role="status">
+                Checking the selected system's rollout capability…
+              </p>
+              <div id="rollout-clip-notice" class="launch-explanation" hidden>
+                <strong>This example has ground truth only through f4.</strong>
+                Training windows contain five recorded frames, so generated
+                frames f5 onward cannot be scored here. To see measured error
+                for every step through f10, use this system’s official-test
+                clip (eleven recorded frames).
+                <div class="hero-actions">
+                  <button id="rollout-use-clip" class="btn primary small">
+                    Switch to the f0–f10 test clip →
+                  </button>
+                </div>
+              </div>
+              <p id="rollout-reference" class="small muted"></p>
+              <div id="rollout-playback" hidden>
+                <div class="rollout-controls">
+                  <button id="rollout-play" class="btn secondary">
+                    Play predictions</button
+                  ><label
+                    >Predicted frame<input
+                      id="rollout-scrubber"
+                      type="range"
+                      min="4"
+                      max="10"
+                      value="4"
+                      step="1" /></label
+                  ><label
+                    >Playback speed<select id="rollout-fps">
+                      <option value="1">1 fps</option>
+                      <option value="2">2 fps</option>
+                      <option value="5">5 fps</option>
+                      <option value="10">10 fps</option>
+                    </select></label
+                  >
+                </div>
+                <p id="rollout-frame-label"></p>
+                <div id="rollout-panels" class="rollout-panels"></div>
+              </div>
+              <h3>Error versus predicted step</h3>
+              <p id="rollout-chart-note">
+                No rollout results yet. No error curve is drawn without measured
+                data.
+              </p>
+              <svg
+                id="rollout-chart"
+                class="flow-chart"
+                viewBox="0 0 640 210"
+                role="img"
+                aria-label="Error versus predicted frame; no results yet"
+              ></svg>
+              <p>
+                We show reference comparisons to expose where predictions drift.
+                Drift need not increase at every step. Later inference can run
+                without a reference, but its true error cannot be measured
+                without ground truth; validation will still matter.
+              </p>
+              <p>
+                <strong>Why this is the measuring stick.</strong> The served
+                checkpoint was trained at prototype scale on slices of The Well,
+                not on full trajectories, so training budget, not architecture,
+                is the main bottleneck today. As training improves, the
+                number of frames the model can generate from the same four
+                inputs before its error crosses the target should grow. That
+                horizon is how progress on the fluids model gets measured. We
+                deliberately do not inject true frames mid-rollout to “boost”
+                the output: it would hide exactly the drift this view exists to
+                show.
+              </p>
+            </section>
+            <details class="parametric card" id="parametric">
+              <summary>
+                <span
+                  >Table-based outcome estimates (not the FNO)
+                  <span class="tag">Precomputed tables</span></span
+                >
+              </summary>
+              <div class="parametric-body">
+                <div>
+                  <div id="dials"></div>
+                  <button class="btn secondary small" id="predict" disabled>
+                    Estimate outcomes →
+                  </button>
+                  <p class="small muted">
+                    Moving these sliders changes the two numeric estimates. It
+                    does not change the recorded example or its predicted image.
+                    Values update after you pause dragging.
+                  </p>
+                </div>
+                <div>
+                  <div class="metrics" id="metrics"></div>
+                  <p class="small muted" id="units-note">
+                    Simulation code units
+                  </p>
+                </div>
+              </div>
+            </details>
+            <aside class="history-rail" aria-labelledby="recent-runs-title">
+                <div class="card-head">
+                  <h2 id="recent-runs-title">Recent comparisons</h2>
+                </div>
+                <p class="small muted">Saved in this browser</p>
+                <div id="recent-runs"></div>
+                <a class="btn secondary small" href="#history"
+                  >View all runs →</a
+                >
+              </aside>
+
+          </section>
+          <section id="page-history" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>Run history</h1>
+                <p>
+                  Model demo comparisons saved in this browser only, up to 20.
+                  Workbench studies are different: they are stored on the
+                  server and listed under <a class="text-link" href="#workbench">Workbench → Start</a>.
+                </p>
+              </div>
+            </div>
+            <div id="history-list" class="history-grid"></div>
+            <div id="history-detail" class="card" hidden></div>
+            <div class="history-actions">
+              <button id="clear-history" class="btn small danger" type="button">
+                Clear saved comparisons
+              </button>
+            </div>
+          </section>
+          <section id="page-datasets" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>Three systems. Different dynamics.</h1>
+                <p>
+                  Real 2D simulations from Polymathic AI’s The Well. Six
+                  windows, two per system.
+                </p>
+              </div>
+              <a
+                class="btn secondary small"
+                href="https://huggingface.co/datasets/KrishMalik/deltav-fluid"
+                target="_blank"
+                rel="noopener"
+                >Dataset repository ↗</a
+              >
+            </div>
+            <div id="dataset-cards">
+              <p class="muted">Loading dataset metadata…</p>
+            </div>
+            <div class="prose card">
+              <h2>What a time instance means</h2>
+              <p>
+                Each sample contains five consecutive snapshots from one
+                simulation trajectory. Local frames t₀–t₃ are the model input;
+                t₄ is the next-state reference. Physical times come from the
+                sample metadata, in simulation code units. A local frame number
+                is not physical time.
+              </p>
+              <p>
+                The source start index identifies the first frame in the window.
+                Each catalog entry lists every timestamp and its spacing. The
+                extraction did not retain the original trajectory ID or file
+                path, so these sample IDs are not a complete trajectory catalog.
+              </p>
+              <p>
+                All fields are resampled to 256 × 256 for the model. The viewer
+                preserves the physical domain’s aspect ratio. The top timeline
+                loops the five recorded snapshots. Autoregressive rollout uses
+                three separate official-test clips (IDs begin
+                <code>rollout-test-</code>) with eleven recorded frames each:
+                f0–f3 seed the model and f4–f10 are the reference.
+              </p>
+              <p>
+                <strong>Training scale.</strong> The served checkpoint was
+                trained on bounded slices of The Well at prototype budget, not
+                on the full trajectory sets. This is the main reason accuracy
+                and rollout horizon are where they are; see the Model page.
+              </p>
+            </div>
+          </section>
+          <section id="page-models" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>The model behind the field.</h1>
+                <p>
+                  The original shared next-frame checkpoint used by the Model
+                  demo across its three systems. The Workbench serves a
+                  separate model adapted to each study; its details are on
+                  that study's Model step.
+                </p>
+              </div>
+            </div>
+            <div class="prose card">
+              <span class="tag">Fourier neural operator</span>
+              <h2>Four snapshots in. One learned next state out.</h2>
+              <p>
+                The model receives four fields across four history frames: 16
+                input channels. It produces density, buoyancy or tracer
+                (depending on the system), pressure, and two velocity components
+                on a 256 × 256 grid.
+              </p>
+              <dl class="model-facts">
+                <div>
+                  <dt>Checkpoint</dt>
+                  <dd id="model-epoch">Waiting for service…</dd>
+                </div>
+                <div>
+                  <dt>Spectral modes</dt>
+                  <dd>32 × 32</dd>
+                </div>
+                <div>
+                  <dt>Hidden channels</dt>
+                  <dd>128</dd>
+                </div>
+                <div>
+                  <dt>Serving</dt>
+                  <dd>CPU · one step or bounded rollout (≤ 30 steps)</dd>
+                </div>
+                <div>
+                  <dt>Training data</dt>
+                  <dd>Prototype-scale slices of The Well, not full trajectories</dd>
+                </div>
+                <div>
+                  <dt>Pretraining mix</dt>
+                  <dd>
+                    Turbulent radiative layer (primary) + shear flow +
+                    Rayleigh–Bénard, jointly
+                  </dd>
+                </div>
+              </dl>
+              <h3>Where the bottleneck is</h3>
+              <p>
+                The weights were trained at prototype budget on bounded slices
+                of the dataset. That, more than the FNO architecture, sets the
+                current accuracy and the rollout horizon. Growing the training
+                set and budget is the main lever for this model; the rollout
+                view is where any improvement should show up first.
+              </p>
+              <h3>Why FNO?</h3>
+              <p>
+                Fourier layers learn spatial relationships in the frequency
+                domain, a useful architectural choice for PDE-like fields. This
+                prototype uses a fixed inference grid; resolution-transfer
+                performance is not established here.
+              </p>
+              <h3>A separate fast tier</h3>
+              <p>
+                Numeric parameter estimates use interpolation over precomputed
+                tables. Their accuracy is not measured by the field comparison
+                metrics.
+              </p>
+              <a class="text-link" href="#about"
+                >Research history and limitations →</a
+              >
+            </div>
+          </section>
+          <section id="page-settings" class="page" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>Settings</h1>
+              </div>
+            </div>
+            <div class="settings">
+              <section class="pref-row">
+                <div>
+                  <h2>Appearance</h2>
+                  <p>Black or light surfaces. Your choice stays in this browser.</p>
+                </div>
+                <button id="settings-theme" class="btn" type="button">
+                  Switch theme
+                </button>
+              </section>
+              <section class="pref-row">
+                <div>
+                  <h2>Anonymous usage counts</h2>
+                  <p>
+                    Only fixed event names are sent to this app: page views,
+                    selections, completed examples and prediction success/failure.
+                    No visitor IDs or field arrays are included. Do Not Track and
+                    Global Privacy Control are respected. Counts reset when the
+                    server restarts; hosting providers may keep their own request
+                    logs.
+                    <a class="text-link" href="/analytics" target="_blank" rel="noopener">View aggregate counts</a>
+                  </p>
+                </div>
+                <label class="analytics-choice"
+                  ><input id="analytics-toggle" type="checkbox" checked /> Share
+                  anonymous counts</label
+                >
+              </section>
+              <section class="pref-row">
+                <div>
+                  <h2>What is stored where</h2>
+                  <p>
+                    <strong>In this browser:</strong> your theme, the last 20
+                    Model demo comparisons with their metrics and previews
+                    (<a class="text-link" href="#history">Run history</a>), and
+                    the access key for your Workbench studies. Display-resolution
+                    prediction arrays are cached in this tab for up to one hour.
+                    Clearing site data removes all of it, including access to
+                    your studies.
+                  </p>
+                  <p>
+                    <strong>On the server:</strong> Workbench studies you upload
+                    or open, their versions, models, suggestions and reports. Delete
+                    a study from its Report step.
+                  </p>
+                </div>
+              </section>
+              <details class="pref-advanced">
+                <summary>Advanced: loading measurements</summary>
+                <p id="server-startup">Waiting for server startup measurement.</p>
+                <p id="timing-summary">
+                  Open an example to measure comparison loading.
+                </p>
+              </details>
+            </div>
+          </section>
+          <section id="page-probe" class="page" hidden data-probe-mode="static">
+            <div class="page-heading">
+              <div>
+                <h1>Generalization probe</h1>
+                <p>Can prior fluid learning help on a fourth system?</p>
+              </div>
+              <span class="badge">Static results, not live inference</span>
+            </div>
+            <div class="card prose launch-guide">
+              <h2>Setup</h2>
+              <p>
+                <code>euler_multi_quadrants_openBC</code> is a fourth fluid
+                system held out entirely from joint SEM pretraining. Pretraining
+                used <code>turbulent_radiative_layer_2D</code> as the primary
+                set with <code>shear_flow</code> and
+                <code>rayleigh_benard</code> as joint co-training sets. The
+                question: does that prior learning help scarce-data fine-tuning
+                on a fluid system the model never saw?
+              </p>
+              <p>
+                Both arms were fine-tuned on the same scarce Euler data. Arm A
+                started from the SEM-pretrained joint checkpoint. Arm B used the
+                same architecture with random initialization, trained from
+                scratch.
+              </p>
+              <div class="probe-arms">
+                <article>
+                  <p class="eyebrow">Arm A: pretrained start</p>
+                  <h2>0.0089</h2>
+                  <p>Final loss · 30 fine-tuning epochs</p>
+                  <p>
+                    Start with prior learning from the three fluid systems, then
+                    fine-tune the model weights on Euler.
+                  </p>
+                </article>
+                <article>
+                  <p class="eyebrow">Arm B: from scratch</p>
+                  <h2>0.0107</h2>
+                  <p>Final loss · 30 training epochs</p>
+                  <p>
+                    Start with random weights and learn on the same scarce-data
+                    Euler setup, without that prior learning.
+                  </p>
+                </article>
+              </div>
+              <h2>16.3% lower error with the pretrained start</h2>
+              <p>
+                <strong
+                  >Measured during training; reported by the project
+                  owner.</strong
+                >
+                Both arms were reported fully converged in the 30-epoch rerun.
+                The percentage is the reported result, not recalculated from the
+                rounded losses above. These are aggregate losses, not the
+                simulator's per-field relative L2 scores or its 15% acceptance
+                target.
+              </p>
+              <p>
+                <strong>Important limitation:</strong> a file-selection bug
+                limited fine-tuning to one distinct gamma value instead of the
+                four intended. This narrows the evidence. The gamma-aware rerun
+                is pending; new results may differ.
+              </p>
+              <h3>Run history</h3>
+              <div
+                class="evidence-scroll"
+                role="region"
+                aria-label="Euler probe run history"
+                tabindex="0"
+              >
+                <table class="evidence-table">
+                  <caption>
+                    Two runs were made. Only the second is reported.
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Run</th>
+                      <th scope="col">Fine-tune epochs</th>
+                      <th scope="col">Result</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>First</td>
+                      <td>15</td>
+                      <td>Pretrained arm ahead by 44.2%</td>
+                      <td>
+                        <strong>Superseded, not used.</strong> The from-scratch
+                        arm had not converged at 15 epochs, so the gap was
+                        inflated and the comparison was not fair.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Rerun</td>
+                      <td>30</td>
+                      <td>
+                        Pretrained final loss 0.0089 · from-scratch final loss
+                        0.0107
+                      </td>
+                      <td>
+                        <strong>Reported result.</strong> Both arms fully
+                        converged. Pretrained start is 16.3% lower error.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3>Artifact status</h3>
+              <ul>
+                <li>
+                  <strong>No fine-tuned checkpoint exists.</strong> Neither the
+                  pretrained-start arm nor the from-scratch arm was saved or
+                  pushed. Confirmed directly against the
+                  <code>checkpoints/</code> folder of the HF dataset repo. Only
+                  the losses above survive, which is why this page is static and
+                  Euler cannot run live.
+                </li>
+                <li>
+                  <strong>Normalization stats do exist</strong> on HF
+                  (<code>stats/euler_multi_quadrants_openBC.npz</code>), so that
+                  piece is not a blocker for wiring Euler live later.
+                </li>
+                <li>
+                  <strong>No parametric table</strong> for Euler exists, unlike
+                  the three live systems. Its single dial (<code>gamma</code>)
+                  is defined in code but was never built into a servable table.
+                </li>
+              </ul>
+              <h3>Euler in the shared representation</h3>
+              <ul>
+                <li>Native grid 512 × 512, resampled to 256 × 256 for the model.</li>
+                <li>
+                  Five raw fields; four map into the canonical
+                  <code>[scalar, pressure, velocity_x, velocity_y]</code>
+                  vocabulary and one raw field has no canonical slot and is
+                  dropped.
+                </li>
+                <li>
+                  Raw velocity channels store momentum-like quantities; they are
+                  divided by density on the way in to recover true velocity
+                  (<code>derive_velocity</code>). This transform is applied once
+                  to the seed frames only; predictions are never round-tripped
+                  through it.
+                </li>
+                <li>One dial: <code>gamma</code>.</li>
+              </ul>
+              <h3>What this experiment does and does not test</h3>
+              <p>
+                It compares two starting points for full-model training. It does
+                not test frozen-backbone learned adapters. It is evidence
+                <em>in the direction of</em> transfer to another fluid system,
+                not proof of generalization to arbitrary physics. A
+                trajectory-separated rerun and saved checkpoints are needed for
+                stronger claims.
+              </p>
+            </div>
+            <div class="card prose launch-guide">
+              <h2>How each physics domain is meant to mature</h2>
+              <ol class="maturity-ladder">
+                <li>
+                  <strong>Single system (SEM):</strong> a single-system engineering-model
+                  experience. The three live systems are presented at this
+                  maturity level; their current implementation shares one
+                  jointly trained checkpoint.
+                </li>
+                <li>
+                  <strong>Several systems:</strong> demonstrate reliable shared
+                  learning across systems within fluids. Sharing
+                  weights alone does not establish that milestone.
+                </li>
+                <li>
+                  <strong>One unseen system:</strong> demonstrate generalization to one
+                  unseen fluid system, not universal physics generalization.
+                </li>
+                <li>
+                  <strong>Validated engineering model (LEM):</strong> a broader, rigorously validated
+                  engineering model within that domain; not claimed here.
+                </li>
+              </ol>
+              <p>
+                The Euler result is evidence
+                <strong>in the direction of</strong> the next step, not a claim
+                that Delta-V has reached it. Every future domain (solid
+                mechanics, heat transfer, electromagnetics) is meant to repeat
+                this same climb with the same tooling, the same honesty rules
+                and its own measured evidence. Fluids is simply the domain we started with.
+              </p>
+              <p>
+                Next: fix gamma selection, rerun both arms, save checkpoints and
+                provenance, then connect a real side-by-side. A learned-adapter
+                arm remains a separate future experiment.
+              </p>
+              <a href="#simulator" class="text-link"
+                >Explore the three live systems →</a
+              >
+            </div>
+          </section>
+          <section id="page-about" class="page about" hidden>
+            <div class="page-heading">
+              <div>
+                <h1>A first step toward<br />learned engineering tools.</h1>
+                <p>
+                  What Delta-V does, how to use it, and where the evidence ends.
+                </p>
+              </div>
+              <a class="btn primary" href="#workbench?start=example">Explore the worked example</a>
+            </div>
+            <div class="about-now">
+              <h2>What Delta-V does today</h2>
+              <p>
+                Bring compatible simulation runs, adapt a pretrained Fourier
+                Neural Operator to them, explore settings you have not
+                simulated with calibrated intervals, and choose the next batch
+                of runs. That workflow lives in the
+                <a class="text-link" href="#workbench">Workbench</a>, for one
+                supported study type: a 2D periodic flow on a fixed 64 × 64
+                grid. Its research basis is on the
+                <a class="text-link" href="#evidence">Evidence</a> page.
+              </p>
+              <p>
+                The sections below explain the earlier work that led here: the
+                shared next-frame model in the Model demo, the rollout view and
+                the Euler probe. They are history and context, not additional
+                supported study types.
+              </p>
+            </div>
+            <nav class="article-nav" aria-label="Explanation sections">
+              <a href="#about" data-anchor="what">Overview</a
+              ><a href="#about" data-anchor="approach">Approach</a
+              ><a href="#about" data-anchor="limitations">Limitations</a
+              ><a href="#about" data-anchor="research">What we tried</a
+              ><a href="#about" data-anchor="walkthrough">Walkthrough</a>
+            </nav>
+            <div class="about-body">
+              <article class="prose">
+                <section id="what">
+                  <h2>
+                    A system for learned engineering surrogates, built one physics domain at a time.
+                  </h2>
+                  <p>
+                    Delta-V is not a fluids tool. It is the scaffolding for
+                    serving, measuring and honestly presenting learned
+                    approximations of physical systems, and fluid dynamics is
+                    the first domain we are running through that
+                    scaffolding. Each domain gets its own data, its own
+                    checkpoint, and its own climb up the same maturity ladder.
+                    What carries across domains is the workflow: a fast
+                    parameter-based estimate, a neural next-state prediction,
+                    a bounded rollout, and a reference comparison beside every
+                    result so you can see exactly where the model agrees with
+                    simulation and where it does not.
+                  </p>
+                  <p>
+                    The project began in a software engineering lab. This public
+                    prototype is an invitation to test the interaction and
+                    understand its usefulness. The live fluids model uses only 2D data
+                    from The Well and complements high-fidelity simulation. Its
+                    output is not validated industrial simulation.
+                  </p>
+                </section>
+                <section id="approach">
+                  <h2>Fast estimates, with a reference you can inspect.</h2>
+                  <p>
+                    The distinction is the workflow: a numeric parameter
+                    explorer and a field-comparison viewer share one interface
+                    across three fluid systems. Open code and identifiable data
+                    make the implementation inspectable. This is a design
+                    choice, not evidence of superior accuracy or speed over
+                    other tools.
+                  </p>
+                  <p>
+                    The parametric tier interpolates outcome tables for flux and
+                    turbulent velocity. The field tier uses a Fourier Neural
+                    Operator (FNO) with per-system preprocessing. Changing an
+                    outcome dial does not generate a new field initial
+                    condition: field prediction uses a selected recorded sample.
+                  </p>
+                  <h3>Current stage</h3>
+                  <p>
+                    An experimental multi-system fluid prototype: three served
+                    systems, one shared field checkpoint, six training
+                    demonstration windows, three official-test rollout clips
+                    with up to 30 generated steps, and browser-local history.
+                    Our starting point was the single-system engineering model
+                    (SEM). This shared serving setup is an early step toward a
+                    broader fluid model, but a validated large engineering model
+                    (LEM) requires evidence of generalization that this
+                    prototype does not yet provide.
+                  </p>
+                  <p>
+                    <strong>The bottleneck is training scale, not
+                    architecture.</strong> The served checkpoint was trained at
+                    prototype budget on bounded slices of The Well, not on the
+                    full trajectory sets. That is the honest reason for the
+                    current accuracy and for how quickly rollout error grows. The
+                    rollout horizon (how many frames the model can generate
+                    from four inputs before crossing the error target) is the
+                    number we expect to move as training scales, and it is how
+                    we intend to measure that.
+                  </p>
+                  <p>
+                    The research path is to compare per-system baselines with
+                    joint training, then evaluate generalization to unseen fluid
+                    systems (the Euler probe is the first such measurement),
+                    then open the next domain and repeat. Cross-domain or
+                    3D generalization is not claimed.
+                  </p>
+                </section>
+                <section id="limitations">
+                  <h2>The comparison is part of the product.</h2>
+                  <ul>
+                    <li>
+                      <strong>Uneven prediction quality.</strong> Inspect
+                      relative L2, RMSE and SSIM per channel in the measured
+                      results below. The self-imposed v1 target is strictly
+                      relative L2 &lt;15% for scalar and pressure. Some windows
+                      miss that target. Velocity channels are directional
+                      structure only; no quantitative target for this release.
+                    </li>
+                    <li>
+                      <strong>Six short windows.</strong> Two examples per
+                      system, drawn from training slices. They demonstrate
+                      behavior, not out-of-sample generalization. Each has four
+                      input snapshots and one reference next state.
+                    </li>
+                    <li>
+                      <strong>Prototype-scale training.</strong> The checkpoint
+                      was trained on bounded slices of The Well, not full
+                      trajectories. More training data and budget, not a new
+                      architecture, is the main lever left for the fluids model.
+                    </li>
+                    <li>
+                      <strong>Bounded rollout, short reference.</strong> Up to
+                      30 generated steps on three official-test clips, but
+                      measured error exists only through f10. Beyond that there
+                      is no ground truth and no error is reported. The top
+                      timeline still shows recorded frames only.
+                    </li>
+                    <li>
+                      <strong>Fixed model grid.</strong> Fields are resampled to
+                      256 × 256. Images use 8-bit colors; metrics use
+                      full-precision fields before display quantization.
+                    </li>
+                    <li>
+                      <strong>Parameter-estimate evaluation is open.</strong>
+                      Field errors do not validate table interpolation. The
+                      parametric tier needs its own accuracy evaluation.
+                    </li>
+                    <li>
+                      <strong>Prototype hosting and storage.</strong> Startup
+                      can take a minute or two after sleep. History lives in
+                      your browser, without synchronization or saved
+                      full-resolution result arrays.
+                    </li>
+                  </ul>
+                  <h3>Measured results, not a generalization claim</h3>
+                  <p id="evidence-status" role="status">
+                    Measured results load when the model is ready.
+                  </p>
+                  <div
+                    class="evidence-scroll"
+                    role="region"
+                    aria-label="Per-channel measured results"
+                    tabindex="0"
+                  >
+                    <table class="evidence-table">
+                      <caption>
+                        One-step measurements on the six training demonstrations
+                        and three official-test rollout clips (IDs begin
+                        rollout-test-). This small selection is not a
+                        comprehensive held-out benchmark.
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">System / sample</th>
+                          <th scope="col">Field</th>
+                          <th scope="col">Rel. L2</th>
+                          <th scope="col">RMSE<br />(code units)</th>
+                          <th scope="col">SSIM</th>
+                          <th scope="col">Self-imposed v1 target</th>
+                        </tr>
+                      </thead>
+                      <tbody id="evidence-body"></tbody>
+                    </table>
+                  </div>
+                  <p class="small muted">
+                    Scores are computed before display quantization. Lower
+                    relative L2 and RMSE are better; SSIM measures local
+                    structural similarity (1 is an exact match). SSIM uses the
+                    reference field’s data range and is undefined for a constant
+                    reference. A dash means unavailable or undefined, never zero
+                    error.
+                  </p>
+                  <h3>Separate check: six official test windows</h3>
+                  <p>
+                    Two fixed test files per system, one window from trajectory
+                    0 in each. These are outside the supplied notebook's
+                    train-only source path. The notebook's original validation
+                    split mixed windows from shared trajectories; these new
+                    scores do not repair that old split. Checkpoint lineage is
+                    owner-supplied, not cryptographically established. This is a
+                    small check, not a broad generalization benchmark or adapter
+                    experiment.
+                  </p>
+                  <p id="heldout-status" role="status">
+                    Loading the published test check…
+                  </p>
+                  <div
+                    class="evidence-scroll"
+                    role="region"
+                    aria-label="Official test window results"
+                    tabindex="0"
+                  >
+                    <table class="evidence-table">
+                      <caption>
+                        Epoch 59 · fixed official test sources · no training or
+                        tuning on these results
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">System / test window</th>
+                          <th scope="col">Field</th>
+                          <th scope="col">Rel. L2</th>
+                          <th scope="col">RMSE<br />(code units)</th>
+                          <th scope="col">SSIM</th>
+                          <th scope="col">Self-imposed v1 target</th>
+                        </tr>
+                      </thead>
+                      <tbody id="heldout-body"></tbody>
+                    </table>
+                  </div>
+                  <p>
+                    <a href="heldout-results.json"
+                      >Download scores and exact source identifiers →</a
+                    >
+                    ·
+                    <a href="technical-note.html#evaluation"
+                      >Method and caveats →</a
+                    >
+                  </p>
+                </section>
+                <section id="research">
+                  <h2>Choices, experiments, and lessons.</h2>
+                  <h3>A common representation for different fluids</h3>
+                  <p>
+                    Density, buoyancy, and tracer map to a shared scalar channel
+                    alongside pressure and x/y velocity. Per-system
+                    normalization and fixed preprocessing adapters let the same
+                    pipeline handle radiative cooling, convection, and shear
+                    mixing. These adapters map data; they are not learned neural
+                    modules. The served FNO weights are fully shared.
+                  </p>
+                  <h3>Spectral prediction plus table interpolation</h3>
+                  <p>
+                    FNO was selected as a neural-operator baseline for spatial
+                    fields. A lightweight interpolator handles numeric outcomes
+                    without running the field model. Both are available here so
+                    their different roles stay visible.
+                  </p>
+                  <h3>A checkpoint-selection correction</h3>
+                  <p>
+                    During development, the file labeled “best” retained epoch-3
+                    weights while later training reached epoch 59 with lower
+                    validation loss (0.0366 → 0.0251). Inference was compared
+                    and the artifact corrected. The live epoch appears on the
+                    Model page. Validation loss is not the same as the per-field
+                    error shown here.
+                  </p>
+                  <h3>An Euler-system research probe</h3>
+                  <p>
+                    The code retains an adapter for
+                    <code>euler_multi_quadrants_openBC</code> but excludes it
+                    from the served fluid family. This was explored as a
+                    generalization probe. The supplied notebook implements full
+                    fine-tuning versus training from scratch on Euler. The owner
+                    subsequently supplied a 30-epoch result: 0.0089 versus
+                    0.0107 final loss, with a reported 16.3% lower error for the
+                    pretrained start. Only one gamma value was covered instead
+                    of four intended; checkpoints were not saved. See
+                    <a href="#probe">the two-arm probe and caveats</a>. A
+                    frozen-backbone learned-adapter arm, a trajectory-separated
+                    evaluation and comparisons across data fractions are new
+                    work. The two-arm result points in the direction of
+                    transfer; learned-adapter advantage is not established.
+                  </p>
+                  <h3>Next questions</h3>
+                  <p>
+                    Which comparisons help people judge a prediction? Where do
+                    errors concentrate? Are more sample windows or longer
+                    rollouts useful? Broader evaluation and clearer data
+                    provenance will guide the next iteration.
+                  </p>
+                </section>
+                <section id="walkthrough">
+                  <h2>Your first exploration.</h2>
+                  <ol>
+                    <li>
+                      <strong>Choose a physical system.</strong> Select
+                      cooling-driven turbulence, convection, or shear flow.
+                      Fields, samples, and ranges update together.
+                    </li>
+                    <li>
+                      <strong>Try the instant explorer.</strong> Adjust the
+                      logarithmic sliders; estimates update after you pause
+                      dragging for 150 ms. Estimate outcomes also lets you
+                      retry. These are table-based estimates in simulation code
+                      units.
+                    </li>
+                    <li>
+                      <strong>Inspect a sample.</strong> Choose a bundled
+                      window, field, and frame. Each view has a numeric color
+                      scale and preserves the physical aspect ratio.
+                    </li>
+                    <li>
+                      <strong>Run a prediction.</strong> Four history frames
+                      predict the fifth. Compare prediction, reference, and
+                      signed prediction-minus-truth. Timeline selection does not
+                      change this fixed target. The fixed one-step predictions
+                      are computed at startup and cached. Repeated requests
+                      reuse the result; they do not run the model again.
+                    </li>
+                    <li>
+                      <strong>Read the errors.</strong> Relative L2 compares
+                      error magnitude with reference magnitude; lower is better.
+                      RMSE measures typical error magnitude in the field’s
+                      units. SSIM measures structural similarity, with 1
+                      denoting an exact match. Near-zero references can make
+                      relative error hard to interpret.
+                    </li>
+                    <li>
+                      <strong>Inspect and revisit.</strong> Zoom, expand, or
+                      download the current field. History saves metrics and a
+                      comparison preview; reopening the sample and predicting
+                      again reuses the cached prediction for the current model.
+                    </li>
+                    <li>
+                      <strong>Explore the rest.</strong> Datasets explains
+                      domains, parameters, windows, source indices, and times.
+                      Model describes the architecture. Settings controls
+                      appearance.
+                    </li>
+                  </ol>
+                  <button id="about-tour" class="btn secondary">
+                    Take the in-app walkthrough →
+                  </button>
+                </section>
+                <section>
+                  <h2>Built on open work.</h2>
+                  <p>
+                    <a href="technical-note.html"
+                      >Read the technical note and reproduction steps →</a
+                    >
+                  </p>
+                  <p>
+                    <a
+                      href="https://polymathic-ai.org/the_well/"
+                      target="_blank"
+                      rel="noopener"
+                      >Polymathic AI’s The Well ↗</a
+                    ><br /><a
+                      href="https://github.com/krishoncloud/delta-v"
+                      target="_blank"
+                      rel="noopener"
+                      >Delta-V source code ↗</a
+                    ><br /><a
+                      href="https://huggingface.co/datasets/KrishMalik/deltav-fluid"
+                      target="_blank"
+                      rel="noopener"
+                      >Model and dataset artifacts ↗</a
+                    >
+                  </p>
+                  <p>Created by Krish Malik.</p>
+                </section>
+              </article>
+              <aside class="about-aside">
+                <h3>Experimental prototype</h3>
+                <p>
+                  Fluids, the first of several planned domains<br />3 systems live ·
+                  1 held-out probe<br />6 sample windows + 3 rollout clips<br />4
+                  input frames → 1 prediction → ≤ 30-step rollout<br />2D only<br />Simulation
+                  code units
+                </p>
+                <a class="text-link" href="#datasets">Meet the datasets →</a>
+              </aside>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <dialog id="field-dialog">
+      <div class="dialog-head">
+        <strong id="dialog-title">Field inspection</strong
+        ><button
+          id="dialog-close"
+          class="icon-btn"
+          aria-label="Close field inspection"
+        >
+          ✕
+        </button>
+      </div>
+      <div id="dialog-field"></div>
+      <p class="small muted">
+        Reference field · simulation code units · original physical aspect ratio
+      </p>
+    </dialog>
+    <script src="colormaps.js?v=redesign-21"></script>
+    <script src="rollout.js?v=redesign-21"></script>
+    <script src="launch.js?v=redesign-21"></script>
+    <script src="flow.js?v=redesign-21"></script>
+    <script src="flowapi.js?v=redesign-21"></script>
+    <script src="pages.js?v=redesign-21"></script>
+    <script src="workbench.js?v=redesign-21"></script>
+    <script src="app.js?v=redesign-21"></script>
+  </body>
+</html>

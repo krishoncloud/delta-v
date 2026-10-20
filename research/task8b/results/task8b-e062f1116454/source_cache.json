@@ -1,0 +1,22 @@
+{
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "cache_sha256": "376d8b49c3ca842f536532fd323b075a864a61c5be12cf8acdb41d0d4230c8c5",
+  "lineage": {
+    "source": {
+      "repo": "KrishMalik/deltav-fluid",
+      "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+      "filename": "checkpoints/domain_fluid.pt",
+      "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+      "bytes": 858147645
+    },
+    "epoch": 59,
+    "loaded_tensor_keys": 40
+  },
+  "load_and_cache_seconds": 6.923029027000041
+}

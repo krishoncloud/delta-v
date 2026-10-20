@@ -1,0 +1,13 @@
+repetition,baseline,both_valid_stops,fno_active_labels,baseline_labels,saved_labels,saved_fraction
+701,fno_lhs,True,75,75,0.0,0.0
+1409,fno_lhs,True,83,75,-8.0,-0.10666666666666667
+2111,fno_lhs,True,75,67,-8.0,-0.11940298507462686
+701,gp_active,True,75,75,0.0,0.0
+1409,gp_active,True,83,67,-16.0,-0.23880597014925373
+2111,gp_active,True,75,75,0.0,0.0
+701,gp_random,True,75,75,0.0,0.0
+1409,gp_random,True,83,75,-8.0,-0.10666666666666667
+2111,gp_random,True,75,75,0.0,0.0
+701,gp_sobol,True,75,75,0.0,0.0
+1409,gp_sobol,True,83,75,-8.0,-0.10666666666666667
+2111,gp_sobol,True,75,75,0.0,0.0

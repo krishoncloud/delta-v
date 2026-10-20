@@ -1,0 +1,6 @@
+policy,valid_stops,premature_stops,never_stopped,median_labels_at_proposed_stop
+fno_active,3,0,0,75.0
+fno_lhs,3,0,0,75.0
+gp_active,3,0,0,75.0
+gp_random,3,0,0,75.0
+gp_sobol,3,0,0,75.0

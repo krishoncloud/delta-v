@@ -1,0 +1,13 @@
+repetition,baseline,both_valid_and_fno_saves_labels,saved_labels,extra_non_solver_seconds,breakeven_seconds_per_customer_simulation,actual_generated_solver_workflow_fno_faster
+701,fno_lhs,False,,-7.385992968999631,,True
+701,gp_active,False,,507.4244544059999,,False
+701,gp_random,False,,507.46514543399996,,False
+701,gp_sobol,False,,507.3734964350002,,False
+1409,fno_lhs,False,,190.10157800000138,,False
+1409,gp_active,False,,673.7063288660008,,False
+1409,gp_random,False,,673.3116906910016,,False
+1409,gp_sobol,False,,673.2561071080011,,False
+2111,fno_lhs,False,,171.75201907599927,,False
+2111,gp_active,False,,488.4675877999985,,False
+2111,gp_random,False,,488.48081803899873,,False
+2111,gp_sobol,False,,488.38647754999926,,False

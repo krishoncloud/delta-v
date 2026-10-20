@@ -1,0 +1,9 @@
+{
+  "repetition": 1409,
+  "policy": "fno_active",
+  "budget": 32,
+  "runs_so_far": 32,
+  "calibration_q": 2.9746841366818617,
+  "tolerance": 0.015,
+  "model_says_stop": true
+}

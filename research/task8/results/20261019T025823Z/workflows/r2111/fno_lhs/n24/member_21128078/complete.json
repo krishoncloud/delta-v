@@ -1,0 +1,30 @@
+{
+  "signature": "197365a5005a6ee77383081268716109e4610fca61460137845fe857b0846d06",
+  "files": {
+    "attempts/20261019T040704_058725.json": {
+      "sha256": "c47ec369fd8f51771fb3cb0c8ccffa0f16e72e9c1313b55ae9a0e3f43f1ab79e",
+      "bytes": 58
+    },
+    "contract.json": {
+      "sha256": "d2221bca0f69ae8743b30f751d8c0238b48547cc163881d973055671130fb06f",
+      "bytes": 3492
+    },
+    "learning.csv": {
+      "sha256": "fba263c8a9f985efc7b100fdea6b016088a8f4496906eef2fd3a189fcc4fc0ea",
+      "bytes": 1528
+    },
+    "predictions.npz": {
+      "sha256": "a258588d77706dc5e6b3b61cfde2b7313a9135687da3151827714bd18e206ddc",
+      "bytes": 8775
+    },
+    "result.json": {
+      "sha256": "038daa3f52f2953b2f0bbc54568064ef7943edada64baad99f54f8a06726585c",
+      "bytes": 991
+    }
+  },
+  "weight": {
+    "sha256": "3636d204a1eee87373d12e0d92c3144ce57e9d30f46a855153f91d0d47708f16",
+    "bytes": 286045477
+  },
+  "sha256": "e2caedb7cf988cde27cb0022321409adb2a26d998f06c0b5cf3c9d7c5e85811e"
+}

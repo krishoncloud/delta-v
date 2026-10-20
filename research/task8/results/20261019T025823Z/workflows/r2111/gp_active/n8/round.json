@@ -1,0 +1,55 @@
+{
+  "protocol": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "repetition": 2111,
+  "policy": "gp_active",
+  "budget": 8,
+  "selected_ids": [
+    "r2111-00000",
+    "r2111-00001",
+    "r2111-00002",
+    "r2111-00003",
+    "r2111-00004",
+    "r2111-00005",
+    "r2111-00006",
+    "r2111-00007"
+  ],
+  "next_ids": [
+    "r2111-00382",
+    "r2111-00312",
+    "r2111-00228",
+    "r2111-00258",
+    "r2111-00334",
+    "r2111-00081",
+    "r2111-00119",
+    "r2111-00224"
+  ],
+  "first_proposed_stop": null,
+  "proposed_stop_now": false,
+  "probe_ready_fraction": 0.0,
+  "probe_max_halfwidth_ratio": 17.92258186520134,
+  "shadow_after_first_stop": false,
+  "charged_labels": 59,
+  "round_wall_seconds": 0.24661973299953388,
+  "selection_seconds": 0.0037406130004455918,
+  "data_access_seconds": 0.033435038999414246,
+  "non_fit_loop_seconds": 0.06064522200085776,
+  "fit_overhead_seconds": 0.002528906000407005,
+  "fit_receipts": {
+    "member_2111": "44e9fb37f0e6842def33b94ae9b108cedaa331709f70c6c088d060e12e813950"
+  },
+  "files": {
+    "aggregate_predictions.npz": {
+      "sha256": "349c9a8afe9ad624ddf575d5c0e435eb58898f41af41209ff20c039bdb2fccd5",
+      "bytes": 29812
+    },
+    "calibration_rule.json": {
+      "sha256": "726ca1633a5b9be519b160193883dc1332fb613d7fad482461467e11bbab813e",
+      "bytes": 329
+    },
+    "recommendations.json": {
+      "sha256": "b46b0fb40d1e1c3a48ca400826f55258eb2340eaf19789f1a842ecdc1c088714",
+      "bytes": 1861
+    }
+  },
+  "sha256": "7cfa5de7de73ddfa53d6e93c15c44acf34d516c948054afda4292486091515e0"
+}

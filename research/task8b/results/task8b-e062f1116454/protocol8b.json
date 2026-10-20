@@ -1,0 +1,85 @@
+{
+  "rules": {
+    "level": 0.9,
+    "objective1": {
+      "budgets": [
+        16,
+        24
+      ],
+      "coverage_band": [
+        0.85,
+        0.95
+      ],
+      "max_extra_labels": 12,
+      "method": "joint normalized CV+ over K folds of the FNO-LHS training set; the 12 development runs are still used only for checkpoint selection",
+      "references": [
+        "split conformal on 39 calibration runs (Task 7/8 style)",
+        "split conformal on the 12 development runs (optimistic: they also selected checkpoints)",
+        "raw ensemble mean +/- z*sd"
+      ]
+    },
+    "objective2": {
+      "budgets": [
+        8,
+        16
+      ],
+      "max_rmse_ratio": 0.8,
+      "aggregate": "median over repetitions of FNO RMSE / baseline RMSE, per outcome; all four (budget, outcome) cells must pass for each baseline",
+      "baselines": [
+        "pod_gp",
+        "gp_refit"
+      ],
+      "training_ids": "identical to the Task 8 FNO-LHS path"
+    },
+    "objective3": {
+      "tolerances": [
+        0.015,
+        0.008,
+        0.004
+      ],
+      "success_fraction": 0.9,
+      "tail_ratio": 2.0,
+      "minimum_saving_runs": 8,
+      "required_tolerances": 2,
+      "primary": "fno_lhs",
+      "baselines": "best of gp_active, gp_random, gp_sobol, pod_gp on the gp_sobol path, pod_gp on the fno_lhs path",
+      "never_qualifies": "counted as ceiling + one batch (censored)"
+    },
+    "evidence_status": "retrospective development evidence: Task 8 test labels were already opened"
+  },
+  "settings": {
+    "budgets": [
+      8,
+      16,
+      24
+    ],
+    "folds": 4,
+    "member_seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "steps": 3000,
+    "max_seconds": 3600.0
+  },
+  "task8_protocol_sha256": "df369db23d69771ad092d5413b07afac3a670f2d217ebc9697d6880bfc256424",
+  "code_sha256": "90df55f11c4c21f9b00acb63cac5eb6f21eeb71f790e05150609c2cd8e624c76",
+  "environment": {
+    "python": "3.13.11",
+    "packages": {
+      "marimo": "0.25.1",
+      "torch": "2.11.0",
+      "neuraloperator": "2.0.0",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "pandas": "3.0.3",
+      "scikit-learn": "1.9.0",
+      "matplotlib": "3.11.1",
+      "huggingface-hub": "1.33.0"
+    },
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "cuda": "13.0",
+    "precision": "float32 model, float64 solver"
+  },
+  "sha256": "e062f11164540ed06dfe952ea292f808fe84ee908ace4ba696cf6c08c619547b"
+}

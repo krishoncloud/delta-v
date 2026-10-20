@@ -1,0 +1,462 @@
+{
+  "fields/000_initial.npy": {
+    "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+    "bytes": 65664
+  },
+  "fields/000_target.npy": {
+    "sha256": "97ab884100f00c69115c20cf0c3a0cc3aaf819f49b838a8e17a5b7722d46ac80",
+    "bytes": 65664
+  },
+  "fields/001_initial.npy": {
+    "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+    "bytes": 65664
+  },
+  "fields/001_target.npy": {
+    "sha256": "0c9ed2c7b5bc581f918d9618cf367468309d0b5e3b584ea4261b835c4362d585",
+    "bytes": 65664
+  },
+  "fields/002_initial.npy": {
+    "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+    "bytes": 65664
+  },
+  "fields/002_target.npy": {
+    "sha256": "8558ec709d4d1cba4793a203f8e9a1b566ecb3afa6281fea36a8230a937fa4da",
+    "bytes": 65664
+  },
+  "fields/003_initial.npy": {
+    "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+    "bytes": 65664
+  },
+  "fields/003_target.npy": {
+    "sha256": "0ed2c2e99f41b8e6adae0067faff6b91283b18986aa7c8813857e937a67e82dd",
+    "bytes": 65664
+  },
+  "fields/004_initial.npy": {
+    "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+    "bytes": 65664
+  },
+  "fields/004_target.npy": {
+    "sha256": "44d72d644f2dab15191dba5d5c289eb8566b811b76a5f0c5ac7beeb0c25a86f9",
+    "bytes": 65664
+  },
+  "fields/005_initial.npy": {
+    "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+    "bytes": 65664
+  },
+  "fields/005_target.npy": {
+    "sha256": "0df6053844383b251a093bd8b4e8957eeb90449be6360a9d92b972193e474d37",
+    "bytes": 65664
+  },
+  "fields/006_initial.npy": {
+    "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+    "bytes": 65664
+  },
+  "fields/006_target.npy": {
+    "sha256": "5563c66e05162e743365004f09147fcd02979f844c3d08afa50e17abd5b71005",
+    "bytes": 65664
+  },
+  "fields/007_initial.npy": {
+    "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+    "bytes": 65664
+  },
+  "fields/007_target.npy": {
+    "sha256": "99ddb612cf527f28dd12826d753bb549ff4626785b6b717e5c982c285579c58d",
+    "bytes": 65664
+  },
+  "fields/008_initial.npy": {
+    "sha256": "dedfc27ec7ad71cc281621fecf8feb012e829bf02b27510d1562ddca699a7292",
+    "bytes": 65664
+  },
+  "fields/008_target.npy": {
+    "sha256": "856adee0475c9ad3af1a2792004a5a02741e40803998e5ff6a0d42e5e60bc01f",
+    "bytes": 65664
+  },
+  "fields/009_initial.npy": {
+    "sha256": "6238149a8db4af00bcf49faf748d1b9bc799b106833858c0f75dd265a8102cba",
+    "bytes": 65664
+  },
+  "fields/009_target.npy": {
+    "sha256": "d237794ba11daf77c4f2d576d74abf20c7ae97b01b00607c48147a807dd2a996",
+    "bytes": 65664
+  },
+  "fields/010_initial.npy": {
+    "sha256": "b1d198940755264129b2a4cd55c5c38d0cf0d1b51837108725e8e036c8d45f63",
+    "bytes": 65664
+  },
+  "fields/010_target.npy": {
+    "sha256": "943c2a974d03d55d71588084818c5544253b87ecaa407cbffbcdfdb79ae161e0",
+    "bytes": 65664
+  },
+  "fields/011_initial.npy": {
+    "sha256": "40331d6a275893fc56cb50b922c45f6042a967b59244aa0e211f26dd318ae197",
+    "bytes": 65664
+  },
+  "fields/011_target.npy": {
+    "sha256": "e99ebb44a65486847d8fdca405a9a146db2a6d483a060972b15a00344a269161",
+    "bytes": 65664
+  },
+  "fields/012_initial.npy": {
+    "sha256": "d9831bac18811388277796148bbda0aa05e9c2c3915ff65022d57e47e58dd058",
+    "bytes": 65664
+  },
+  "fields/012_target.npy": {
+    "sha256": "b127cb9125446a12c32d199b2ccc2cacd97c58806fa7125a91312440f3cc6deb",
+    "bytes": 65664
+  },
+  "fields/013_initial.npy": {
+    "sha256": "a0da3fbeb27234e0cdac5e7f08211818e8f9d23bbcd4bf0d7026144ebfad48b9",
+    "bytes": 65664
+  },
+  "fields/013_target.npy": {
+    "sha256": "e8fe535161fc7246d151972d5a9d25a56e4a6ca09cc9f9b0fcec8d4ee2e5701e",
+    "bytes": 65664
+  },
+  "fields/014_initial.npy": {
+    "sha256": "ba2ad288bab72472b9096ed81405ec3c7007b938bf273cc6d7f69dc0631a776c",
+    "bytes": 65664
+  },
+  "fields/014_target.npy": {
+    "sha256": "5a8145e6b4b1aa5d8cd576cb8f30b000262761485423e81a31b74e3bd88f34a3",
+    "bytes": 65664
+  },
+  "fields/015_initial.npy": {
+    "sha256": "6abe15e950339100cfd6f583dd42f9fb788baf396c71a80899c2a557843b1775",
+    "bytes": 65664
+  },
+  "fields/015_target.npy": {
+    "sha256": "d6bc9e5602f3cb2f27116adf6970352925679fc0fbd3c228852949b5e71c0bb6",
+    "bytes": 65664
+  },
+  "fields/016_initial.npy": {
+    "sha256": "9168f4d10fc9da6482f5134b9cc7426b6d227f0082def4d9807d588ffbc322cb",
+    "bytes": 65664
+  },
+  "fields/016_target.npy": {
+    "sha256": "7d3e0ecb4372c2ee946d7b0efc48aae481ebac6e668908ca19a09ed089220311",
+    "bytes": 65664
+  },
+  "fields/017_initial.npy": {
+    "sha256": "45201a2573a640f1cd4d9597426f8a8147f680e8c1f00b54dedcdd0253fda056",
+    "bytes": 65664
+  },
+  "fields/017_target.npy": {
+    "sha256": "c2638533e4b24e9ded14ae9beda0076c6371ad46aa25a140f6bcc89b8eb94745",
+    "bytes": 65664
+  },
+  "fields/018_initial.npy": {
+    "sha256": "e1eeeda6b50cf1b734ccd8c08282c16a62f91d11c1b0062486ea98ef854862b1",
+    "bytes": 65664
+  },
+  "fields/018_target.npy": {
+    "sha256": "7893ca6ab2a8828a9a0cc6e912ee95aec096bcf4621298362e7223fe8b32335e",
+    "bytes": 65664
+  },
+  "fields/019_initial.npy": {
+    "sha256": "c3ace553b98b03229518c41b94d75c0cdae09705d2acf6da9d9381d36152ffa8",
+    "bytes": 65664
+  },
+  "fields/019_target.npy": {
+    "sha256": "1e080ae2146b4d6eaf394aca5a08838b7c5eed711fe5662cd499775d69887976",
+    "bytes": 65664
+  },
+  "fields/020_initial.npy": {
+    "sha256": "ace7defaebf9e664391d9da174ea4e5ee55cf7a3906f654a3259b1fe748508b0",
+    "bytes": 65664
+  },
+  "fields/020_target.npy": {
+    "sha256": "52d8900d847e99d2d49ba80393a0706c6bd5c77b3bccf8ee98b7d4d2ebe986f5",
+    "bytes": 65664
+  },
+  "fields/021_initial.npy": {
+    "sha256": "e6c6d2c71b9fb1b2d15bbd5d8fd65f37d4ae5ddeaf268023199e3ee0d79b4a26",
+    "bytes": 65664
+  },
+  "fields/021_target.npy": {
+    "sha256": "ecad8154640175eded4f446e3a6752fd15fb9797a01c449b7c7dde87503306ee",
+    "bytes": 65664
+  },
+  "fields/022_initial.npy": {
+    "sha256": "475bc17da8103afbb6c3c1b413189d6c33072fdc322f7d4db369de346f653fc2",
+    "bytes": 65664
+  },
+  "fields/022_target.npy": {
+    "sha256": "c537641fe16a3ce7c09fba0808de13154d568e3a2fb6a3e32f8d3cbe7c7688d9",
+    "bytes": 65664
+  },
+  "fields/023_initial.npy": {
+    "sha256": "45079028eedb3658ebd5e65a6581795949053f0ad8997cba251b795fd7ad1558",
+    "bytes": 65664
+  },
+  "fields/023_target.npy": {
+    "sha256": "dbb22f3b485e32a84a13d6f811dfe4f51d10f9ba509c8f2edc52004b39705732",
+    "bytes": 65664
+  },
+  "fields/024_initial.npy": {
+    "sha256": "9164a9d315071a22a4d8ea5bd342a4bde017e274e49c0a9def3798fc7b4c3cde",
+    "bytes": 65664
+  },
+  "fields/024_target.npy": {
+    "sha256": "45a0b185f05695c47a61c59b927793b907cb9ae2397bbca537d57d94844d3902",
+    "bytes": 65664
+  },
+  "fields/025_initial.npy": {
+    "sha256": "68a361c66619c6400ae6129c4719a94e8b680969276dc7bd8ff5e695fe23747e",
+    "bytes": 65664
+  },
+  "fields/025_target.npy": {
+    "sha256": "d7503205efc901d76230382835e336033f7a5cbbc5a30403c317880c58448956",
+    "bytes": 65664
+  },
+  "fields/026_initial.npy": {
+    "sha256": "efaf1243f758ab68c5b02ee0b38fee4a691a35121f3f90ae3a2cb1142c61a1ba",
+    "bytes": 65664
+  },
+  "fields/026_target.npy": {
+    "sha256": "b9fc0c22bcaebc151c9ab007d8c0772a1b183cf5b8cbead59436dbfc34f862e0",
+    "bytes": 65664
+  },
+  "fields/027_initial.npy": {
+    "sha256": "0f6e64f38e69d1d7f0a5ee11e5980ecf259ae31c8986be65ec7bdd791b0b7659",
+    "bytes": 65664
+  },
+  "fields/027_target.npy": {
+    "sha256": "1c62af3d7d27baa53e7b5b276fb7dda18586ebff6944ba5777278403455f4d77",
+    "bytes": 65664
+  },
+  "fields/028_initial.npy": {
+    "sha256": "d7c6c0428260b058abdd66a3e4a6a1970cd62d15e864dba6e3678d1762596e5d",
+    "bytes": 65664
+  },
+  "fields/028_target.npy": {
+    "sha256": "5d89f955dfb88128bd8b47fbee5a23f4f14ce85a80f4e194ecd98f900ac1ded1",
+    "bytes": 65664
+  },
+  "fields/029_initial.npy": {
+    "sha256": "2f0fb661bde1c8892b232b41b1fb1ad1ca03c3fac6215204d2ddb539ecd86c50",
+    "bytes": 65664
+  },
+  "fields/029_target.npy": {
+    "sha256": "5466acf254a6c3b2913164ea2cd214c8052da915092bb2c84ff830d3e56f2d88",
+    "bytes": 65664
+  },
+  "fields/030_initial.npy": {
+    "sha256": "7a47a655c9394505c4230389e7ff859d619e6320d3da18c1f24a81368aa11732",
+    "bytes": 65664
+  },
+  "fields/030_target.npy": {
+    "sha256": "456de964c7343b73530bc61c388117806c482dc4b7935450e9f5a279dee8488f",
+    "bytes": 65664
+  },
+  "fields/031_initial.npy": {
+    "sha256": "f2da80681d2afb2e30b77f405ec23016264556badd4285e8d72a5dec2b6deed9",
+    "bytes": 65664
+  },
+  "fields/031_target.npy": {
+    "sha256": "bf963d48194889bcc758baec78e1786a14ca36b4c96494595234e94ecff6ae53",
+    "bytes": 65664
+  },
+  "fields/032_initial.npy": {
+    "sha256": "a368a33e19690322adf50ca785f858cb4d92a2e7138bef11bd720e1f5896cd18",
+    "bytes": 65664
+  },
+  "fields/032_target.npy": {
+    "sha256": "4006847a7a5974d9f4766970f96ea9c9412ae86645d809d26f65b8f68518bf6c",
+    "bytes": 65664
+  },
+  "fields/033_initial.npy": {
+    "sha256": "e0098d919c4b91a3ebe66531b060228709de6eb2094626aad3254437b87fd850",
+    "bytes": 65664
+  },
+  "fields/033_target.npy": {
+    "sha256": "aef3a12f9e6ac7738739c7ea8089f7bcacebb4e3aaa501d8a3492322cca25fc7",
+    "bytes": 65664
+  },
+  "fields/034_initial.npy": {
+    "sha256": "3b88a90eb1d438efe34c5f46728d56cdf8cc8a69bb21597c095f3a73c349235a",
+    "bytes": 65664
+  },
+  "fields/034_target.npy": {
+    "sha256": "6652416aaea89f482ba998c3f3f167dfbb237507d2cb581f2a7133471ff0a074",
+    "bytes": 65664
+  },
+  "fields/035_initial.npy": {
+    "sha256": "27e8b43b0c982c3bda9fbcf8eae1c30af220f12f9051a41e033f1df08e5206be",
+    "bytes": 65664
+  },
+  "fields/035_target.npy": {
+    "sha256": "eca05754c66e9370b8b0a84dc1ef2eb884a30c7ecbd73f7e1d2efdd4334b04a3",
+    "bytes": 65664
+  },
+  "fields/036_initial.npy": {
+    "sha256": "4ff64fd620a4394d964a1585f9bee16532895bfc1a7b082f340bae3194984f46",
+    "bytes": 65664
+  },
+  "fields/036_target.npy": {
+    "sha256": "cad3e1c43e44817bddba90836cf273dd29936feb0ad1b9fa9ca7cff48aa91c04",
+    "bytes": 65664
+  },
+  "fields/037_initial.npy": {
+    "sha256": "17a1492e64756fb0f81dae14fc017ffecce1e17ab1307c2ea86ea240436ab50f",
+    "bytes": 65664
+  },
+  "fields/037_target.npy": {
+    "sha256": "c07ab063d4b68645a1566f90789afef95be4251bb18b917141a099919333c46c",
+    "bytes": 65664
+  },
+  "fields/038_initial.npy": {
+    "sha256": "59508202177aaf8c9eebe5626eaf3159e01c69a436339774aaa81e957954b281",
+    "bytes": 65664
+  },
+  "fields/038_target.npy": {
+    "sha256": "3bea2f64c8c1dd1e909e394afc6c5fe470ff657954d491014243884ced774a6b",
+    "bytes": 65664
+  },
+  "fields/039_initial.npy": {
+    "sha256": "e6ec4ce6941f5e97a531496b04a9cc0111bcdea9a52d56eefb3375a39fff4a70",
+    "bytes": 65664
+  },
+  "fields/039_target.npy": {
+    "sha256": "e9036f4fbc71f0d9edfa76fb7428dc03cb3e151b91edab7e4d665164e80399a1",
+    "bytes": 65664
+  },
+  "fields/040_initial.npy": {
+    "sha256": "a0ce91df89d960b5f287f94cd8d03d66b39314142f30d3d02e6844e788893342",
+    "bytes": 65664
+  },
+  "fields/040_target.npy": {
+    "sha256": "59e0ac29236ae63867449f45cda9b3fce38d164674c0ec33052ed8d7189a5aff",
+    "bytes": 65664
+  },
+  "fields/041_initial.npy": {
+    "sha256": "b6e7d42d7a66e3b263fe6ae7f2c96d2c481ede6a1253eeea2f7d40a541712066",
+    "bytes": 65664
+  },
+  "fields/041_target.npy": {
+    "sha256": "212cf9f562d3fed53570080fc60cb1ee9088a1ebc87fa5794f21bc7d30caf62a",
+    "bytes": 65664
+  },
+  "fields/042_initial.npy": {
+    "sha256": "1bda85d4c782ffca0b335dcf6f7370d5dbc1bd6578bfe913fa633ab43eb9d121",
+    "bytes": 65664
+  },
+  "fields/042_target.npy": {
+    "sha256": "6d4edc9bc55c21123d31ca60d0180fd7435e0caadb47cd53381727ae2d2f3de5",
+    "bytes": 65664
+  },
+  "fields/043_initial.npy": {
+    "sha256": "c3419a7974f4b9b17a8adc6b0ddd89f06a8633a886435174257fd2018ad3ebd6",
+    "bytes": 65664
+  },
+  "fields/043_target.npy": {
+    "sha256": "3f873ba70d1a341a19dc7a73ef41246072776981ae2a24886b01696331bc4cf7",
+    "bytes": 65664
+  },
+  "fields/044_initial.npy": {
+    "sha256": "f5c8083e6a3d66ba2af5b0c449803caa41f6c56800ab8302b61769c9825cd9fa",
+    "bytes": 65664
+  },
+  "fields/045_initial.npy": {
+    "sha256": "9a7963edbf6fa6860e7aec432175953e59a5818a65534b2d2dcf36910231941c",
+    "bytes": 65664
+  },
+  "fields/046_initial.npy": {
+    "sha256": "5be3bc51c62274d1333bb7c6da97b983209bb0af3b117bd022cdee0303d046bf",
+    "bytes": 65664
+  },
+  "fields/047_initial.npy": {
+    "sha256": "7b9bc70b11995e74c150a4f115357cc5486808cb2aabbd07e606107c7bc14018",
+    "bytes": 65664
+  },
+  "fields/048_initial.npy": {
+    "sha256": "4693c154f80c851553e44c9dafc166c4777a7c543f6e458c0b2eb1d891deceb4",
+    "bytes": 65664
+  },
+  "fields/049_initial.npy": {
+    "sha256": "c216a86596331bfe59cc02e69bbdc3c7b46de8591fe9393ec7045b02455a1bbe",
+    "bytes": 65664
+  },
+  "fields/050_initial.npy": {
+    "sha256": "cc4b730cb019f43a09baca890b919eaf07eb745f590ef3bba54afd49ec158b5e",
+    "bytes": 65664
+  },
+  "fields/051_initial.npy": {
+    "sha256": "456a9daab0d3769db4ef867fbc8fc3c26cc781238f56d0ed85df461701f9f04b",
+    "bytes": 65664
+  },
+  "fields/052_initial.npy": {
+    "sha256": "eb5dd0de493aae2259da50c68d4a3837191c90523559daeb41d64a7bcbd1450f",
+    "bytes": 65664
+  },
+  "fields/053_initial.npy": {
+    "sha256": "34293953f42c254dc16178ceb5f492fe6a01197963a5e54c8d0795f4ee61fbd9",
+    "bytes": 65664
+  },
+  "fields/054_initial.npy": {
+    "sha256": "92321a761959e44e2b75f5bd73de88ada86ab07a91aa3a5928071544d52a1393",
+    "bytes": 65664
+  },
+  "fields/055_initial.npy": {
+    "sha256": "502b69fa9c0b8e0cc836000844ec34ddb3232662cbe3d3bab46e6e8c2ee322fc",
+    "bytes": 65664
+  },
+  "fields/056_initial.npy": {
+    "sha256": "1da06dce6ab2d8f3010d8d4cd079b36c81abcabda70d4409605ec1cd6c9ef660",
+    "bytes": 65664
+  },
+  "fields/057_initial.npy": {
+    "sha256": "8dad057e782b97683fc8ff3e05f19f3dd7bc6d71d6dab03ed9866a4d146f668f",
+    "bytes": 65664
+  },
+  "fields/058_initial.npy": {
+    "sha256": "71fb193d96e67539157f1273cfc4c57652891fd00861331a9470dd502fe99b52",
+    "bytes": 65664
+  },
+  "fields/059_initial.npy": {
+    "sha256": "fdd23129342cfa74a891d69238cc62fc1575fc150cf55802006433bf0ead6d7a",
+    "bytes": 65664
+  },
+  "fields/060_initial.npy": {
+    "sha256": "5bb01d4ef30feab1fdc7a461132f5281dfe8329a7711c99652cf8bd5c1370ba4",
+    "bytes": 65664
+  },
+  "fields/061_initial.npy": {
+    "sha256": "33d787908bf94090cbdeaafbaae40ef90164b87129152f714ece5a952cb98381",
+    "bytes": 65664
+  },
+  "fields/062_initial.npy": {
+    "sha256": "0c0fb4a4c866d68537bb3e852d49cb43f0700d3a3a668fb1b75cb35d2e0cffbf",
+    "bytes": 65664
+  },
+  "fields/063_initial.npy": {
+    "sha256": "29c284d8ce2bb90e218d0551813f9e2fb858886415f989b3ee23ad0ed93b45d6",
+    "bytes": 65664
+  },
+  "fields/064_initial.npy": {
+    "sha256": "a144b31b7a4f68c2f1e6431fd9465fe5f204b4cfbb80559646f3d23c2b1e33dd",
+    "bytes": 65664
+  },
+  "fields/065_initial.npy": {
+    "sha256": "699a55be3243b9e3ad404923fd08fe6c60cb7e3b5fc598aaf596ebfc98fac7f5",
+    "bytes": 65664
+  },
+  "fields/066_initial.npy": {
+    "sha256": "db75abb91ce908854235b301aed08f88800002e520bfbd4bf01aebb783874342",
+    "bytes": 65664
+  },
+  "fields/067_initial.npy": {
+    "sha256": "0eaa19640a6a397b972b6a446f5645ea002db591c71aeb19b1b186f3873ba9e9",
+    "bytes": 65664
+  },
+  "reference_costs.csv": {
+    "sha256": "7f84fccb994a91c370b352e82f7eb0f333e871b65a250c971066a3d153c1510d",
+    "bytes": 3883
+  },
+  "runs.csv": {
+    "sha256": "e0a1319b3ba35a985b6f264939b2dc6ad431087e72bc209d96973ee875f56b8b",
+    "bytes": 9398
+  },
+  "study.json": {
+    "sha256": "dff827ef6c7750e15f1c6fde2c168c8bcb0db1597f1d9a601846eedaf6f3dac5",
+    "bytes": 1749
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "method": "scratch",
+  "budget": 8,
+  "seed": 2026,
+  "load_seconds": 0.5456761349998942,
+  "cold_query_seconds": 0.004380635999950755,
+  "warm_batch_seconds": 0.05514841800004433,
+  "warm_per_query_seconds": 0.0022978507500018472
+}

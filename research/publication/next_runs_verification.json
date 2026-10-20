@@ -1,0 +1,16 @@
+{
+  "label": "next_runs",
+  "archive_name": "delta_v_next_runs.zip",
+  "archive_sha256": "6aca8c348921ab73fcaef6daa3f819274ce834104fd8ca66f4d8f05eb9f57a91",
+  "archive_bytes": 1416301,
+  "zip_crc": "passed",
+  "published_files": 53,
+  "original_manifest_entries_verified": 0,
+  "original_manifest_missing_entries": [],
+  "explicitly_excluded_entries": [],
+  "original_files_preserved_unchanged": true,
+  "path": "research/task8/next_runs",
+  "storage": "Exact original ZIP stored in verified multipart archive; readable reports/tables/code/figures extracted separately",
+  "archive_parts_path": "research/evidence_archives/next_runs",
+  "files_preserved_in_archive_only": []
+}

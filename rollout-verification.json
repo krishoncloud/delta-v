@@ -1,0 +1,848 @@
+[
+  {
+    "sample": "rollout-test-turbulent_radiative_layer_2D",
+    "shape": [
+      7,
+      4,
+      256,
+      256
+    ],
+    "wall_seconds_including_single_step_check": 45.655625625000084,
+    "metadata": {
+      "contract": "deltav-rollout-v1",
+      "system": "turbulent_radiative_layer_2D",
+      "sample_id": "rollout-test-turbulent_radiative_layer_2D",
+      "cache_revision": "52bad1a8c7ab447fa35f3b92f8e23a04",
+      "first_frame": 4,
+      "checkpoint_epoch": 59,
+      "inference_seconds": 13.454952689120546,
+      "mean_step_seconds": 1.9221360984457923,
+      "steps": [
+        {
+          "frame": 4,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.09213689041759643,
+              "rmse": 5.041511260020363,
+              "ssim": 0.8404381792405617,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.021177113229651597,
+              "rmse": 0.01864500868955454,
+              "ssim": 0.933312987755699,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.41660995178477095,
+              "rmse": 0.020636085700693092,
+              "ssim": 0.927088051586292,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.2533924417749968,
+              "rmse": 0.018314466057010367,
+              "ssim": 0.9018609417059368,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 5,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.14422160757055277,
+              "rmse": 7.841446374872431,
+              "ssim": 0.786559432084099,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.040538429123912936,
+              "rmse": 0.034720600834547914,
+              "ssim": 0.9123417272163001,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.553780504583714,
+              "rmse": 0.029530329190069784,
+              "ssim": 0.9027538534558504,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.3323723147351878,
+              "rmse": 0.030515369335349735,
+              "ssim": 0.8620182377111127,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 6,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.1846911192079468,
+              "rmse": 9.945706799430313,
+              "ssim": 0.7217329702998939,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.07517234827211733,
+              "rmse": 0.0625557315718323,
+              "ssim": 0.8969863356511542,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.5145327845033882,
+              "rmse": 0.023694607537263223,
+              "ssim": 0.8460988344702042,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.40616707784771794,
+              "rmse": 0.046540644892228096,
+              "ssim": 0.8226933779519218,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 7,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.24798224956666615,
+              "rmse": 13.354938042431627,
+              "ssim": 0.785607825500108,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.08825041070188903,
+              "rmse": 0.07360903421763189,
+              "ssim": 0.9104444545794517,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.5949531749329731,
+              "rmse": 0.031895636243302626,
+              "ssim": 0.8417039137083642,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.44178752014958733,
+              "rmse": 0.048993828464370524,
+              "ssim": 0.7833081418614326,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 8,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.27441242044658576,
+              "rmse": 14.736181995837766,
+              "ssim": 0.7290640201002863,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.10612330575708243,
+              "rmse": 0.08847164851978198,
+              "ssim": 0.8917463618154926,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.6435180065879818,
+              "rmse": 0.03319329053024869,
+              "ssim": 0.8608124243612653,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.49766617526051304,
+              "rmse": 0.05448031347379426,
+              "ssim": 0.7611204419870317,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 9,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.332316060813633,
+              "rmse": 17.84801831611846,
+              "ssim": 0.7117574281001467,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.10640545872464595,
+              "rmse": 0.0884967303079524,
+              "ssim": 0.8668852572707569,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.7788109223540867,
+              "rmse": 0.052972606470019806,
+              "ssim": 0.8508384629834925,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.5457664705615713,
+              "rmse": 0.06521291551141345,
+              "ssim": 0.7373845652774631,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 10,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.3686375185851296,
+              "rmse": 19.888521405358574,
+              "ssim": 0.6961380691878915,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.10286660900439555,
+              "rmse": 0.08656433551095483,
+              "ssim": 0.8391285251546508,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.9130998183907014,
+              "rmse": 0.05899908217174862,
+              "ssim": 0.8371615018303694,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.5657053433290411,
+              "rmse": 0.059517508695541455,
+              "ssim": 0.7096183224103201,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        }
+      ]
+    },
+    "first_step_matches_single_step": true
+  },
+  {
+    "sample": "rollout-test-rayleigh_benard",
+    "shape": [
+      7,
+      4,
+      256,
+      256
+    ],
+    "wall_seconds_including_single_step_check": 37.99327295900002,
+    "metadata": {
+      "contract": "deltav-rollout-v1",
+      "system": "rayleigh_benard",
+      "sample_id": "rollout-test-rayleigh_benard",
+      "cache_revision": "52bad1a8c7ab447fa35f3b92f8e23a04",
+      "first_frame": 4,
+      "checkpoint_epoch": 59,
+      "inference_seconds": 13.467251571128145,
+      "mean_step_seconds": 1.923893081589735,
+      "steps": [
+        {
+          "frame": 4,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.09053746830721095,
+              "rmse": 0.028086244807929716,
+              "ssim": 0.8437501166010603,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.06179088477360132,
+              "rmse": 0.005340849494751909,
+              "ssim": 0.9585483056458021,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.08580762913344392,
+              "rmse": 0.017487083214556564,
+              "ssim": 0.8970902807933977,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.12171038318905214,
+              "rmse": 0.02168715886301549,
+              "ssim": 0.8811903862342578,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 5,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.1235385812308696,
+              "rmse": 0.03840922124188818,
+              "ssim": 0.783355438893518,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.11225980920537816,
+              "rmse": 0.009774242264837333,
+              "ssim": 0.8999837831433448,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.1500001922142511,
+              "rmse": 0.030973500164137746,
+              "ssim": 0.8110254569741941,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.17520622043509046,
+              "rmse": 0.03135750391583208,
+              "ssim": 0.7739225609713032,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 6,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.15033259362210163,
+              "rmse": 0.04680852348604415,
+              "ssim": 0.7498670402830802,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.1499724181871816,
+              "rmse": 0.013112884659482979,
+              "ssim": 0.8666181319295931,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.21188695458812304,
+              "rmse": 0.04439228883778512,
+              "ssim": 0.7473126392528403,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.21719238069118513,
+              "rmse": 0.038909641339725,
+              "ssim": 0.7068844344452138,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 7,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.1746905384817564,
+              "rmse": 0.05443453824209707,
+              "ssim": 0.7194962539387152,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.18581568125246145,
+              "rmse": 0.01622311948741303,
+              "ssim": 0.836167642463021,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.27382528612239215,
+              "rmse": 0.05822311040642942,
+              "ssim": 0.6795538912107302,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.26556719544469437,
+              "rmse": 0.04751191462707162,
+              "ssim": 0.6545128989919047,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 8,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.19499913939518052,
+              "rmse": 0.06084739223390376,
+              "ssim": 0.6975415044458211,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.215728510447772,
+              "rmse": 0.01873086590042553,
+              "ssim": 0.8063217457723462,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.3429940958670608,
+              "rmse": 0.0742179814098114,
+              "ssim": 0.5903572093583663,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.31304232907412566,
+              "rmse": 0.05567801869427155,
+              "ssim": 0.5983142815837971,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 9,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.20975587144643085,
+              "rmse": 0.0655776315556454,
+              "ssim": 0.6875079263775041,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.2400213535264146,
+              "rmse": 0.02073338954547668,
+              "ssim": 0.7712078688976725,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.4091984707923798,
+              "rmse": 0.0900308692166698,
+              "ssim": 0.5206141786555659,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.36082503950500533,
+              "rmse": 0.06362565943520493,
+              "ssim": 0.5530620112259858,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 10,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.22390523178769775,
+              "rmse": 0.07015643416085317,
+              "ssim": 0.6792213016212719,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.2710354417219939,
+              "rmse": 0.023307451910483893,
+              "ssim": 0.7258612595000793,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.47204424667370104,
+              "rmse": 0.10509582214513202,
+              "ssim": 0.49382594485008025,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.4203003325082433,
+              "rmse": 0.07358917693894987,
+              "ssim": 0.5056926478752614,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        }
+      ]
+    },
+    "first_step_matches_single_step": true
+  },
+  {
+    "sample": "rollout-test-shear_flow",
+    "shape": [
+      7,
+      4,
+      256,
+      256
+    ],
+    "wall_seconds_including_single_step_check": 86.83873158400002,
+    "metadata": {
+      "contract": "deltav-rollout-v1",
+      "system": "shear_flow",
+      "sample_id": "rollout-test-shear_flow",
+      "cache_revision": "52bad1a8c7ab447fa35f3b92f8e23a04",
+      "first_frame": 4,
+      "checkpoint_epoch": 59,
+      "inference_seconds": 13.187237415928394,
+      "mean_step_seconds": 1.883891059418342,
+      "steps": [
+        {
+          "frame": 4,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.030851551255988426,
+              "rmse": 0.013451360378271136,
+              "ssim": 0.985962767559195,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.05799612459138241,
+              "rmse": 0.002257813621827712,
+              "ssim": 0.9666391425287975,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.036225516956491066,
+              "rmse": 0.01601643702001106,
+              "ssim": 0.9909008677423363,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.06506061475511692,
+              "rmse": 0.004320094969339545,
+              "ssim": 0.9072382759983322,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 5,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.08151473339949333,
+              "rmse": 0.035494457428075214,
+              "ssim": 0.9369196161693097,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.13454154334476334,
+              "rmse": 0.005149012251630243,
+              "ssim": 0.8865299093021292,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.07968472208248342,
+              "rmse": 0.035245939923889004,
+              "ssim": 0.9687232665082817,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.15039560356803866,
+              "rmse": 0.00979065741514953,
+              "ssim": 0.745207182065448,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 6,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.14107360407914823,
+              "rmse": 0.061345560410899024,
+              "ssim": 0.8656693061601612,
+              "threshold": 0.15,
+              "passes": true,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.21874897254874384,
+              "rmse": 0.00824414330171552,
+              "ssim": 0.7912035338533877,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.12030606703602023,
+              "rmse": 0.053232375841080606,
+              "ssim": 0.9433662466495745,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.24138053493796688,
+              "rmse": 0.015441318734934513,
+              "ssim": 0.6179587718532895,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 7,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.20234726082129534,
+              "rmse": 0.08787194689327821,
+              "ssim": 0.789119811824896,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.30548692157086,
+              "rmse": 0.011362156332184337,
+              "ssim": 0.6965796850571937,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.1565886255675478,
+              "rmse": 0.0693061657239326,
+              "ssim": 0.9198213238720568,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.3327503251024973,
+              "rmse": 0.020977623433627617,
+              "ssim": 0.5194934940734957,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 8,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.26098558363095326,
+              "rmse": 0.1131821972132999,
+              "ssim": 0.7145065430057347,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.39179194608647505,
+              "rmse": 0.014417200552140007,
+              "ssim": 0.6130083726521777,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.18825508320039397,
+              "rmse": 0.08333924546975771,
+              "ssim": 0.8997673944228792,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.4205865160820476,
+              "rmse": 0.02621705528898668,
+              "ssim": 0.44156410836497795,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 9,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.31553120836753035,
+              "rmse": 0.13665254897473583,
+              "ssim": 0.6504336923674198,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.4761611077223023,
+              "rmse": 0.01738428989572058,
+              "ssim": 0.5442298094323083,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.21543840623353222,
+              "rmse": 0.09538591617737273,
+              "ssim": 0.8826284310911597,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.5028699981908171,
+              "rmse": 0.03110650858859031,
+              "ssim": 0.37896263921839324,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        },
+        {
+          "frame": 10,
+          "quality": {
+            "scalar": {
+              "rel_l2": 0.3662771516480394,
+              "rmse": 0.1584267272334056,
+              "ssim": 0.6013355058106177,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "pressure": {
+              "rel_l2": 0.5575723986253736,
+              "rmse": 0.020257984937503276,
+              "ssim": 0.4904393486988487,
+              "threshold": 0.15,
+              "passes": false,
+              "note": null
+            },
+            "velocity_x": {
+              "rel_l2": 0.2384787632412138,
+              "rmse": 0.10559325022464872,
+              "ssim": 0.868039038127305,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            },
+            "velocity_y": {
+              "rel_l2": 0.5785256251294127,
+              "rmse": 0.03564865434655058,
+              "ssim": 0.3285104128569747,
+              "threshold": null,
+              "passes": null,
+              "note": "Directional structure only \u2014 no quantitative target for this release."
+            }
+          }
+        }
+      ]
+    },
+    "first_step_matches_single_step": true
+  }
+]

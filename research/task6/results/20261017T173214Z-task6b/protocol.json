@@ -1,0 +1,952 @@
+{
+  "created_utc": "2026-10-17T17:34:22.864355+00:00",
+  "options": {
+    "audit_accepted": true,
+    "tolerance_basis": "These are provisional research thresholds for this synthetic benchmark, not customer-approved engineering limits. I chose absolute tolerances of 0.015 in each nondimensional outcome, zero additional relative tolerance, 90% joint per-setting success, and a maximum error of 2\u00d7 tolerance to make the run-to-accuracy comparison measurable. Results will be reported against these thresholds and should not be treated as safe design decisions.",
+    "absolute_tolerance": [
+      0.015,
+      0.015
+    ],
+    "relative_tolerance": 0.0,
+    "relative_floor": 0.001,
+    "success_fraction": 0.9,
+    "max_tolerance_ratio": 2.0,
+    "margin": 0.1,
+    "steps": 3000,
+    "max_seconds": 3600.0,
+    "external_audit_path": "",
+    "budgets": [
+      8,
+      16,
+      24,
+      32
+    ],
+    "seeds": [
+      42,
+      123,
+      2026
+    ]
+  },
+  "config": {
+    "device": "cuda",
+    "lr": 0.0001,
+    "adapter_lr": 0.001,
+    "batch": 2,
+    "validate_every": 100,
+    "loss": "relative",
+    "field_floor": 0.01,
+    "coordinates": "periodic",
+    "schedule": true,
+    "gp_restarts": 2,
+    "ridge_alphas": [
+      1e-06,
+      0.001,
+      0.1,
+      1.0
+    ],
+    "gp_kernels": [
+      "matern15",
+      "matern25",
+      "rbf"
+    ],
+    "steps": 3000,
+    "max_seconds": 3600.0
+  },
+  "config_basis": "Task 6b, fixed before any 6b fitting and informed by the Task 6a results (a different design seed, so a different generated study and fresh confirmation settings). 6a trained every neural fit for only 400 steps and its full-tuning error stopped improving beyond 16 supplied settings, which suggests undertraining; 6b uses 3000 steps. 6a frozen-backbone tuning trained only a 192-parameter input adapter at the backbone rate and did not learn at all, so 6b gives the newly initialised 1x1 conditioner its own learning rate (identical for every neural arm) and frozen tuning additionally trains the backbone lifting and projection layers while the spectral blocks stay frozen. Unchanged from 6a: relative field loss with a floor, periodic sine/cosine coordinates, minibatch 2, cosine decay. No pilot or ablation was run for 6b; these values are choices, not tuned optima. Validation data select only each fit's saved checkpoint and the baseline ridge strength/GP kernel.",
+  "methods": [
+    "mean",
+    "linear",
+    "gp",
+    "scratch",
+    "pretrained_full",
+    "pretrained_frozen"
+  ],
+  "planned_fits": 72,
+  "planned_neural_fits": 36,
+  "pilot": "none",
+  "source": {
+    "repo": "KrishMalik/deltav-fluid",
+    "revision": "e25651ff92cf1d8f8818164a0277b8613e83d8b3",
+    "filename": "checkpoints/domain_fluid.pt",
+    "sha256": "2aefbf631c8ce81f5037646b08d6e16ece9e736cbfda1b37ad4c924e261e1674",
+    "bytes": 858147645
+  },
+  "source_tensor_sha256": "f1d250264aba19c2ac7a6d2ceea34fb174c542c979b719ba634fe59082e9fa0a",
+  "source_epoch": 59,
+  "study_manifest": {
+    "fields/000_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/000_target.npy": {
+      "sha256": "97ab884100f00c69115c20cf0c3a0cc3aaf819f49b838a8e17a5b7722d46ac80",
+      "bytes": 65664
+    },
+    "fields/001_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/001_target.npy": {
+      "sha256": "0c9ed2c7b5bc581f918d9618cf367468309d0b5e3b584ea4261b835c4362d585",
+      "bytes": 65664
+    },
+    "fields/002_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/002_target.npy": {
+      "sha256": "8558ec709d4d1cba4793a203f8e9a1b566ecb3afa6281fea36a8230a937fa4da",
+      "bytes": 65664
+    },
+    "fields/003_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/003_target.npy": {
+      "sha256": "0ed2c2e99f41b8e6adae0067faff6b91283b18986aa7c8813857e937a67e82dd",
+      "bytes": 65664
+    },
+    "fields/004_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/004_target.npy": {
+      "sha256": "44d72d644f2dab15191dba5d5c289eb8566b811b76a5f0c5ac7beeb0c25a86f9",
+      "bytes": 65664
+    },
+    "fields/005_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/005_target.npy": {
+      "sha256": "0df6053844383b251a093bd8b4e8957eeb90449be6360a9d92b972193e474d37",
+      "bytes": 65664
+    },
+    "fields/006_initial.npy": {
+      "sha256": "bc5a9d87b9bee1bccb4f07d8e2f5f89f58cc5a930432df132b1db19d912006c4",
+      "bytes": 65664
+    },
+    "fields/006_target.npy": {
+      "sha256": "5563c66e05162e743365004f09147fcd02979f844c3d08afa50e17abd5b71005",
+      "bytes": 65664
+    },
+    "fields/007_initial.npy": {
+      "sha256": "79314213dd191769ebe6524aaa2549bab8c3cbdbae06a7b17cc5d566d74fd83c",
+      "bytes": 65664
+    },
+    "fields/007_target.npy": {
+      "sha256": "99ddb612cf527f28dd12826d753bb549ff4626785b6b717e5c982c285579c58d",
+      "bytes": 65664
+    },
+    "fields/008_initial.npy": {
+      "sha256": "dedfc27ec7ad71cc281621fecf8feb012e829bf02b27510d1562ddca699a7292",
+      "bytes": 65664
+    },
+    "fields/008_target.npy": {
+      "sha256": "856adee0475c9ad3af1a2792004a5a02741e40803998e5ff6a0d42e5e60bc01f",
+      "bytes": 65664
+    },
+    "fields/009_initial.npy": {
+      "sha256": "6238149a8db4af00bcf49faf748d1b9bc799b106833858c0f75dd265a8102cba",
+      "bytes": 65664
+    },
+    "fields/009_target.npy": {
+      "sha256": "d237794ba11daf77c4f2d576d74abf20c7ae97b01b00607c48147a807dd2a996",
+      "bytes": 65664
+    },
+    "fields/010_initial.npy": {
+      "sha256": "b1d198940755264129b2a4cd55c5c38d0cf0d1b51837108725e8e036c8d45f63",
+      "bytes": 65664
+    },
+    "fields/010_target.npy": {
+      "sha256": "943c2a974d03d55d71588084818c5544253b87ecaa407cbffbcdfdb79ae161e0",
+      "bytes": 65664
+    },
+    "fields/011_initial.npy": {
+      "sha256": "40331d6a275893fc56cb50b922c45f6042a967b59244aa0e211f26dd318ae197",
+      "bytes": 65664
+    },
+    "fields/011_target.npy": {
+      "sha256": "e99ebb44a65486847d8fdca405a9a146db2a6d483a060972b15a00344a269161",
+      "bytes": 65664
+    },
+    "fields/012_initial.npy": {
+      "sha256": "d9831bac18811388277796148bbda0aa05e9c2c3915ff65022d57e47e58dd058",
+      "bytes": 65664
+    },
+    "fields/012_target.npy": {
+      "sha256": "b127cb9125446a12c32d199b2ccc2cacd97c58806fa7125a91312440f3cc6deb",
+      "bytes": 65664
+    },
+    "fields/013_initial.npy": {
+      "sha256": "a0da3fbeb27234e0cdac5e7f08211818e8f9d23bbcd4bf0d7026144ebfad48b9",
+      "bytes": 65664
+    },
+    "fields/013_target.npy": {
+      "sha256": "e8fe535161fc7246d151972d5a9d25a56e4a6ca09cc9f9b0fcec8d4ee2e5701e",
+      "bytes": 65664
+    },
+    "fields/014_initial.npy": {
+      "sha256": "ba2ad288bab72472b9096ed81405ec3c7007b938bf273cc6d7f69dc0631a776c",
+      "bytes": 65664
+    },
+    "fields/014_target.npy": {
+      "sha256": "5a8145e6b4b1aa5d8cd576cb8f30b000262761485423e81a31b74e3bd88f34a3",
+      "bytes": 65664
+    },
+    "fields/015_initial.npy": {
+      "sha256": "6abe15e950339100cfd6f583dd42f9fb788baf396c71a80899c2a557843b1775",
+      "bytes": 65664
+    },
+    "fields/015_target.npy": {
+      "sha256": "d6bc9e5602f3cb2f27116adf6970352925679fc0fbd3c228852949b5e71c0bb6",
+      "bytes": 65664
+    },
+    "fields/016_initial.npy": {
+      "sha256": "9168f4d10fc9da6482f5134b9cc7426b6d227f0082def4d9807d588ffbc322cb",
+      "bytes": 65664
+    },
+    "fields/016_target.npy": {
+      "sha256": "7d3e0ecb4372c2ee946d7b0efc48aae481ebac6e668908ca19a09ed089220311",
+      "bytes": 65664
+    },
+    "fields/017_initial.npy": {
+      "sha256": "45201a2573a640f1cd4d9597426f8a8147f680e8c1f00b54dedcdd0253fda056",
+      "bytes": 65664
+    },
+    "fields/017_target.npy": {
+      "sha256": "c2638533e4b24e9ded14ae9beda0076c6371ad46aa25a140f6bcc89b8eb94745",
+      "bytes": 65664
+    },
+    "fields/018_initial.npy": {
+      "sha256": "e1eeeda6b50cf1b734ccd8c08282c16a62f91d11c1b0062486ea98ef854862b1",
+      "bytes": 65664
+    },
+    "fields/018_target.npy": {
+      "sha256": "7893ca6ab2a8828a9a0cc6e912ee95aec096bcf4621298362e7223fe8b32335e",
+      "bytes": 65664
+    },
+    "fields/019_initial.npy": {
+      "sha256": "c3ace553b98b03229518c41b94d75c0cdae09705d2acf6da9d9381d36152ffa8",
+      "bytes": 65664
+    },
+    "fields/019_target.npy": {
+      "sha256": "1e080ae2146b4d6eaf394aca5a08838b7c5eed711fe5662cd499775d69887976",
+      "bytes": 65664
+    },
+    "fields/020_initial.npy": {
+      "sha256": "ace7defaebf9e664391d9da174ea4e5ee55cf7a3906f654a3259b1fe748508b0",
+      "bytes": 65664
+    },
+    "fields/020_target.npy": {
+      "sha256": "52d8900d847e99d2d49ba80393a0706c6bd5c77b3bccf8ee98b7d4d2ebe986f5",
+      "bytes": 65664
+    },
+    "fields/021_initial.npy": {
+      "sha256": "e6c6d2c71b9fb1b2d15bbd5d8fd65f37d4ae5ddeaf268023199e3ee0d79b4a26",
+      "bytes": 65664
+    },
+    "fields/021_target.npy": {
+      "sha256": "ecad8154640175eded4f446e3a6752fd15fb9797a01c449b7c7dde87503306ee",
+      "bytes": 65664
+    },
+    "fields/022_initial.npy": {
+      "sha256": "475bc17da8103afbb6c3c1b413189d6c33072fdc322f7d4db369de346f653fc2",
+      "bytes": 65664
+    },
+    "fields/022_target.npy": {
+      "sha256": "c537641fe16a3ce7c09fba0808de13154d568e3a2fb6a3e32f8d3cbe7c7688d9",
+      "bytes": 65664
+    },
+    "fields/023_initial.npy": {
+      "sha256": "45079028eedb3658ebd5e65a6581795949053f0ad8997cba251b795fd7ad1558",
+      "bytes": 65664
+    },
+    "fields/023_target.npy": {
+      "sha256": "dbb22f3b485e32a84a13d6f811dfe4f51d10f9ba509c8f2edc52004b39705732",
+      "bytes": 65664
+    },
+    "fields/024_initial.npy": {
+      "sha256": "9164a9d315071a22a4d8ea5bd342a4bde017e274e49c0a9def3798fc7b4c3cde",
+      "bytes": 65664
+    },
+    "fields/024_target.npy": {
+      "sha256": "45a0b185f05695c47a61c59b927793b907cb9ae2397bbca537d57d94844d3902",
+      "bytes": 65664
+    },
+    "fields/025_initial.npy": {
+      "sha256": "68a361c66619c6400ae6129c4719a94e8b680969276dc7bd8ff5e695fe23747e",
+      "bytes": 65664
+    },
+    "fields/025_target.npy": {
+      "sha256": "d7503205efc901d76230382835e336033f7a5cbbc5a30403c317880c58448956",
+      "bytes": 65664
+    },
+    "fields/026_initial.npy": {
+      "sha256": "efaf1243f758ab68c5b02ee0b38fee4a691a35121f3f90ae3a2cb1142c61a1ba",
+      "bytes": 65664
+    },
+    "fields/026_target.npy": {
+      "sha256": "b9fc0c22bcaebc151c9ab007d8c0772a1b183cf5b8cbead59436dbfc34f862e0",
+      "bytes": 65664
+    },
+    "fields/027_initial.npy": {
+      "sha256": "0f6e64f38e69d1d7f0a5ee11e5980ecf259ae31c8986be65ec7bdd791b0b7659",
+      "bytes": 65664
+    },
+    "fields/027_target.npy": {
+      "sha256": "1c62af3d7d27baa53e7b5b276fb7dda18586ebff6944ba5777278403455f4d77",
+      "bytes": 65664
+    },
+    "fields/028_initial.npy": {
+      "sha256": "d7c6c0428260b058abdd66a3e4a6a1970cd62d15e864dba6e3678d1762596e5d",
+      "bytes": 65664
+    },
+    "fields/028_target.npy": {
+      "sha256": "5d89f955dfb88128bd8b47fbee5a23f4f14ce85a80f4e194ecd98f900ac1ded1",
+      "bytes": 65664
+    },
+    "fields/029_initial.npy": {
+      "sha256": "2f0fb661bde1c8892b232b41b1fb1ad1ca03c3fac6215204d2ddb539ecd86c50",
+      "bytes": 65664
+    },
+    "fields/029_target.npy": {
+      "sha256": "5466acf254a6c3b2913164ea2cd214c8052da915092bb2c84ff830d3e56f2d88",
+      "bytes": 65664
+    },
+    "fields/030_initial.npy": {
+      "sha256": "7a47a655c9394505c4230389e7ff859d619e6320d3da18c1f24a81368aa11732",
+      "bytes": 65664
+    },
+    "fields/030_target.npy": {
+      "sha256": "456de964c7343b73530bc61c388117806c482dc4b7935450e9f5a279dee8488f",
+      "bytes": 65664
+    },
+    "fields/031_initial.npy": {
+      "sha256": "f2da80681d2afb2e30b77f405ec23016264556badd4285e8d72a5dec2b6deed9",
+      "bytes": 65664
+    },
+    "fields/031_target.npy": {
+      "sha256": "bf963d48194889bcc758baec78e1786a14ca36b4c96494595234e94ecff6ae53",
+      "bytes": 65664
+    },
+    "fields/032_initial.npy": {
+      "sha256": "a368a33e19690322adf50ca785f858cb4d92a2e7138bef11bd720e1f5896cd18",
+      "bytes": 65664
+    },
+    "fields/032_target.npy": {
+      "sha256": "4006847a7a5974d9f4766970f96ea9c9412ae86645d809d26f65b8f68518bf6c",
+      "bytes": 65664
+    },
+    "fields/033_initial.npy": {
+      "sha256": "e0098d919c4b91a3ebe66531b060228709de6eb2094626aad3254437b87fd850",
+      "bytes": 65664
+    },
+    "fields/033_target.npy": {
+      "sha256": "aef3a12f9e6ac7738739c7ea8089f7bcacebb4e3aaa501d8a3492322cca25fc7",
+      "bytes": 65664
+    },
+    "fields/034_initial.npy": {
+      "sha256": "3b88a90eb1d438efe34c5f46728d56cdf8cc8a69bb21597c095f3a73c349235a",
+      "bytes": 65664
+    },
+    "fields/034_target.npy": {
+      "sha256": "6652416aaea89f482ba998c3f3f167dfbb237507d2cb581f2a7133471ff0a074",
+      "bytes": 65664
+    },
+    "fields/035_initial.npy": {
+      "sha256": "27e8b43b0c982c3bda9fbcf8eae1c30af220f12f9051a41e033f1df08e5206be",
+      "bytes": 65664
+    },
+    "fields/035_target.npy": {
+      "sha256": "eca05754c66e9370b8b0a84dc1ef2eb884a30c7ecbd73f7e1d2efdd4334b04a3",
+      "bytes": 65664
+    },
+    "fields/036_initial.npy": {
+      "sha256": "4ff64fd620a4394d964a1585f9bee16532895bfc1a7b082f340bae3194984f46",
+      "bytes": 65664
+    },
+    "fields/036_target.npy": {
+      "sha256": "cad3e1c43e44817bddba90836cf273dd29936feb0ad1b9fa9ca7cff48aa91c04",
+      "bytes": 65664
+    },
+    "fields/037_initial.npy": {
+      "sha256": "17a1492e64756fb0f81dae14fc017ffecce1e17ab1307c2ea86ea240436ab50f",
+      "bytes": 65664
+    },
+    "fields/037_target.npy": {
+      "sha256": "c07ab063d4b68645a1566f90789afef95be4251bb18b917141a099919333c46c",
+      "bytes": 65664
+    },
+    "fields/038_initial.npy": {
+      "sha256": "59508202177aaf8c9eebe5626eaf3159e01c69a436339774aaa81e957954b281",
+      "bytes": 65664
+    },
+    "fields/038_target.npy": {
+      "sha256": "3bea2f64c8c1dd1e909e394afc6c5fe470ff657954d491014243884ced774a6b",
+      "bytes": 65664
+    },
+    "fields/039_initial.npy": {
+      "sha256": "e6ec4ce6941f5e97a531496b04a9cc0111bcdea9a52d56eefb3375a39fff4a70",
+      "bytes": 65664
+    },
+    "fields/039_target.npy": {
+      "sha256": "e9036f4fbc71f0d9edfa76fb7428dc03cb3e151b91edab7e4d665164e80399a1",
+      "bytes": 65664
+    },
+    "fields/040_initial.npy": {
+      "sha256": "a0ce91df89d960b5f287f94cd8d03d66b39314142f30d3d02e6844e788893342",
+      "bytes": 65664
+    },
+    "fields/040_target.npy": {
+      "sha256": "59e0ac29236ae63867449f45cda9b3fce38d164674c0ec33052ed8d7189a5aff",
+      "bytes": 65664
+    },
+    "fields/041_initial.npy": {
+      "sha256": "b6e7d42d7a66e3b263fe6ae7f2c96d2c481ede6a1253eeea2f7d40a541712066",
+      "bytes": 65664
+    },
+    "fields/041_target.npy": {
+      "sha256": "212cf9f562d3fed53570080fc60cb1ee9088a1ebc87fa5794f21bc7d30caf62a",
+      "bytes": 65664
+    },
+    "fields/042_initial.npy": {
+      "sha256": "1bda85d4c782ffca0b335dcf6f7370d5dbc1bd6578bfe913fa633ab43eb9d121",
+      "bytes": 65664
+    },
+    "fields/042_target.npy": {
+      "sha256": "6d4edc9bc55c21123d31ca60d0180fd7435e0caadb47cd53381727ae2d2f3de5",
+      "bytes": 65664
+    },
+    "fields/043_initial.npy": {
+      "sha256": "c3419a7974f4b9b17a8adc6b0ddd89f06a8633a886435174257fd2018ad3ebd6",
+      "bytes": 65664
+    },
+    "fields/043_target.npy": {
+      "sha256": "3f873ba70d1a341a19dc7a73ef41246072776981ae2a24886b01696331bc4cf7",
+      "bytes": 65664
+    },
+    "fields/044_initial.npy": {
+      "sha256": "f5c8083e6a3d66ba2af5b0c449803caa41f6c56800ab8302b61769c9825cd9fa",
+      "bytes": 65664
+    },
+    "fields/045_initial.npy": {
+      "sha256": "9a7963edbf6fa6860e7aec432175953e59a5818a65534b2d2dcf36910231941c",
+      "bytes": 65664
+    },
+    "fields/046_initial.npy": {
+      "sha256": "5be3bc51c62274d1333bb7c6da97b983209bb0af3b117bd022cdee0303d046bf",
+      "bytes": 65664
+    },
+    "fields/047_initial.npy": {
+      "sha256": "7b9bc70b11995e74c150a4f115357cc5486808cb2aabbd07e606107c7bc14018",
+      "bytes": 65664
+    },
+    "fields/048_initial.npy": {
+      "sha256": "4693c154f80c851553e44c9dafc166c4777a7c543f6e458c0b2eb1d891deceb4",
+      "bytes": 65664
+    },
+    "fields/049_initial.npy": {
+      "sha256": "c216a86596331bfe59cc02e69bbdc3c7b46de8591fe9393ec7045b02455a1bbe",
+      "bytes": 65664
+    },
+    "fields/050_initial.npy": {
+      "sha256": "cc4b730cb019f43a09baca890b919eaf07eb745f590ef3bba54afd49ec158b5e",
+      "bytes": 65664
+    },
+    "fields/051_initial.npy": {
+      "sha256": "456a9daab0d3769db4ef867fbc8fc3c26cc781238f56d0ed85df461701f9f04b",
+      "bytes": 65664
+    },
+    "fields/052_initial.npy": {
+      "sha256": "eb5dd0de493aae2259da50c68d4a3837191c90523559daeb41d64a7bcbd1450f",
+      "bytes": 65664
+    },
+    "fields/053_initial.npy": {
+      "sha256": "34293953f42c254dc16178ceb5f492fe6a01197963a5e54c8d0795f4ee61fbd9",
+      "bytes": 65664
+    },
+    "fields/054_initial.npy": {
+      "sha256": "92321a761959e44e2b75f5bd73de88ada86ab07a91aa3a5928071544d52a1393",
+      "bytes": 65664
+    },
+    "fields/055_initial.npy": {
+      "sha256": "502b69fa9c0b8e0cc836000844ec34ddb3232662cbe3d3bab46e6e8c2ee322fc",
+      "bytes": 65664
+    },
+    "fields/056_initial.npy": {
+      "sha256": "1da06dce6ab2d8f3010d8d4cd079b36c81abcabda70d4409605ec1cd6c9ef660",
+      "bytes": 65664
+    },
+    "fields/057_initial.npy": {
+      "sha256": "8dad057e782b97683fc8ff3e05f19f3dd7bc6d71d6dab03ed9866a4d146f668f",
+      "bytes": 65664
+    },
+    "fields/058_initial.npy": {
+      "sha256": "71fb193d96e67539157f1273cfc4c57652891fd00861331a9470dd502fe99b52",
+      "bytes": 65664
+    },
+    "fields/059_initial.npy": {
+      "sha256": "fdd23129342cfa74a891d69238cc62fc1575fc150cf55802006433bf0ead6d7a",
+      "bytes": 65664
+    },
+    "fields/060_initial.npy": {
+      "sha256": "5bb01d4ef30feab1fdc7a461132f5281dfe8329a7711c99652cf8bd5c1370ba4",
+      "bytes": 65664
+    },
+    "fields/061_initial.npy": {
+      "sha256": "33d787908bf94090cbdeaafbaae40ef90164b87129152f714ece5a952cb98381",
+      "bytes": 65664
+    },
+    "fields/062_initial.npy": {
+      "sha256": "0c0fb4a4c866d68537bb3e852d49cb43f0700d3a3a668fb1b75cb35d2e0cffbf",
+      "bytes": 65664
+    },
+    "fields/063_initial.npy": {
+      "sha256": "29c284d8ce2bb90e218d0551813f9e2fb858886415f989b3ee23ad0ed93b45d6",
+      "bytes": 65664
+    },
+    "fields/064_initial.npy": {
+      "sha256": "a144b31b7a4f68c2f1e6431fd9465fe5f204b4cfbb80559646f3d23c2b1e33dd",
+      "bytes": 65664
+    },
+    "fields/065_initial.npy": {
+      "sha256": "699a55be3243b9e3ad404923fd08fe6c60cb7e3b5fc598aaf596ebfc98fac7f5",
+      "bytes": 65664
+    },
+    "fields/066_initial.npy": {
+      "sha256": "db75abb91ce908854235b301aed08f88800002e520bfbd4bf01aebb783874342",
+      "bytes": 65664
+    },
+    "fields/067_initial.npy": {
+      "sha256": "0eaa19640a6a397b972b6a446f5645ea002db591c71aeb19b1b186f3873ba9e9",
+      "bytes": 65664
+    },
+    "reference_costs.csv": {
+      "sha256": "7f84fccb994a91c370b352e82f7eb0f333e871b65a250c971066a3d153c1510d",
+      "bytes": 3883
+    },
+    "runs.csv": {
+      "sha256": "e0a1319b3ba35a985b6f264939b2dc6ad431087e72bc209d96973ee875f56b8b",
+      "bytes": 9398
+    },
+    "study.json": {
+      "sha256": "dff827ef6c7750e15f1c6fde2c168c8bcb0db1597f1d9a601846eedaf6f3dac5",
+      "bytes": 1749
+    }
+  },
+  "notebook_code_sha256": "a88b42213f90243f0ebe32c25b37376260bdd61e809b33428b97ee551f1d5453",
+  "notebook_sha256": "d08e04522b53f75dab0616c4700083858f13e2fb9a2f30260199f040446f0d87",
+  "environment": {
+    "python": "3.13.11",
+    "packages": {
+      "marimo": "0.25.1",
+      "torch": "2.11.0",
+      "neuraloperator": "2.0.0",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "pandas": "3.0.3",
+      "scikit-learn": "1.9.0",
+      "huggingface-hub": "1.33.0"
+    },
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "cuda": "13.0",
+    "precision": "float32; FFT complex64; solver float64",
+    "source_pretraining_cost": "unknown; excluded from per-customer amortized cost, not claimed free"
+  },
+  "plans": {
+    "42": {
+      "8": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007"
+      ],
+      "16": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s024",
+        "s023",
+        "s026",
+        "s027",
+        "s017",
+        "s015",
+        "s025",
+        "s031"
+      ],
+      "24": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s024",
+        "s023",
+        "s026",
+        "s027",
+        "s017",
+        "s015",
+        "s025",
+        "s031",
+        "s014",
+        "s018",
+        "s011",
+        "s008",
+        "s028",
+        "s020",
+        "s013",
+        "s019"
+      ],
+      "32": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s024",
+        "s023",
+        "s026",
+        "s027",
+        "s017",
+        "s015",
+        "s025",
+        "s031",
+        "s014",
+        "s018",
+        "s011",
+        "s008",
+        "s028",
+        "s020",
+        "s013",
+        "s019",
+        "s022",
+        "s030",
+        "s010",
+        "s012",
+        "s029",
+        "s009",
+        "s021",
+        "s016"
+      ]
+    },
+    "123": {
+      "8": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007"
+      ],
+      "16": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s028",
+        "s010",
+        "s012",
+        "s031",
+        "s018",
+        "s030",
+        "s015",
+        "s014"
+      ],
+      "24": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s028",
+        "s010",
+        "s012",
+        "s031",
+        "s018",
+        "s030",
+        "s015",
+        "s014",
+        "s019",
+        "s009",
+        "s008",
+        "s016",
+        "s026",
+        "s029",
+        "s023",
+        "s027"
+      ],
+      "32": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s028",
+        "s010",
+        "s012",
+        "s031",
+        "s018",
+        "s030",
+        "s015",
+        "s014",
+        "s019",
+        "s009",
+        "s008",
+        "s016",
+        "s026",
+        "s029",
+        "s023",
+        "s027",
+        "s024",
+        "s017",
+        "s020",
+        "s025",
+        "s013",
+        "s022",
+        "s011",
+        "s021"
+      ]
+    },
+    "2026": {
+      "8": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007"
+      ],
+      "16": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s027",
+        "s020",
+        "s028",
+        "s017",
+        "s011",
+        "s023",
+        "s024",
+        "s008"
+      ],
+      "24": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s027",
+        "s020",
+        "s028",
+        "s017",
+        "s011",
+        "s023",
+        "s024",
+        "s008",
+        "s030",
+        "s019",
+        "s021",
+        "s009",
+        "s014",
+        "s010",
+        "s022",
+        "s026"
+      ],
+      "32": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s027",
+        "s020",
+        "s028",
+        "s017",
+        "s011",
+        "s023",
+        "s024",
+        "s008",
+        "s030",
+        "s019",
+        "s021",
+        "s009",
+        "s014",
+        "s010",
+        "s022",
+        "s026",
+        "s025",
+        "s016",
+        "s029",
+        "s013",
+        "s031",
+        "s015",
+        "s012",
+        "s018"
+      ]
+    }
+  },
+  "confirm_ids": [
+    "s044",
+    "s045",
+    "s046",
+    "s047",
+    "s048",
+    "s049",
+    "s050",
+    "s051",
+    "s052",
+    "s053",
+    "s054",
+    "s055",
+    "s056",
+    "s057",
+    "s058",
+    "s059",
+    "s060",
+    "s061",
+    "s062",
+    "s063",
+    "s064",
+    "s065",
+    "s066",
+    "s067"
+  ],
+  "validation_ids": [
+    "s032",
+    "s033",
+    "s034",
+    "s035",
+    "s036",
+    "s037",
+    "s038",
+    "s039",
+    "s040",
+    "s041",
+    "s042",
+    "s043"
+  ],
+  "numerical_audit": {
+    "external": false,
+    "cases": [
+      {
+        "controls": [
+          0.02,
+          1.2,
+          0.8
+        ],
+        "time_difference": [
+          5.0817128283142665e-12,
+          1.399047544481391e-11
+        ],
+        "grid_difference": [
+          7.469214025057624e-09,
+          1.7551456843456492e-08
+        ],
+        "field_relative_l2": 6.717469413191123e-05,
+        "divergence": 3.1308289294429414e-14,
+        "seconds": 3.473656495,
+        "solver_executions": 3
+      },
+      {
+        "controls": [
+          0.08,
+          0.2,
+          0.2
+        ],
+        "time_difference": [
+          1.1962653090336062e-14,
+          5.329070518200751e-15
+        ],
+        "grid_difference": [
+          1.942890293094024e-16,
+          3.0531133177191805e-16
+        ],
+        "field_relative_l2": 1.7112629685026084e-12,
+        "divergence": 1.482147737874584e-14,
+        "seconds": 3.469108079999984,
+        "solver_executions": 3
+      },
+      {
+        "controls": [
+          0.05,
+          0.7,
+          0.5
+        ],
+        "time_difference": [
+          3.894662370385049e-13,
+          2.631228568361621e-14
+        ],
+        "grid_difference": [
+          1.4932499681208355e-14,
+          2.355893258254582e-13
+        ],
+        "field_relative_l2": 5.429031811322608e-08,
+        "divergence": 2.0872192862952943e-14,
+        "seconds": 3.453493155999979,
+        "solver_executions": 3
+      }
+    ]
+  },
+  "primary": "smallest tested budget meeting joint per-setting tolerances, coverage=1, on every seed",
+  "secondary_transfer": "weighted tolerance-normalized RMSE margin at first two budgets, no per-outcome regression",
+  "strata": "interior vs edge: any normalized coordinate <=0.15 or >=0.85; low signal: reference magnitude <= relative_floor",
+  "gp_class": "scalar ARD RBF/Matern-1.5/Matern-2.5 plus white noise; validation-only kernel choice",
+  "field_feature_baseline": "not implemented: scope six mandatory arms; scalar GP comparison confounds field supervision, disclosed",
+  "regime_change": "not tested unless separate future protocol; no transition certified for this candidate",
+  "many_controls": "three controls only; ten-control hypothesis not tested",
+  "scenarios": {
+    "new_study": "primary",
+    "spatial_outcomes": "primary",
+    "fewer_runs": "primary",
+    "many_knobs": "not tested",
+    "regime_transition": "not tested",
+    "OpenFOAM": "Task 9; not tested"
+  },
+  "bootstrap": "paired hierarchical seed/setting resampling; 1000 draws; descriptive with three seeds; no multiplicity correction",
+  "field_maps_ids": [
+    "s044",
+    "s045"
+  ],
+  "sha256": "7fb9154efb8a8c0eae581c92d2c024d918c0548cdb1210ba64fa33ffec7b7ee2"
+}

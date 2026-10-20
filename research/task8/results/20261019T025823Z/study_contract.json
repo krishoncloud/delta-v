@@ -1,0 +1,54 @@
+{
+  "lane": "fluid",
+  "grid": [
+    64,
+    64
+  ],
+  "geometry": "fixed periodic square [0,2pi]^2",
+  "boundary_conditions": [
+    "periodic",
+    "periodic"
+  ],
+  "parameters": [
+    {
+      "name": "viscosity",
+      "range": [
+        0.02,
+        0.08
+      ],
+      "unit": "nondimensional"
+    },
+    {
+      "name": "forcing",
+      "range": [
+        0.2,
+        1.2
+      ],
+      "unit": "nondimensional"
+    },
+    {
+      "name": "initial_mix",
+      "range": [
+        0.2,
+        0.8
+      ],
+      "unit": "nondimensional"
+    }
+  ],
+  "outcomes": [
+    {
+      "name": "kinetic_energy",
+      "kind": "mean_kinetic_energy",
+      "unit": "nondimensional"
+    },
+    {
+      "name": "pressure_rms",
+      "kind": "pressure_rms",
+      "unit": "nondimensional"
+    }
+  ],
+  "time": 2.0,
+  "solver": "dealiased Fourier vorticity RK4, float64, dt=.005",
+  "query": "controls and analytically known initial fields; no future labels",
+  "source_exclusion": "same new generated family as Task6; distinct from named source registry, legacy complete exposure ledger unavailable"
+}

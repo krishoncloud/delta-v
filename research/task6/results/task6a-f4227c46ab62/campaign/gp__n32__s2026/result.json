@@ -1,0 +1,13 @@
+{
+  "method": "gp",
+  "validation_score": 3.7606790166316464e-05,
+  "total_seconds": 0.4994206270000632,
+  "weights_bytes": 11330,
+  "selected_trials": 6,
+  "warnings": 9,
+  "reload_matches": true,
+  "time_cap_hit": false,
+  "status": "complete",
+  "attempt_seconds": 0.4997901809999803,
+  "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+}
