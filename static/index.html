@@ -16,8 +16,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="app.css?v=redesign-21" />
-    <link rel="stylesheet" href="flow.css?v=redesign-21" />
+    <link rel="stylesheet" href="app.css?v=redesign-22" />
+    <link rel="stylesheet" href="flow.css?v=redesign-22" />
   </head>
   <body>
     <a class="skip" href="#main-content">Skip to content</a>
@@ -274,6 +274,108 @@
                   <li>Lower total cost is showing promising early results, and we are working on it further with real solvers. The budget numbers below are your own scenario.</li>
                 </ul>
                 <p><a class="text-link" href="#evidence">See every test and result</a></p>
+              </section>
+              <section class="doc-section" aria-labelledby="cost-title">
+                <h2 id="cost-title">What a simulation run costs</h2>
+                <p>Delta-V works alongside your solver. It aims to cut how many runs a study needs, so it matters most when each run takes hours. On the worked example here a solver run takes about half a second, so there is nothing to save there.</p>
+                <div class="table-scroll" tabindex="0" role="region" aria-label="Cost per run by approach">
+                  <table class="flow-table how-table">
+                    <thead>
+                      <tr><th scope="col">Approach</th><th scope="col">Licence</th><th scope="col">Compute for one run</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">OpenFOAM</th>
+                        <td>Free and open source.</td>
+                        <td>Cloud compute only, about $0.03 to $0.10 per core-hour. One published example: a 20-million-cell steady case on 48 cores for about 10 hours cost about €24.</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Commercial solvers such as Ansys Fluent and Simcenter STAR-CCM+</th>
+                        <td>Not published. Third-party estimates for Fluent are about $20,000 to $40,000 per user per year, plus HPC packs beyond 4 cores. STAR-CCM+ pay-per-hour licensing was reported at about $22 per wall-clock hour.</td>
+                        <td>The same compute as OpenFOAM, plus licence time while the run is open.</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Delta-V (prototype)</th>
+                        <td>Not priced yet.</td>
+                        <td>About half a second of CPU per predicted setting on this demo server. Adapting the model to a study takes about 3 to 4 minutes on one GPU. It still needs 67 finished solver runs per fit.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <h3 class="how-table-title">Illustrative: one design question with 100 runs planned</h3>
+                <p class="how-table-note">Each run assumed to match the OpenFOAM example above: 48 cores for 10 hours.</p>
+                <div class="table-scroll" tabindex="0" role="region" aria-label="Illustrative cost of a 100-run study">
+                  <table class="flow-table how-table">
+                    <thead>
+                      <tr><th scope="col">Cost item</th><th scope="col" class="num">100-run sweep</th><th scope="col" class="num">Delta-V goal, about 67 runs</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><th scope="row">OpenFOAM compute</th><td class="num">about €2,400</td><td class="num">about €1,600</td></tr>
+                      <tr><th scope="row">STAR-CCM+ licence hours, on top of compute</th><td class="num">about $22,000</td><td class="num">about $14,700</td></tr>
+                      <tr><th scope="row">Calendar time, 4 runs at a time</th><td class="num">about 250 h</td><td class="num">about 170 h</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="how-table-note">Illustrative goal, not measured savings. In our tests on a generated study, total runs ended level with the best standard workflow. Lower cost is showing promising early results and is being tested further. Prices are public estimates from October 2026, not quotes: <a class="text-link" href="https://www.itqlick.com/ansys-fluent/pricing" target="_blank" rel="noopener">Fluent estimates</a>, <a class="text-link" href="https://aws.amazon.com/blogs/hpc/simcenter-star-ccm-price-performance-on-aws" target="_blank" rel="noopener">STAR-CCM+ on AWS</a>, <a class="text-link" href="https://cloudhpc.cloud/2023/01/16/estimate-openfoam-cloudhpc-cost/" target="_blank" rel="noopener">OpenFOAM run cost</a>, <a class="text-link" href="https://cfd.direct/cloud/cost/" target="_blank" rel="noopener">cloud core-hour rates</a>.</p>
+              </section>
+              <section class="doc-section" aria-labelledby="compare-title">
+                <h2 id="compare-title">Compared with standard surrogate models</h2>
+                <p>Standard surrogate models such as Gaussian processes (GP) and POD-GP are the usual way to predict new settings from a few runs. Here is where Delta-V stands against them today, and what we are building next.</p>
+                <h3 class="how-table-title">Today: measured results</h3>
+                <p class="how-table-note">All on one generated 2D flow study, three repeats.</p>
+                <div class="table-scroll" tabindex="0" role="region" aria-label="Measured results against standard surrogate models">
+                  <table class="flow-table how-table has-status">
+                    <thead>
+                      <tr><th scope="col">What we compared</th><th scope="col">Result</th><th scope="col">Status</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><th scope="row">Accuracy with 8 runs</th><td>Error about a third of the GP's.</td><td>Ahead</td></tr>
+                      <tr><th scope="row">Runs to reach the accuracy target</th><td>16 runs, against 24 for the other methods. At 16 runs, 597 of 600 held-out settings were within tolerance.</td><td>Ahead</td></tr>
+                      <tr><th scope="row">Error at 16 runs against POD-GP</th><td>About 31% lower on kinetic energy and 52% lower on pressure RMS, as the median of three repeats. In one repeat POD-GP did better on kinetic energy.</td><td>Ahead on average</td></tr>
+                      <tr><th scope="row">What it predicts</th><td>The whole flow field (density, pressure and velocity), with outcomes computed from it. Standard surrogates predict only the outcomes they were trained on.</td><td>Built</td></tr>
+                      <tr><th scope="row">Calibrated 90% prediction intervals</th><td>91.5% coverage on 200 unseen cases; 90.7% pooled over three repeats. GPs give their own intervals; we have not compared the two head to head yet.</td><td>Measured</td></tr>
+                      <tr><th scope="row">Knowing when to stop</th><td>15 of 15 stops, none too early.</td><td>Measured</td></tr>
+                      <tr><th scope="row">With 24 runs or more</th><td>The GP catches up and pulls ahead.</td><td>No edge</td></tr>
+                      <tr><th scope="row">Total runs for a whole study</th><td>Level with the best standard workflow.</td><td>No saving shown yet</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <h3 class="how-table-title">Vision: features in progress</h3>
+                <div class="table-scroll" tabindex="0" role="region" aria-label="Planned features">
+                  <table class="flow-table how-table has-status">
+                    <thead>
+                      <tr><th scope="col">Feature</th><th scope="col">What it adds</th><th scope="col">Where it stands</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><th scope="row">Fewer total runs than standard workflows</th><td>The main cost saving: the same answer from fewer solver runs.</td><td>Promising early results, in progress</td></tr>
+                      <tr><th scope="row">Tested on real solvers, OpenFOAM first</th><td>Evidence on real CFD studies, not generated data.</td><td>Looking for a design partner</td></tr>
+                      <tr><th scope="row">Your uploads adapted live</th><td>Your own study adapted in minutes on a GPU.</td><td>Built; needs a GPU on the public site</td></tr>
+                      <tr><th scope="row">Cheaper calibration</th><td>Fewer than 39 calibration runs, for example by reusing development runs.</td><td>Next research step</td></tr>
+                      <tr><th scope="row">A more robust pretrained model</th><td>Better accuracy from the first few runs on new flows.</td><td>In progress</td></tr>
+                      <tr><th scope="row">More physics and geometries</th><td>Beyond 2D periodic flow on a 64 × 64 grid.</td><td>Early probe on compressible flow</td></tr>
+                      <tr><th scope="row">Studies that persist</th><td>Your studies survive server restarts.</td><td>Needs persistent storage</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+              <section class="doc-section" aria-labelledby="avenues-title">
+                <h2 id="avenues-title">Promising avenues</h2>
+                <p>Early results that point to where the biggest gains could come from.</p>
+                <div class="table-scroll" tabindex="0" role="region" aria-label="Promising avenues">
+                  <table class="flow-table how-table">
+                    <thead>
+                      <tr><th scope="col">Avenue</th><th scope="col">Why it looks promising</th><th scope="col">Next step</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><th scope="row">Smarter choice of next runs</th><td>In a replay of past studies, the next-run picker was never worse than the alternatives and saved about one batch of 4 runs at tighter accuracy targets.</td><td>Repeat with real solver runs.</td></tr>
+                      <tr><th scope="row">Stopping sooner</th><td>The stop signal never stopped too early. In two of three repeats it stopped at 24 runs when 16 were already enough.</td><td>Tune it to stop sooner without stopping early.</td></tr>
+                      <tr><th scope="row">Cheaper calibration</th><td>Calibration takes 39 of the 67 runs each fit needs, the largest share.</td><td>Test calibrating with the development runs.</td></tr>
+                      <tr><th scope="row">A pretrained start for new physics</th><td>On compressible flow held out of pretraining, starting from the pretrained model gave a 16.3% lower final loss than starting from scratch (one setting, owner-reported).</td><td>More settings, with saved checkpoints.</td></tr>
+                      <tr><th scope="row">Studies with expensive runs</th><td>Each run avoided saves hours of compute, and licence time on commercial solvers.</td><td>Measure on a partner's OpenFOAM or commercial study.</td></tr>
+                      <tr><th scope="row">New outcomes from predicted fields</th><td>The model predicts whole fields, so other field-based quantities could come from the same predictions.</td><td>Check accuracy on quantities it was not tuned for.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
               </section>
               <section class="doc-section" aria-labelledby="budget-title">
                 <h2 id="budget-title">Your budget scenario</h2>
@@ -1618,13 +1720,13 @@
         Reference field · simulation code units · original physical aspect ratio
       </p>
     </dialog>
-    <script src="colormaps.js?v=redesign-21"></script>
-    <script src="rollout.js?v=redesign-21"></script>
-    <script src="launch.js?v=redesign-21"></script>
-    <script src="flow.js?v=redesign-21"></script>
-    <script src="flowapi.js?v=redesign-21"></script>
-    <script src="pages.js?v=redesign-21"></script>
-    <script src="workbench.js?v=redesign-21"></script>
-    <script src="app.js?v=redesign-21"></script>
+    <script src="colormaps.js?v=redesign-22"></script>
+    <script src="rollout.js?v=redesign-22"></script>
+    <script src="launch.js?v=redesign-22"></script>
+    <script src="flow.js?v=redesign-22"></script>
+    <script src="flowapi.js?v=redesign-22"></script>
+    <script src="pages.js?v=redesign-22"></script>
+    <script src="workbench.js?v=redesign-22"></script>
+    <script src="app.js?v=redesign-22"></script>
   </body>
 </html>

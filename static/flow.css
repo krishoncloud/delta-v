@@ -1407,6 +1407,37 @@ details > summary {
 #how-budget {
   margin-top: 16px;
 }
+/* How it works: cost and comparison tables inside the reading column. */
+.how-table-title {
+  margin: 28px 0 4px;
+  font-size: 16px;
+}
+.doc-section > .how-table-note {
+  margin: 0 0 12px;
+  max-width: 68ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+.doc-section > .table-scroll + .how-table-note {
+  margin-top: 12px;
+}
+.how-table {
+  min-width: 560px;
+  line-height: 1.55;
+}
+.how-table tbody th[scope="row"] {
+  width: 28%;
+  font-weight: 500;
+  color: var(--text);
+}
+.how-table td {
+  color: var(--text-2);
+}
+.how-table.has-status td:last-child {
+  width: 22%;
+  color: var(--text);
+}
 
 /* Research ledger: number rail, question and finding, a light verdict word. */
 .ledger-section {
