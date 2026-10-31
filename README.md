@@ -1,3 +1,12 @@
+---
+title: Delta-V
+emoji: 🌊
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
 
 > **Delta-V 2 website, 20 October 2026:** bring-your-runs workflow on the live site: upload a compatible study, use the pre-adapted worked example, predict untested settings with 90% confidence ranges, and plan next runs inside your own limits. See docs/UI_REDESIGN_PROGRESS.md and [docs/flow/DEMO.md](docs/flow/DEMO.md).
 
@@ -6,7 +15,32 @@
 
 **Learned physics surrogates, built one domain lane at a time.**
 
-Live prototype: https://krishmalik-delta-v.hf.space
+Live prototype: https://krishmalik-delta-v.hf.space · Book a 15-minute call: https://cal.id/krish-malik
+
+## Where Delta-V stands (November 2026)
+
+Delta-V specialises in the **low-run regime**: design studies where each solver
+run is costly and a team can afford tens of runs, not hundreds. It is built for
+smaller companies first (CFD consultancies, labs, and drone, EV-cooling, HVAC
+and turbomachinery teams without the budget for hundreds of runs or enterprise
+simulation-AI tools), and for larger engineering teams that want fewer runs per
+study.
+
+- **About half the total runs, on real OpenFOAM data.** 86 real 2D laminar
+  runs past an ellipse (Reynolds 60 to 180, varying aspect ratio and angle),
+  30 held out for testing. Full flow fields reached the 6 % relative-error
+  target with **24 runs in total** (16 to train, 8 to check its own accuracy)
+  against **48 for POD-GP**, in all three repeats. At a stricter 4 % target
+  POD-GP did not get there within 48 runs. Lift showed the same pattern.
+- **Knowing when to stop.** On a generated 2D flow study the stop signal never
+  stopped too early: 15 of 15 stops.
+- **Choosing the next run.** Not yet better than spreading runs evenly on real
+  data; improving it is the current work, with design partners.
+- **Pretraining stays on the roadmap.** On real OpenFOAM data a pretrained
+  start gave no help over training from scratch (October 2026). The Euler probe
+  below predates that test.
+- **Not claimed:** a drag advantage over a simple scalar model, an edge from
+  seeing the body shape directly, turbulent or 3D results.
 
 Delta-V is not a fluids tool. It is the scaffolding for serving, measuring, and
 honestly presenting learned approximations of physical systems. Fluid dynamics
@@ -106,7 +140,11 @@ scarce-data fine-tuning on a fourth the model never saw?
 | Run | Fine-tune epochs | Result | Status |
 |---|---:|---|---|
 | First | 15 | Pretrained arm ahead by 44.2 % | **Superseded — not used.** The from-scratch arm had not converged, so the gap was inflated. |
-| Rerun | 30 | Pretrained final loss **0.0089** vs. from-scratch **0.0107** | **Reported.** Both arms converged. Pretrained start is **16.3 % lower error**. |
+| Rerun | 30 | Pretrained final loss **0.0089** vs. from-scratch **0.0107** | **Reported.** Both arms converged. Pretrained start is **16.3 % lower final training loss**. |
+
+Later result: on real OpenFOAM data (October 2026) a pretrained start gave no
+help over training from scratch, so pretraining is on the roadmap, not in the
+claims.
 
 Caveats, in full:
 

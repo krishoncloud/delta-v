@@ -109,9 +109,12 @@
       const fmtY = (v) => F.pct(v, 0);
       const series = curveSeries(ev, "joint_accuracy_success", fmtY);
       root.innerHTML =
-        '<section class="ev-lead"><p class="ev-figure"><strong>' + acc.value.hits + " of " + acc.value.cases + "</strong> held-out research settings predicted within tolerance</p>" +
-        '<p class="ev-qual">' + esc(acc.claim) + " " + esc(acc.qualification) + "</p></section>" +
-        '<section class="ev-section"><h2>Accuracy as training runs grow</h2>' +
+        '<section class="ev-lead ev-lead-pair">' +
+        '<div><p class="ev-label">Real OpenFOAM data</p><p class="ev-figure"><strong>24 vs 48</strong> runs to reach the field-accuracy target</p>' +
+        '<p class="ev-qual">Delta-V needed 24 runs in total (16 to train, 8 to check its own accuracy); the standard field surrogate (POD-GP) needed 48, in all three repeats. 86 real 2D laminar runs made for this project, 30 held out for testing. Not customer data.</p></div>' +
+        '<div><p class="ev-label">A new generated flow study</p><p class="ev-figure"><strong>' + acc.value.hits + " of " + acc.value.cases + "</strong> held-out settings predicted within tolerance</p>" +
+        '<p class="ev-qual">A study the model never saw in pretraining. ' + esc(acc.claim) + " " + esc(acc.qualification) + "</p></div></section>" +
+        '<section class="ev-section"><h2>Accuracy as training runs grow, generated flow study</h2>' +
         '<p class="flow-note">Share of held-out settings where both outcomes landed within ±' + ev.curves.tolerance + ' of the solver. Points are the mean of three independent repeats of the study; bars span the lowest and highest repeat. Each budget also used 12 development and 39 calibration runs.</p>' +
         '<figure class="chart-figure"><div id="evidence-accuracy" class="chart-mount"></div>' +
         F.legendHtml(series.map((s) => ({ name: s.name, cls: s.cls, dash: !!s.dash, shape: s.shape }))) +

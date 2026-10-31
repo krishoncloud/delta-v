@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,7 +8,7 @@
       name="description"
       content="Delta-V adapts a pretrained physics model (FNO) to a compatible simulation study, predicts untested settings with calibrated intervals, and plans the next batch of runs. Prototype with one supported study type."
     />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#fafafa" />
     <link rel="icon" href="logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,8 +16,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="app.css?v=redesign-22" />
-    <link rel="stylesheet" href="flow.css?v=redesign-22" />
+    <link rel="stylesheet" href="app.css?v=redesign-26" />
+    <link rel="stylesheet" href="flow.css?v=redesign-26" />
   </head>
   <body>
     <a class="skip" href="#main-content">Skip to content</a>
@@ -267,7 +267,9 @@
               </section>
               <section class="doc-section">
                 <h2>Where it stands today</h2>
+                <p>Delta-V specialises in the low-run regime: studies where each run is costly and you can afford tens of runs, not hundreds. It is for smaller companies first (consultancies, labs, and drone, EV-cooling, HVAC and turbomachinery teams without the budget for hundreds of runs or enterprise simulation-AI tools), and for larger engineering teams that want fewer runs per study.</p>
                 <ul class="plain-list">
+                  <li>On real 2D OpenFOAM data: full flow fields and lift with about half the total runs of the standard field surrogate (POD-GP), 24 against 48, in all three repeats.</li>
                   <li>More accurate than standard methods when only 8 to 16 training runs are available.</li>
                   <li>Calibrated 90% prediction intervals that held up on 200 unseen cases.</li>
                   <li>A stop signal that never stopped too early in our tests.</li>
@@ -322,13 +324,15 @@
                 <h2 id="compare-title">Compared with standard surrogate models</h2>
                 <p>Standard surrogate models such as Gaussian processes (GP) and POD-GP are the usual way to predict new settings from a few runs. Here is where Delta-V stands against them today, and what we are building next.</p>
                 <h3 class="how-table-title">Today: measured results</h3>
-                <p class="how-table-note">All on one generated 2D flow study, three repeats.</p>
+                <p class="how-table-note">The first two rows are on real 2D OpenFOAM data (86 runs, 30 held out for testing). The rest are on one generated 2D flow study. Three repeats each.</p>
                 <div class="table-scroll" tabindex="0" role="region" aria-label="Measured results against standard surrogate models">
                   <table class="flow-table how-table has-status">
                     <thead>
                       <tr><th scope="col">What we compared</th><th scope="col">Result</th><th scope="col">Status</th></tr>
                     </thead>
                     <tbody>
+                      <tr><th scope="row">Runs to reach the field target, real OpenFOAM data</th><td>24 runs in total (16 to train, 8 to check its own accuracy) against 48 for POD-GP: about half. At a stricter target POD-GP did not get there within 48 runs; Delta-V did with the same 24. Lift showed the same pattern.</td><td>Ahead</td></tr>
+                      <tr><th scope="row">Pretrained start, real OpenFOAM data</th><td>No help over training from scratch. Pretraining is on the roadmap, not in the claims.</td><td>No edge yet</td></tr>
                       <tr><th scope="row">Accuracy with 8 runs</th><td>Error about a third of the GP's.</td><td>Ahead</td></tr>
                       <tr><th scope="row">Runs to reach the accuracy target</th><td>16 runs, against 24 for the other methods. At 16 runs, 597 of 600 held-out settings were within tolerance.</td><td>Ahead</td></tr>
                       <tr><th scope="row">Error at 16 runs against POD-GP</th><td>About 31% lower on kinetic energy and 52% lower on pressure RMS, as the median of three repeats. In one repeat POD-GP did better on kinetic energy.</td><td>Ahead on average</td></tr>
@@ -348,10 +352,10 @@
                     </thead>
                     <tbody>
                       <tr><th scope="row">Fewer total runs than standard workflows</th><td>The main cost saving: the same answer from fewer solver runs.</td><td>Promising early results, in progress</td></tr>
-                      <tr><th scope="row">Tested on real solvers, OpenFOAM first</th><td>Evidence on real CFD studies, not generated data.</td><td>Looking for a design partner</td></tr>
+                      <tr><th scope="row">Tested on real solvers, OpenFOAM first</th><td>Evidence on real CFD studies, not generated data.</td><td>First results in (about half the runs on fields); next, a design partner's study</td></tr>
                       <tr><th scope="row">Your uploads adapted live</th><td>Your own study adapted in minutes on a GPU.</td><td>Built; needs a GPU on the public site</td></tr>
                       <tr><th scope="row">Cheaper calibration</th><td>Fewer than 39 calibration runs, for example by reusing development runs.</td><td>Next research step</td></tr>
-                      <tr><th scope="row">A more robust pretrained model</th><td>Better accuracy from the first few runs on new flows.</td><td>In progress</td></tr>
+                      <tr><th scope="row">A pretrained model that helps on real data</th><td>Better accuracy from the first few runs on new flows.</td><td>Roadmap: needs pretraining on real CFD runs</td></tr>
                       <tr><th scope="row">More physics and geometries</th><td>Beyond 2D periodic flow on a 64 × 64 grid.</td><td>Early probe on compressible flow</td></tr>
                       <tr><th scope="row">Studies that persist</th><td>Your studies survive server restarts.</td><td>Needs persistent storage</td></tr>
                     </tbody>
@@ -367,10 +371,10 @@
                       <tr><th scope="col">Avenue</th><th scope="col">Why it looks promising</th><th scope="col">Next step</th></tr>
                     </thead>
                     <tbody>
-                      <tr><th scope="row">Smarter choice of next runs</th><td>In a replay of past studies, the next-run picker was never worse than the alternatives and saved about one batch of 4 runs at tighter accuracy targets.</td><td>Repeat with real solver runs.</td></tr>
+                      <tr><th scope="row">Smarter choice of next runs</th><td>In a replay of past studies, the next-run picker was never worse than the alternatives and saved about one batch of 4 runs at tighter accuracy targets. On real OpenFOAM data it has not yet beaten spreading runs evenly.</td><td>The current work: a better picker, built with design partners.</td></tr>
                       <tr><th scope="row">Stopping sooner</th><td>The stop signal never stopped too early. In two of three repeats it stopped at 24 runs when 16 were already enough.</td><td>Tune it to stop sooner without stopping early.</td></tr>
                       <tr><th scope="row">Cheaper calibration</th><td>Calibration takes 39 of the 67 runs each fit needs, the largest share.</td><td>Test calibrating with the development runs.</td></tr>
-                      <tr><th scope="row">A pretrained start for new physics</th><td>On compressible flow held out of pretraining, starting from the pretrained model gave a 16.3% lower final loss than starting from scratch (one setting, owner-reported).</td><td>More settings, with saved checkpoints.</td></tr>
+                      <tr><th scope="row">A pretrained start for new physics</th><td>On compressible flow held out of pretraining, starting from the pretrained model gave a 16.3% lower final training loss than starting from scratch (one setting, owner-reported). On real OpenFOAM data a pretrained start gave no help, so this stays on the roadmap.</td><td>Pretrain on real CFD runs, then test against training from scratch.</td></tr>
                       <tr><th scope="row">Studies with expensive runs</th><td>Each run avoided saves hours of compute, and licence time on commercial solvers.</td><td>Measure on a partner's OpenFOAM or commercial study.</td></tr>
                       <tr><th scope="row">New outcomes from predicted fields</th><td>The model predicts whole fields, so other field-based quantities could come from the same predictions.</td><td>Check accuracy on quantities it was not tuned for.</td></tr>
                     </tbody>
@@ -388,7 +392,7 @@
             <div class="page-heading">
               <div>
                 <h1>Research</h1>
-                <p>The tests behind Delta-V, what each one showed, and what comes next. Every number comes from recorded research runs on one generated flow study.</p>
+                <p>The tests behind Delta-V, what each one showed, and what comes next. Every number comes from recorded research runs: real OpenFOAM simulations made for this project, and one generated flow study.</p>
               </div>
             </div>
             <div id="ev-root">Loading…</div>
@@ -397,9 +401,11 @@
               <ul class="findings">
                 <li><strong>Accurate with few runs.</strong> With 16 training runs, 597 of 600 held-out settings were within tolerance, and error was clearly lower than standard methods at 8 to 16 runs (Tests 6, 8 and 8b).</li>
                 <li><strong>Honest uncertainty.</strong> The calibrated 90% prediction intervals covered 91.5% of 200 unseen cases (Test 7).</li>
-                <li><strong>Knowing when to stop.</strong> The stop signal was right in 15 of 15 runs, never too early (Test 8). An exploratory replay of the next-run picker saved about one batch at tighter targets.</li>
+                <li><strong>Knowing when to stop.</strong> The stop signal was right in 15 of 15 runs, never too early (Test 8). An exploratory replay of the next-run picker saved about one batch at tighter targets; making the picker better is the current work.</li>
+                <li><strong>About half the runs on real OpenFOAM data.</strong> Full flow fields reached the accuracy target with 24 runs in total against 48 for POD-GP, in all three repeats (Test 10).</li>
+                <li><strong>Pretraining stays on the roadmap.</strong> On real OpenFOAM data a pretrained start gave no help over training from scratch (Test 9).</li>
               </ul>
-              <p class="flow-note">All measured on one generated 2D flow study type, not customer data.</p>
+              <p class="flow-note">Tests 9 to 12 use real OpenFOAM runs made for this project, not customer data. The rest use one generated 2D flow study type.</p>
             </section>
             <section class="ledger-section" aria-labelledby="tests-title">
               <h2 id="tests-title">The tests behind it</h2>
@@ -410,8 +416,8 @@
                   <div class="t-body">
                     <h3>Does earlier learning help on a fluid the model never saw?</h3>
                     <details class="t-how"><summary>How we tested</summary><p>We held one fluid system (compressible Euler flow) out of pretraining, then trained two copies on the same small amount of its data: one starting from the pretrained model, one from scratch.</p></details>
-                    <p class="t-result">The pretrained start reached a final loss of 0.0089 against 0.0107 from scratch, 16.3% lower, after 30 training passes.</p>
-                    <p class="t-note">Owner-reported run on one setting of the gas constant, without saved checkpoints. A fuller rerun is planned.</p>
+                    <p class="t-result">The pretrained start reached a final training loss of 0.0089 against 0.0107 from scratch, 16.3% lower, after 30 training passes.</p>
+                    <p class="t-note">Owner-reported run on one setting of the gas constant, without saved checkpoints. On real OpenFOAM data a pretrained start gave no help (Test 9), so pretraining is on the roadmap, not in the claims.</p>
                   </div>
                   <span class="t-verdict v-mixed">Owner-reported</span>
                 </li>
@@ -477,6 +483,33 @@
                   </div>
                   <span class="t-verdict v-neutral">Exploratory replay</span>
                 </li>
+                <li>
+                  <span class="t-num">9</span>
+                  <div class="t-body">
+                    <h3>Does a pretrained start help on real solver data?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>62 real OpenFOAM runs of 2D laminar flow past a body. The pretrained model and the same model trained from scratch, each given 16 runs, scored on held-out runs, three repeats.</p></details>
+                    <p class="t-result">No: the pretrained start gave no help in any repeat. Trained from scratch, the model beat POD-GP 2 to 3 times on drag and about 3.5 times on lift, with about 3 times lower field error.</p>
+                  </div>
+                  <span class="t-verdict v-neutral">Negative, real OpenFOAM</span>
+                </li>
+                <li>
+                  <span class="t-num">10</span>
+                  <div class="t-body">
+                    <h3>How many real runs does it take to reach a fixed accuracy?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>86 real OpenFOAM runs of 2D laminar flow past an ellipse, varying Reynolds number (60 to 180), aspect ratio and angle; 30 held out for testing. Delta-V and POD-GP got the same runs in the same order, three repeats. Targets were fixed before any run.</p></details>
+                    <p class="t-result">Full fields: 24 runs in total for Delta-V (16 to train, 8 to check its own accuracy) against 48 for POD-GP, in all three repeats. At the stricter target POD-GP did not get there within 48. Lift showed the same pattern. For drag, a simple Gaussian process on the design numbers was more accurate.</p>
+                  </div>
+                  <span class="t-verdict v-good">Measured, real OpenFOAM</span>
+                </li>
+                <li>
+                  <span class="t-num">11–12</span>
+                  <div class="t-body">
+                    <h3>Does seeing the body shape directly help?</h3>
+                    <details class="t-how"><summary>How we tested</summary><p>101 real runs with varied shapes, then 45 more at low run counts, comparing a model that sees the shape with one that sees only the shape numbers.</p></details>
+                    <p class="t-result">No reliable edge: none at 48 runs, and only a small field edge on familiar shapes at 16 runs, none on new shapes.</p>
+                  </div>
+                  <span class="t-verdict v-neutral">Negative, real OpenFOAM</span>
+                </li>
               </ol>
             </section>
             <section class="ledger-section" aria-labelledby="limits-title">
@@ -485,6 +518,7 @@
                 <div>
                   <h3>What holds up</h3>
                   <ul class="plain-list">
+                    <li>About half the total runs of POD-GP for full flow fields on real OpenFOAM data.</li>
                     <li>More accurate than standard methods at 8 to 16 runs, in four separate tests.</li>
                     <li>Calibrated 90% prediction intervals, measured at 91.5% coverage.</li>
                     <li>A reliable signal for when you have enough runs.</li>
@@ -494,8 +528,9 @@
                 <div>
                   <h3>What comes next</h3>
                   <ul class="plain-list">
-                    <li>Run the workflow on a real customer solver, where each run is expensive.</li>
-                    <li>Lower total cost is showing promising early results: the next-run picker already saved about one batch at tighter accuracy targets. We are building on it.</li>
+                    <li>Run the workflow on a design partner's real study, where each run is expensive.</li>
+                    <li>A better next-run picker: it already saved about one batch at tighter targets in a replay, and on real OpenFOAM data it does not yet beat spreading runs evenly. This is the current work.</li>
+                    <li>Pretraining on real CFD runs, kept only if it beats training from scratch.</li>
                     <li>Make calibration cheaper using runs you already supply.</li>
                     <li>Support more study types: so far, one generated 2D flow family on a 64 × 64 grid.</li>
                   </ul>
@@ -614,7 +649,9 @@
               <p>
                 Euler was held out of joint pretraining, then fine-tuned on
                 scarce data. The recorded two-arm comparison reports 16.3% lower
-                error for the pretrained start. This is not a live prediction.
+                final training loss for the pretrained start. This is not a live
+                prediction, and on real OpenFOAM data a pretrained start gave no
+                help, so pretraining is on the roadmap.
               </p>
               <a class="btn primary" href="#probe"
                 >See the two-arm experiment and its limitations →</a
@@ -1159,7 +1196,12 @@
                   </p>
                 </article>
               </div>
-              <h2>16.3% lower error with the pretrained start</h2>
+              <h2>16.3% lower final training loss with the pretrained start</h2>
+              <p>
+                <strong>Later result:</strong> on real OpenFOAM data (October
+                2026) a pretrained start gave no help over training from
+                scratch, so pretraining is on the roadmap, not in the claims.
+              </p>
               <p>
                 <strong
                   >Measured during training; reported by the project
@@ -1216,7 +1258,7 @@
                       </td>
                       <td>
                         <strong>Reported result.</strong> Both arms fully
-                        converged. Pretrained start is 16.3% lower error.
+                        converged. Pretrained start is 16.3% lower final training loss.
                       </td>
                     </tr>
                   </tbody>
@@ -1591,8 +1633,9 @@
                     generalization probe. The supplied notebook implements full
                     fine-tuning versus training from scratch on Euler. The owner
                     subsequently supplied a 30-epoch result: 0.0089 versus
-                    0.0107 final loss, with a reported 16.3% lower error for the
-                    pretrained start. Only one gamma value was covered instead
+                    0.0107 final loss, with a reported 16.3% lower final training
+                    loss for the pretrained start (on real OpenFOAM data a
+                    pretrained start later gave no help). Only one gamma value was covered instead
                     of four intended; checkpoints were not saved. See
                     <a href="#probe">the two-arm probe and caveats</a>. A
                     frozen-backbone learned-adapter arm, a trajectory-separated
@@ -1720,13 +1763,13 @@
         Reference field · simulation code units · original physical aspect ratio
       </p>
     </dialog>
-    <script src="colormaps.js?v=redesign-22"></script>
-    <script src="rollout.js?v=redesign-22"></script>
-    <script src="launch.js?v=redesign-22"></script>
-    <script src="flow.js?v=redesign-22"></script>
-    <script src="flowapi.js?v=redesign-22"></script>
-    <script src="pages.js?v=redesign-22"></script>
-    <script src="workbench.js?v=redesign-22"></script>
-    <script src="app.js?v=redesign-22"></script>
+    <script src="colormaps.js?v=redesign-26"></script>
+    <script src="rollout.js?v=redesign-26"></script>
+    <script src="launch.js?v=redesign-26"></script>
+    <script src="flow.js?v=redesign-26"></script>
+    <script src="flowapi.js?v=redesign-26"></script>
+    <script src="pages.js?v=redesign-26"></script>
+    <script src="workbench.js?v=redesign-26"></script>
+    <script src="app.js?v=redesign-26"></script>
   </body>
 </html>

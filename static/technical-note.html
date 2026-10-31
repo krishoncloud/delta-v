@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" />
-    <link rel="stylesheet" href="app.css?v=redesign-22" />
+    <link rel="stylesheet" href="app.css?v=redesign-26" />
   </head>
   <body>
     <main class="technical-page">
@@ -161,8 +161,10 @@
         supplied notebook excludes Euler from joint training, but includes a
         scratch-versus-full-fine-tuning experiment on fresh models. The owner
         subsequently supplied the converged 30-epoch two-arm result: losses
-        0.0089 versus 0.0107, with a reported 16.3% lower error for the
-        pretrained start. These training measurements are not live API results.
+        0.0089 versus 0.0107, with a reported 16.3% lower final training loss
+        for the pretrained start. These training measurements are not live API
+        results. On real OpenFOAM data (October 2026) a pretrained start gave no
+        help over training from scratch, so pretraining is on the roadmap.
         Only one gamma value was represented instead of four intended, due to a
         selection bug. No fine-tuned checkpoints were saved. See the
         <a href="/#probe">Generalization probe</a> for provenance and

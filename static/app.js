@@ -143,7 +143,7 @@ history = history
       ["field", "parametric"].includes(r.kind),
   )
   .slice(0, 20);
-function setTheme(theme) {
+function setTheme(theme, remember) {
   document.documentElement.dataset.theme = theme;
   const next = theme === "dark" ? "light" : "dark";
   $("theme").innerHTML =
@@ -152,13 +152,16 @@ function setTheme(theme) {
       : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>';
   $("theme").setAttribute("aria-label", "Switch to " + next + " mode");
   $("settings-theme").textContent = "Switch to " + next + " mode";
+  // Only an explicit toggle is remembered, so light stays the default.
+  if (!remember) return;
   try {
-    localStorage.setItem("deltav-theme", JSON.stringify(theme));
+    localStorage.setItem("deltav-theme-choice", JSON.stringify(theme));
   } catch {}
 }
 function toggleTheme() {
   setTheme(
     document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+    true,
   );
 }
 const PAGE_TITLES = {
@@ -1451,7 +1454,7 @@ async function boot() {
   }
 }
 initLaunch();
-setTheme(storageGet("deltav-theme", "dark") === "light" ? "light" : "dark");
+setTheme(storageGet("deltav-theme-choice", "light") === "dark" ? "dark" : "light");
 route();
 renderHistory();
 syncControls();

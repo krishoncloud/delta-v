@@ -1176,6 +1176,18 @@ html[data-theme="light"] .flow-table td.neg {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+.ev-lead-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px 40px;
+}
+.ev-label {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
 .ev-qual {
   max-width: 72ch;
   margin: 0;
