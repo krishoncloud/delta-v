@@ -1,12 +1,3 @@
----
-title: Delta-V
-emoji: 🌊
-colorFrom: blue
-colorTo: green
-sdk: docker
-app_port: 7860
-pinned: false
----
 
 > **Delta-V 2 website, 20 October 2026:** bring-your-runs workflow on the live site: upload a compatible study, use the pre-adapted worked example, predict untested settings with 90% confidence ranges, and plan next runs inside your own limits. See docs/UI_REDESIGN_PROGRESS.md and [docs/flow/DEMO.md](docs/flow/DEMO.md).
 
