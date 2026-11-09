@@ -331,3 +331,7 @@ epoch-3 weights due to a save-if-better bug and is not automatically better.
 
 Built by Krish Malik Source:
 https://github.com/krishoncloud/delta-v
+
+## Notice
+
+Source available for reading only; all rights reserved. See [NOTICE.md](NOTICE.md). Contact krishmalikus@gmail.com for any other use.
